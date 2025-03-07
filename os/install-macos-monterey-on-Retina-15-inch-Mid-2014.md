@@ -1,10 +1,3 @@
-+++
-date = '2025-03-07T13:37:01+08:00'
-draft = false
-title = 'Install Macos Monterey on Retina 15 Inch Mid 2014'
-
-+++
-
 # 前言
 
 2014年中期的15寸MacPro，闲置已久，偶尔用来上下网。
