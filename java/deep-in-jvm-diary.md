@@ -291,7 +291,58 @@ http://www.open-open.com/lib/view/open1324736648468.html
 
   Stack Trace for Java，显示虚拟机的线程快照
 
-  -F 当正常输出的请求不被响应时，强制输出线程堆栈
+  -F: 当正常输出的请求不被响应时，强制输出线程堆栈
+
+  -l: 除堆栈外，显示关于锁的附加信息
+
+  -m: 如果调用到本地方法的话，可以显示C/C++的堆栈
+
+  ```
+  jstack  -l -F 15348 >> 169.txt 
+  sudo -u root /usr/java/jdk1.6.0_26/bin/jstack -F 15348
+  ```
+
+  在JDK6U23之前，执行jstack,jmap -F会有Bug，看这个文章：http://developer.51cto.com/art/201203/321359.htm
+
+  jstat -gcutil -h10 pid 1000
+
+  GC的时间单位是：second
+
+  ![deep-in-jvm](images/java-deep-in-jvm-diary-3.png)
+
+- MAT
+
+  除了以上之外，另外推荐一个内存分析工具，下载地址：http://www.eclipse.org/mat/downloads.php，它分析的是JVM内存的dump文件，此文件可以通过jmap -dump:format=b,file=xxx.bin pid将内存dump出来，也可以通过设置-XX:+HeapDumpOnOutOfMemoryError参数，在JVM出现OOM时自动输出到文件；或者在VisualVM中直接对监控的JVM进程单击右键，选择“Heap Dump”，将JVM的内存dump出来。
+
+- BTrace
+
+  下载地址：https://kenai.com/projects/btrace/downloads/directory/releases
+
+  写一段脚本，随时切入正在运行的程序，跟踪代码的调用。写一段Btrace脚本还是很麻烦的，不详述了。
+
+  其他的工具还有：HSDB，Java自带的，执行方式如下：
+
+  java -classpath .:$JAVA_HOME/lib/sa-jdi.jar sun.jvm.hotspot.CLHSDB
+
+- jvisualvm
+
+  可以远程监控Java进程，比如Tomcat，增加启动参数：
+
+  ```
+  JAVA_OPTS="-Dcom.sun.management.jmxremote.port=9998 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=10.10.10.212"
+  ```
+
+  或者java进程，启动时增加参数，比如：
+
+  ```
+  java -Xms2048m -Xmx46080m -classpath $CLASSPATH -Dcom.sun.management.jmxremote.port=9998 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=10.10.10.212 com.yougou.recommend.service.ViewViewServiceReverse >> "$stats_log"
+  ```
+
+  则可以在本地通过jvisualvm监控进程情况，在命令行输入jvisualvm，远程，连接ip地址，之后右键这个远程连接，新建JMX连接，输入端口，则可以监控这个远程java进程了。
+
+# 调优案例分析与实战
+
+
 
 # 后记
 

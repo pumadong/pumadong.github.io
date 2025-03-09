@@ -55,46 +55,13 @@
 
      ![clash-download-brew-2](images/clash-download-brew-2.png)
 
-   - brew install ruby@3.3，会碰到openssl3.4.1因为test通不过停止安装的问题
+   - brew 清理缓存
 
-      ![clash-copy-shell](images/clash-download-brew-3.png)
+     以运行 `$ brew cleanup` 来清除这些陈旧的缓存文件让它们不再占用你的硬盘空间——然而 `cleanup` 的常规策略是仅清除超过 120 的缓存，而不是“所有”缓存，所以你可能需要使用 `--prune=all` 选项来清除所有缓存：
 
-      
-
-      下载源码自行编译安装可以解决这个问题：
-
-      ```bash
-      curl -O https://www.openssl.org/source/openssl-3.4.1.tar.gz
-      
-      tar xzfv openssl-3.4.1.tar.gz
-      
-      cd openssl-3.4.1
-      
-      # 不喜欢用 perl, 直接 ./config 干净利落
-      ./config \
-        --prefix=/usr/local/Cellar/openssl@3/3.4.1 \
-        --openssldir=/usr/local/openssl@3 \
-        --libdir=lib \
-        no-ssl3 \
-        no-ssl3-method \
-        no-zlib \
-        darwin64-x86_64-cc \
-        enable-ec_nistp_64_gcc_128
-      
-      make
-      
-      sudo make install MANDIR=/usr/local/Cellar/openssl@3/3.4.1/share/man MANSUFFIX=ssl
-      ```
-
-      新开终端, 验证确认：openssl --version
-
-      homebrew 链接 openssl，让 brew 正确识别, 后续安装 python@3.10 分析依赖, 自然就会跳过 openssl@3 安装
-
-      ```
-      brew link openssl@3
-      ```
-
-      以上解决办法参考这篇文章：[老旧Mac 以 homebrew 安装 openssl@3 失败的问题及解决](https://www.zfkun.com/old-mac-openssl-install.html)。
+     ```bash
+     brew cleanup --prune=all
+     ```
 
 3. 安装Typo。比较好用的所见即所得MarkDown编辑器。
    最后一个免费版本是：[0.11.18](https://zahui.fan/posts/64b52e0d/)。官网：[https://typora.io/](https://typora.io/)。
@@ -139,11 +106,79 @@
        # 3.直接修改config文件，把项目地址换成新的。vim .git/config
        ```
 
-
    参考：
 
    1. [GitHub Docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)。
    2. [GitHub不再支持密码验证解决方案](https://cloud.tencent.com/developer/article/1861466)。
+
+5. brew install ruby@3.3。
+
+   会碰到openssl3.4.1因为test通不过停止安装的问题
+
+   ![clash-copy-shell](images/clash-download-brew-3.png)
+
+   
+
+   下载源码自行编译安装可以解决这个问题：
+
+   ```bash
+   curl -O https://www.openssl.org/source/openssl-3.4.1.tar.gz
+   
+   tar xzfv openssl-3.4.1.tar.gz
+   
+   cd openssl-3.4.1
+   
+   # 不喜欢用 perl, 直接 ./config 干净利落
+   ./config \
+     --prefix=/usr/local/Cellar/openssl@3/3.4.1 \
+     --openssldir=/usr/local/openssl@3 \
+     --libdir=lib \
+     no-ssl3 \
+     no-ssl3-method \
+     no-zlib \
+     darwin64-x86_64-cc \
+     enable-ec_nistp_64_gcc_128
+   
+   make
+   
+   sudo make install MANDIR=/usr/local/Cellar/openssl@3/3.4.1/share/man MANSUFFIX=ssl
+   ```
+
+   新开终端, 验证确认：openssl --version
+
+   homebrew 链接 openssl，让 brew 正确识别, 后续安装 python@3.10 分析依赖, 自然就会跳过 openssl@3 安装
+
+   ```
+   brew link openssl@3
+   ```
+
+   以上解决办法参考这篇文章：[老旧Mac 以 homebrew 安装 openssl@3 失败的问题及解决](https://www.zfkun.com/old-mac-openssl-install.html)。
+
+   
+
+   此外，虽然以上办法安装完成openssl@3，但是遇到了llvm19无法安装的问题，在build的时候过不去。临时放弃3.3这个版本。
+
+6. brew install ruby@3.1
+
+   ![clash-copy-shell](images/clash-download-brew-4.png)
+
+   
+
+   安装过程顺利，需要手工把安装路径加到~/.bash_profile中。
+
+   安装ruby(>=2.7)的目的是为了安装jekyll，这个blog生成工具可以和github.io很好的配合。
+
+7. 安装jekyll
+
+   直接用gem install jekyll后，安装成功，但是找不到位置执行jekyll。
+
+   找到这个解决办法：[https://jekyllrb.com/docs/troubleshooting/#installation-problems](https://jekyllrb.com/docs/troubleshooting/#installation-problems)。
+
+   `gem install -n /usr/local/bin jekyll`
+
+   Quickstart测试一下：[https://jekyllrb.com/docs/](https://jekyllrb.com/docs/)。不错，很顺畅！！！
+
+   下面要进行jekyll和github.io的集成工作了。
 
 # 注意问题
 
