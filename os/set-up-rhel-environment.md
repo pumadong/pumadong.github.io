@@ -116,6 +116,16 @@
 
    - 系统操作
 
+     **查看CPU：**grep 'model name' /proc/cpuinfo | wc -l
+
+     **查看64位还是32位：**getconf LONG_BIT
+
+     **查看内存：**
+
+     ​	grep MemTotal /proc/meminfo
+
+     ​	free -m
+
      **查看OS版本信息：**cat /proc/version，  uname -r，  uname -a，cat /etc/redhat-release，file /bin/bash，file /bin/cat
 
      **显示环境变量：**echo $JAVA_HOME 
@@ -127,15 +137,15 @@
      reboot ，shutdown -r now 立刻重启(root用户使用)  
 
      shutdown -r 10 过10分钟自动重启 
-
+     
      shutdown -r 20:35 在时间为20:35时候重启
-
+     
      **关机：**
-
+     
      halt ，poweroff  立刻关机  
-
+     
      shutdown -h now 立刻关机(root用户使用)  
-
+     
      shutdown -h 10 10分钟后自动关机 
      **磁盘操作：**
 
@@ -172,15 +182,15 @@
      chkconfig --list xx 查找xx是否作为服务运行
 
      find 在机器查找文件，比如: find / -type f -name "rabbitmq-server"
-
+     
      ps -ef | grep xx 显示包含xx的进程
-
+     
      **netstat：**
-
+     
      查看Socket连接数命令：netstat -napo | grep 1080 | wc -l
-
+     
      查看连接某服务端口最多的的IP地址：netstat -nat | grep "192.168.1.15:22" |awk '{print $5}'|awk -F: '{print $1}'|sort -nr|uniq -c|head -20
-
+     
      TCP各种状态列表：netstat -nat |awk '{print $6}'|sort -nr|uniq -c
 
 # Java 17
@@ -240,7 +250,7 @@
 
 - 头部互联网公司自研
 
-  对于头部公司，会有一些个性化需求，同时需要与公司的基础工程一起协作，加上人才储备充足，有进行服务治理框架的自研发。
+  对于头部公司，会有一些个性化需求，同时需要与公司的其他IT基础设施一起协作，加上人才储备充足，有进行服务治理框架的自研发。
 
   比如美团的OCTO：[微服务通信框架及治理体系OCTO](https://tech.meituan.com/2019/08/08/large-scale-microservice-communication-framework.html)、[OCTO 2.0](https://tech.meituan.com/2019/12/12/meituan-octo.html)。
 
@@ -251,15 +261,31 @@
 
 - 行业大佬的文章：[解读微服务的 2022](https://www.infoq.cn/article/wyornavvyp2i4gjy9aoc)。
 
-# RabbitMq
+# 消息队列
 
-# Redis
+- 核心的业务系统，比如订单，用RabitMq较多，因为其高可用性。
+- 海量数据的消息，比如日志系统，用Kafka较多，因为其高吞吐量。
 
-# Maven&Sonatype Nexus
+# 缓存
 
-# MySql
+- Redis
+- Tair
 
-# 运维监控软件
+# Maven仓库管理器
+
+https://help.sonatype.com/en/sonatype-nexus-repository.html
+
+# 数据存储
+
+- MySQL
+- TiDB
+- Hive
+
+# 运维监控
+
+- Open-Falcon
+- Nagios
+- Zabbix
 
 # 总结
 

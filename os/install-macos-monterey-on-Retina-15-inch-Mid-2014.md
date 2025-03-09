@@ -46,14 +46,55 @@
      > export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
      >
      > 也可以把这一行加到~/.bash_profile中
-     
+
      这个命令是在通过ClashX的Copy Shell Command拷贝得来。如下：
 
      ![clash-copy-shell](images/clash-copy-shell.png)
-     
+
      我执行完这个命令，通过智能选择速度最快的香港代理服务器，依然不能安装，后来通过手工更改VPN为一个美国代理点解决。
-     
+
      ![clash-download-brew-2](images/clash-download-brew-2.png)
+
+   - brew install ruby@3.3，会碰到openssl3.4.1因为test通不过停止安装的问题
+
+      ![clash-copy-shell](images/clash-download-brew-3.png)
+
+      
+
+      下载源码自行编译安装可以解决这个问题：
+
+      ```bash
+      curl -O https://www.openssl.org/source/openssl-3.4.1.tar.gz
+      
+      tar xzfv openssl-3.4.1.tar.gz
+      
+      cd openssl-3.4.1
+      
+      # 不喜欢用 perl, 直接 ./config 干净利落
+      ./config \
+        --prefix=/usr/local/Cellar/openssl@3/3.4.1 \
+        --openssldir=/usr/local/openssl@3 \
+        --libdir=lib \
+        no-ssl3 \
+        no-ssl3-method \
+        no-zlib \
+        darwin64-x86_64-cc \
+        enable-ec_nistp_64_gcc_128
+      
+      make
+      
+      sudo make install MANDIR=/usr/local/Cellar/openssl@3/3.4.1/share/man MANSUFFIX=ssl
+      ```
+
+      新开终端, 验证确认：openssl --version
+
+      homebrew 链接 openssl，让 brew 正确识别, 后续安装 python@3.10 分析依赖, 自然就会跳过 openssl@3 安装
+
+      ```
+      brew link openssl@3
+      ```
+
+      以上解决办法参考这篇文章：[老旧Mac 以 homebrew 安装 openssl@3 失败的问题及解决](https://www.zfkun.com/old-mac-openssl-install.html)。
 
 3. 安装Typo。比较好用的所见即所得MarkDown编辑器。
    最后一个免费版本是：[0.11.18](https://zahui.fan/posts/64b52e0d/)。官网：[https://typora.io/](https://typora.io/)。
@@ -73,19 +114,19 @@
    - https://github.com/
 
      [SSH and GPG keys](https://github.com/settings/keys) -> New SSH key -> Copy SSH Key to the key textbook -> Click Add SSH Key button
-   
+
    - Verifying
-   
+
      > ssh -T git@github.com
-   
+
      ```You may see a warning like this
      > The authenticity of host 'github.com (IP ADDRESS)' can't be established.
      > ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
      > Are you sure you want to continue connecting (yes/no)?
      ```
-   
+
    - 注意：
-   
+
      - Git仓库地址使用SSH方式拉取。
      ```shell
      git clone git@github.com:pumadong/pumadong.github.io.git
@@ -97,10 +138,10 @@
        # 2.先删后加 git remote rm origin; git remote add origin [url]
        # 3.直接修改config文件，把项目地址换成新的。vim .git/config
        ```
-   
-   
+
+
    参考：
-   
+
    1. [GitHub Docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)。
    2. [GitHub不再支持密码验证解决方案](https://cloud.tencent.com/developer/article/1861466)。
 
