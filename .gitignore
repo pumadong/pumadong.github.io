@@ -1,3 +1,9 @@
+# files used by jekyll
+Gemfile
+Gemfile.lock
+_posts/
+_site/
+
 *.class
 
 # Mobile Tools for Java (J2ME)
