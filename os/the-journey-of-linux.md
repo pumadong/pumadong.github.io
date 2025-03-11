@@ -1,3 +1,15 @@
+---
+
+layout: single
+title: Linux学习-文件权限和账号管理/Bash/Curl&Http
+permalink: /os/the-journey-of-linux.html
+
+classes: wide
+
+author: Bob Dong
+
+---
+
 # 前言
 
 2015年学习Linux时写的笔记，原文链接：[1](https://blog.csdn.net/puma_dong/article/details/49435195)，[2](https://blog.csdn.net/puma_dong/article/details/49722141)，[3](https://blog.csdn.net/puma_dong/article/details/49456829)。

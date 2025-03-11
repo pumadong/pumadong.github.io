@@ -1,3 +1,16 @@
+---
+
+layout: single
+title: RHEL Server环境搭建
+permalink: /os/set-up-rhel-environment.html
+
+classes: wide
+
+author: Bob Dong
+
+---
+
+
 # 前言
 
 2013年刚刚从.Net开发转向Java开发不久，本篇是当时对[RHEL Server环境搭建](https://blog.csdn.net/puma_dong/article/details/17889593)的学习记录。
@@ -23,40 +36,52 @@
 
 1. 启动方式
 
-   默认已经是multi-user模式，命令行界面。
+   默认已经在命令行界面，graphical.target方式。
 
-   vim /etc/inittab 已经失效，改为用systemctl命令。
+   vim /etc/inittab 已经失效，提示使用systemctl命令。
 
-   ![clash-copy-shell](images/install-rhel7-in-vw fusion-13.5.2-3.png)
-
-   **以下为失效信息：**
-
-   ~~vim /boot/grub/grub.conf  去掉“rhgb”和“quiet”参数。
-   “rhgb”表示”redhat graphical boot”，红帽图形引导。”quiet”表示不在启动时显示内核信息，默认启用该参数。
-   我们去掉这两个参数的目的是为了起到过程中显示所有的内核信息流，方便监控问题。~~
+   ```
+   # 查看当前启动方式
+   systemctl get-default
+   ```
 
 2. 配置IP地址
 
-   - 使用图形工具nmtui，修改完成后执行systemctl restart network。
+   可以使用图形工具nmtui，修改完成后执行systemctl restart network。
 
-   - 我使用了如下的命令行方式：
+   我使用了如下的命令行方式：
 
-     - ip addr，找出网卡的名字，比如下面的ens33。
+   - ip addr，找出网卡的名字，比如下面的ens33。
 
-     - route -n，找出网卡的当前配置，网关，掩码。
+   - route -n，找出网卡的当前配置，网关，掩码。
 
-     - vim /etc/sysconfig/network-scripts/ifcfg-ens33，修改配置。
-       修改之前如下：
-
-       ![clash-copy-shell](images/install-rhel7-in-vw fusion-13.5.2-4.png)
-
-       修改之后如下：
-
-       ![clash-copy-shell](images/install-rhel7-in-vw fusion-13.5.2-5.png)
-
-       备注：IPADDR0、NETMASK0和GATEWAY0后面的0代表第一个地址，IPADDR1代表第二个地址，以此类推；DNS是以1为代表第一个地址；后面的数值必须要写，否则配置不生效。
-
-     - systemctl restart network，使配置生效
+   - vim /etc/sysconfig/network-scripts/ifcfg-ens33，修改配置。
+     
+     ```
+     TYPE="Ethernet"
+     PROXY_METHOD="none"
+     BROWSER_ONLY="no"
+     BOOTPROTO="STATIC"	# 修改，原来尾dhcp
+     DEFROUTE="yes"
+     IPV4_FAILURE_FATAL="no"
+     IPADDR0=192.168.197.11	# 新增
+     NETMASK0=255.255.255.0	# 新增
+     GATEWAY0=192.168.197.2	# 新增
+     DNS1=8.8.8.8
+     IPV6INIT="yes"
+     IPV6_AUTOCONF="yes"
+     IPV6_DEFROUTE="yes"
+     IPV6_FAILURE_FATAL="no"
+     IPV6_ADDR_GEN_MODE="stable-privacy"
+     NAME="ens33"
+     UUID="faf695c7-9140-4a72-ba33-a607eb33aa7e"
+     DEVICE="ens33"
+     ONBOOT="yes"
+     ```
+     
+     备注：IPADDR0、NETMASK0和GATEWAY0后面的0代表第一个地址，IPADDR1代表第二个地址，以此类推；DNS是以1为代表第一个地址；后面的数值必须要写，否则配置不生效。
+     
+   - systemctl restart network，使配置生效
 
 3. 设置时区、时间自动和标准时间同步
 
@@ -70,12 +95,21 @@
 
      /etc/chrony.conf，注释默认时间源，增加公共NTP服务器地址。
 
-     ![clash-copy-shell](images/install-rhel7-in-vw fusion-13.5.2-6.png)
-
+     ```
+     [bob@localhost ~]$ cat /etc/chrony.conf
+     # Use public servers from the pool.ntp.org project.
+     # Please consider joining the pool (http://www.pool.ntp.org/join.html).
+     # server 0.rhel.pool.ntp.org iburst
+     # server 1.rhel.pool.ntp.org iburst
+     # server 2.rhel.pool.ntp.org iburst
+     # server 3.rhel.pool.ntp.org iburst
+     server	ntp.ntsc.ac.cn	iburst	# 新增
+     ```
+     
      常用的公共NTP服务器：https://dns.icoa.cn/ntp/
-
+     
      重启服务：systemctl restart chronyd
-
+     
      查看时间源：chronyc sources -v
 
 4. 关掉Red Hat Subscription Manager
@@ -108,7 +142,26 @@
      -A IN_public_allow -p tcp -m tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
      ```
 
-6. linux常用命令
+6. 安装rzsz，方便Mac/Windows通过ZMODEM协议和虚拟机交换文件
+
+   ```
+    wget https://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz
+    tar zxvf lrzsz-0.12.20.tar.gz && cd lrzsz-0.12.20
+    ./configure && make && make install
+    # 上面安装过程默认把lsz和lrz安装到了/usr/local/bin/目录下，现在我们并不能直接使用
+    # 可以把/usr/local/bin加到PATH系统变量，也可以创建软链接，并命名为rz/sz：
+    cd /usr/bin
+    ln -s /usr/local/bin/lrz rz
+    ln -s /usr/local/bin/lsz sz
+   ```
+
+   在server安装rzsz完毕后，Windows下通过（putty, SecureCRT），Mac下通过iTerm2，SSH到Server后，就可以在server的命令行窗口输入rzsz，接收和发送文件。
+
+   rzsz官网：<https://www.ohse.de/uwe/software/lrzsz.html>
+
+   ZMODEM说明：<https://en.wikipedia.org/wiki/ZMODEM>
+
+7. linux常用命令
 
    - linux系统硬件配置查看方法 
 
@@ -201,8 +254,20 @@
 
 3. 安装成功
 
-   ![clash-copy-shell](images/install-rhel7-in-vw fusion-13.5.2-7.png)
-
+   ```
+   [bob@localhost ~]$ which java
+   /usr/bin/java
+   [bob@localhost ~]$ ls -al /usr/bin | grep java
+   lrwxrwxrwx.  1 root root         22 Mar  8 16:29 java -> /etc/alternatives/java
+   lrwxrwxrwx.  1 root root         23 Mar  8 16:29 javac -> /etc/alternatives/javac
+   lrwxrwxrwx.  1 root root         25 Mar  8 16:29 javadoc -> /etc/alternatives/javadoc
+   lrwxrwxrwx.  1 root root         23 Mar  8 16:29 javap -> /etc/alternatives/javap
+   [bob@localhost ~]$ java --version
+   java 17.0.12 2024-07-16 LTS
+   Java(TM) SE Runtime Environment (build 17.0.12+8-LTS-286)
+   Java HotSpot(TM) 64-Bit Server VM (build 17.0.12+8-LTS-286, mixed mode, sharing)
+   ```
+   
    可以继续配置JAVA_HOME，JRE_HOME，CLASSPATH能环境变量，以备安装其他应用时使用。
 
 # Nginx

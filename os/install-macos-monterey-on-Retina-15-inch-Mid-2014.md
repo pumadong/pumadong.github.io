@@ -1,6 +1,6 @@
 ---
 layout: single
-title: 2014年的MacPro安装MacOS Monterey
+title: 老旧MacPro[2014]安装MacOS Monterey
 permalink: /os/install-macos-monterey-on-Retina-15-inch-Mid-2014.html
 
 classes: wide
@@ -17,7 +17,7 @@ author: Bob Dong
 
 根据[官方说明](https://support.apple.com/zh-cn/111980)，可以支持到Big Sur版本（MacOS 11），过去尝试升级到此版本，并没有成功。
 
-最近有需求，于是拿出两天时间(2025/03/05-03/06)尝试进行系统升级。
+最近拿出两天时间(2025/03/05-03/06)尝试进行系统升级。
 
 # 为什么进行升级
 
@@ -29,22 +29,27 @@ author: Bob Dong
 
 # 升级准备
 
-1. U盘2个。
-   1. 1个8G（Yosemite 10 bootable installer），这个U盘是过去制作的，因为当时通过联网安装，一直失败，于是制作了这个启动盘并一直保存。制作方法参考这个网址，[Create a bootable installer for macOS](https://support.apple.com/en-us/101578)。也可以用下面提到的[Open Core Legacy Patcher](https://dortania.github.io/OpenCore-Legacy-Patcher/)进行制作。
-   2. 1个32G（Monterey 12 bootable installer），用[Open Core Legacy Patcher](https://dortania.github.io/OpenCore-Legacy-Patcher/)进行制作。实操过程中，这个U盘制作了11-15的所有启动安装盘，最终用了Monterey12。
-2. 移动硬盘1个，重装之前使用Time Machine进行备份。开辟1个100G分区，存储官网下载的10.12.6/11/12/13/14/15 PKG文件（PKG文件会在制作bootable installer时用到）。
+- 启动U盘2个。
+
+  1个8G（Yosemite 10 bootable installer），这个U盘是过去制作的，因为当时通过互联网下载安装，一直失败，于是制作了这个启动盘并一直保存。
+
+  制作方法参考这个网址，[Create a bootable installer for macOS](https://support.apple.com/en-us/101578)。也可以用下面提到的[Open Core Legacy Patcher](https://dortania.github.io/OpenCore-Legacy-Patcher/)进行制作。
+
+  1个32G（Monterey 12 bootable installer），用[Open Core Legacy Patcher](https://dortania.github.io/OpenCore-Legacy-Patcher/)进行制作。操作过程中，这个U盘制作了11-15的所有启动安装盘，最终用了Monterey12。
+
+- 移动硬盘1个，重装之前使用Time Machine进行备份。开辟1个100G分区，存储官网下载的10.12.6/11/12/13/14/15 PKG文件（PKG文件会在制作bootable installer时用到）。
 
 # 安装系统
 
-1. 用8G U盘（Yosemite 10.10.5 bootable installer），安装系统。
+- 用8G U盘（Yosemite 10.10.5 bootable installer），安装系统。
 
-   这个MacOS 10也是这个机器的最初版本。安装过程很顺利。
+  这个MacOS 10也是这个机器的最初版本。安装过程很顺利。
 
-2. [官网](https://support.apple.com/en-us/102662)下载并升级到Sierra 10.12.6，直接安装PKG到/Applications下进行安装即可，这个过程也很顺利。
+- [官网](https://support.apple.com/en-us/102662)下载并升级到Sierra 10.12.6，直接安装PKG到/Applications下进行安装即可，这个过程也很顺利。
 
-3. [官网](https://support.apple.com/en-us/102662)下载并升级到Sierra 10.12.6，直接安装PKG到/Applications下进行安装即可，这个过程也很顺利。
+- 使用[Open Core Legacy Patcher](https://dortania.github.io/OpenCore-Legacy-Patcher/)制作Monterey 12 bootable installer。
 
-4. 使用[Open Core Legacy Patcher](https://dortania.github.io/OpenCore-Legacy-Patcher/)制作Monterey 12 bootable installer。制作方法参考：[Install macOS on Unsupported Macs - Catalina/ Big Sur/ Monetery/ Ventura and Sonoma](https://medium.com/future-drafted/install-macos-on-unsupported-macs-catalina-big-sur-monetery-ventura-and-sonoma-a9003cf5ad75)。
+  制作方法参考：[Install macOS on Unsupported Macs - Catalina/ Big Sur/ Monetery/ Ventura and Sonoma](https://medium.com/future-drafted/install-macos-on-unsupported-macs-catalina-big-sur-monetery-ventura-and-sonoma-a9003cf5ad75)。
 
 # 安装应用
 
@@ -58,9 +63,11 @@ Google搜索安装即可，smoothly！
 
 - 使用官方提供的bash脚本，是会报一些Connection方面的错误的，需要全局代理。另外，Mac终端默认是不会用代理的，需要在终端执行命令：
 
-  > export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
-  >
-  > 也可以把这一行加到~/.bash_profile中
+  ```
+  `export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890`
+  ```
+
+  也可以把这一行加到~/.bash_profile中。
 
   这个命令是在通过ClashX的Copy Shell Command拷贝得来。如下：
 
@@ -68,13 +75,12 @@ Google搜索安装即可，smoothly！
 
   我执行完这个命令，通过智能选择速度最快的香港代理服务器，依然不能安装，后来通过手工更改VPN为一个美国代理点解决。
 
-  ![clash-download-brew-2](images/clash-download-brew-2.png)
-
 - brew 清理缓存
 
-  以运行 `$ brew cleanup` 来清除这些陈旧的缓存文件让它们不再占用你的硬盘空间——然而 `cleanup` 的常规策略是仅清除超过 120 的缓存，而不是“所有”缓存，所以你可能需要使用 `--prune=all` 选项来清除所有缓存：
+  可以运行 `$ brew cleanup` 来清除缓存文件让它们不再占用你的硬盘空间——然而 `cleanup` 的常规策略是仅清除超过 120天的缓存，而不是“所有”缓存，所以你可能需要使用 `--prune=all` 选项来清除所有缓存：
 
   ```bash
+  brew cleanup --help
   brew cleanup --prune=all
   ```
 
@@ -88,13 +94,12 @@ Google搜索安装即可，smoothly！
 
 - Git Client
 
-  > ```shell
-  > ssh-keygen -t ed25519 -C "your_email@example.com"
-  > ```
-  > ```shell
-  > $ pbcopy < ~/.ssh/id_ed25519.pub
-  > # Copies the contents of the id_ed25519.pub file to your clipboard
-  > ```
+  ```bash
+  # 生成sshkey
+  ssh-keygen -t ed25519 -C "your_email@example.com"
+  # Copies the contents of the id_ed25519.pub file to your clipboard
+  $ pbcopy < ~/.ssh/id_ed25519.pub
+  ```
 
 - https://github.com/
 
@@ -102,40 +107,39 @@ Google搜索安装即可，smoothly！
 
 - Verifying
 
-  > ssh -T git@github.com
-
-  ```You may see a warning like this
+  ```
+  ssh -T git@github.com
+  
   > The authenticity of host 'github.com (IP ADDRESS)' can't be established.
   > ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
   > Are you sure you want to continue connecting (yes/no)?
   ```
 
-- 注意：
+  因为之前用http方式pull的，所以现在依然是通过http方式验证。需要更改拉取方式，一下3种方式，任选其一：
 
-  - Git仓库地址使用SSH方式拉取。
-  ```shell
+  ```
+  # 1.修改 git remote origin set-url [url]
+  # 2.先删后加 git remote rm origin; git remote add origin [url]
+  # 3.直接修改config文件，把项目地址换成新的。vim .git/config
+  ```
+
+  Git仓库地址使用SSH方式拉取。
+
+  ```
   git clone git@github.com:pumadong/pumadong.github.io.git
   ```
-  - 如果之前是用https方式拉取的，需要修改远程仓库地址。有如下3种方式，任选其一。
-  
-    ```shell
-    # 1.修改 git remote origin set-url [url]
-    # 2.先删后加 git remote rm origin; git remote add origin [url]
-    # 3.直接修改config文件，把项目地址换成新的。vim .git/config
-    ```
 
-参考：
+- 参考：
 
-1. [GitHub Docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)。
-2. [GitHub不再支持密码验证解决方案](https://cloud.tencent.com/developer/article/1861466)。
+  [GitHub Docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+
+  [GitHub不再支持密码验证解决方案](https://cloud.tencent.com/developer/article/1861466)。
 
 ## brew install ruby@3.3
 
-会碰到openssl3.4.1因为test通不过停止安装的问题
+遇到openssl3.4.1因为test通不过停止安装的问题
 
 ![clash-copy-shell](images/clash-download-brew-3.png)
-
-
 
 下载源码自行编译安装可以解决这个问题：
 
@@ -192,29 +196,42 @@ brew link openssl@3
 
 找到这个解决办法：[https://jekyllrb.com/docs/troubleshooting/#installation-problems](https://jekyllrb.com/docs/troubleshooting/#installation-problems)。
 
-`gem install -n /usr/local/bin jekyll`
+```
+gem install -n /usr/local/bin jekyll
+```
 
 参考[https://jekyllrb.com/docs/](https://jekyllrb.com/docs/)Quickstart测试一下。不错，很顺畅！！！
 
 ### 配置、github.io集成
 
-`jekyll new myblog`
+根据官方向导：<https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/>，安装jekyll。
 
-`cd myblog`
-
-Follow the guid below to set tup minimal-mistakes-jekyll theme:
-
-[https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/](https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/)
+```
+# Add the following to your Gemfile:
+gem "minimal-mistakes-jekyll"
+# Fetch and update bundled gems by running the following Bundler command:
+bundle
+# Set the theme in your project’s Jekyll _config.yml file
+theme: minimal-mistakes-jekyll
+```
 
 执行：`bundle info --path minimal-mistakes-jekyll`，可以看到模版已经通过gem方式安装成功，显示结果如下：
 
 `/usr/local/lib/ruby/gems/3.1.0/gems/minimal-mistakes-jekyll-4.26.2`
 
-`bundle exec jekyll serve`，通过：http://localhost:4000/，可以看到模版的展示结果了。
+运行一个站点：
 
-根据[Guide](https://mmistakes.github.io/minimal-mistakes/docs/configuration/)，通过系统变量、展示布局等参数的更改，定制站点的展示结果。
+```
+jekyll new myblog
+cd myblog
+bundle exec jekyll serve
+```
 
-字体大小问题，拷贝assets/css/main.scss，做如下修改。
+通过：http://localhost:4000/，可以看到模版的展示结果了
+
+根据[Config Guide](https://mmistakes.github.io/minimal-mistakes/docs/configuration/)，通过系统变量、展示布局等参数的更改，定制站点的展示结果。
+
+关于默认字体太大的问题，拷贝assets/css/main.scss，做如下修改。
 
 ```
 ---
@@ -237,7 +254,7 @@ section {
 }
 ```
 
-参考：
+字体问题参考：
 
 [https://github.com/mmistakes/minimal-mistakes/discussions/1352](https://github.com/mmistakes/minimal-mistakes/discussions/1352)
 
@@ -274,7 +291,7 @@ group :jekyll_plugins do
 end
 ```
 
-参考：
+GitHub部署参考：
 
 [https://github.com/mmistakes/minimal-mistakes/issues/1992](https://github.com/mmistakes/minimal-mistakes/issues/1992)
 
@@ -286,28 +303,189 @@ end
 
 _config.yum在本地和远端的配置是不一样的，如果不更改，不希望提交到远端：
 
-`git update-index --assume-unchanged logs/*.log`
+```
+git update-index --assume-unchanged logs/*.log
+```
 
 有更改需要提交的时候，做如下更改：
 
-`git update-index --no-assume-unchanged`
+```
+git update-index --no-assume-unchanged
+```
 
-# 注意问题
+## rzsz
 
-1. High Sierra 10.13.6这个版本的下载地址非常少。如果从App Store下载，是个Stub版本(只有几十M，不是10多G)，不能用来制作bootable installer，尝试从网上找到的资源，比如[Archive](https://archive.org/details/macOS.High.Sierra.10.13.6)，又Verify失败，所以我就放弃了这个版本。
+iterm2配置rzsz，档SSH到某个Server后，可以与server通过ZMODEM协议快捷交换文件。
 
-   当时之所以计划安装这个版本，是以为想从Sierra 10.12.6直接到Sonoma 14，Open Coare Legacy Patcher提示需要这个版本。后来直接从Sierra到Big Sur，就放弃这个版本了。
+mac下这是最好的rzsz配置方式，putty是不支持ZMODEM协议的，SecureCRT是收费的。
 
-2. Monterey 12的安装过程，错误日志也提示过那个不兼容问题并安装失败，但是重试了两次，就成功了。
+```
+# 安装rzsz
+brew install lrzsz
+# 通过which rz可以看到brew已经帮我们设置好了软连接
+lrwxr-xr-x    1 bob   admin    32 Mar 12 01:04 rz -> ../Cellar/lrzsz/0.12.20_1/bin/rz
+lrwxr-xr-x    1 bob   admin    32 Mar 12 01:04 sz -> ../Cellar/lrzsz/0.12.20_1/bin/sz
+# 如果没有的话，就需要手动做链接
+```
 
-3. Ventura 13/Sonoma 14/Sequoia 15，都尝试多次，但是安装失败。开始安装后，字体马上变得特别小，几乎看不清，安装过程中有以下错误情况：
+将iterm2-send-zmodem.sh和iterm2-recv-zmodem.sh保存到/usr/local/bin目录下。
 
-   - 可能和无线WIFI存在某种兼容问题，第一步选择网络时，识别网络并加入成功，后续安装过程中出现WIFI断网（实际WIFI是正常的）。
+```
+# iterm2-send-zmodem.sh
 
-   - 有错误日志：no compatibility bundle on this version of macos. will assume compatible，然后安装失败。Google是有说Date问题，有说U盘问题。我确认过系统时间，是对的，U盘也多次制作，没有成功。
+#!/bin/bash
+# Author: Matt Mastracci (matthew@mastracci.com)
+# AppleScript from http://stackoverflow.com/questions/4309087/cancel-button-on-osascript-in-a-bash-script
+# licensed under cc-wiki with attribution required 
+# Remainder of script public domain
+
+osascript -e 'tell application "iTerm2" to version' > /dev/null 2>&1 && NAME=iTerm2 || NAME=iTerm
+if [[ $NAME = "iTerm" ]]; then
+	FILE=$(osascript -e 'tell application "iTerm" to activate' -e 'tell application "iTerm" to set thefile to choose file with prompt "Choose a file to send"' -e "do shell script (\"echo \"&(quoted form of POSIX path of thefile as Unicode text)&\"\")")
+else
+	FILE=$(osascript -e 'tell application "iTerm2" to activate' -e 'tell application "iTerm2" to set thefile to choose file with prompt "Choose a file to send"' -e "do shell script (\"echo \"&(quoted form of POSIX path of thefile as Unicode text)&\"\")")
+fi
+if [[ $FILE = "" ]]; then
+	echo Cancelled.
+	# Send ZModem cancel
+	echo -e \\x18\\x18\\x18\\x18\\x18
+	sleep 1
+	echo
+	echo \# Cancelled transfer
+else
+	/usr/local/bin/sz "$FILE" --escape --binary --bufsize 4096
+	sleep 1
+	echo
+	echo \# Received "$FILE"
+fi
+```
+
+```
+# iterm2-recv-zmodem.sh
+
+#!/bin/bash
+# Author: Matt Mastracci (matthew@mastracci.com)
+# AppleScript from http://stackoverflow.com/questions/4309087/cancel-button-on-osascript-in-a-bash-script
+# licensed under cc-wiki with attribution required 
+# Remainder of script public domain
+
+osascript -e 'tell application "iTerm2" to version' > /dev/null 2>&1 && NAME=iTerm2 || NAME=iTerm
+if [[ $NAME = "iTerm" ]]; then
+	FILE=$(osascript -e 'tell application "iTerm" to activate' -e 'tell application "iTerm" to set thefile to choose folder with prompt "Choose a folder to place received files in"' -e "do shell script (\"echo \"&(quoted form of POSIX path of thefile as Unicode text)&\"\")")
+else
+	FILE=$(osascript -e 'tell application "iTerm2" to activate' -e 'tell application "iTerm2" to set thefile to choose folder with prompt "Choose a folder to place received files in"' -e "do shell script (\"echo \"&(quoted form of POSIX path of thefile as Unicode text)&\"\")")
+fi
+
+if [[ $FILE = "" ]]; then
+	echo Cancelled.
+	# Send ZModem cancel
+	echo -e \\x18\\x18\\x18\\x18\\x18
+	sleep 1
+	echo
+	echo \# Cancelled transfer
+else
+	cd "$FILE"
+	/usr/local/bin/rz --rename --escape --binary --bufsize 4096 
+	sleep 1
+	echo
+	echo
+	echo \# Sent \-\> $FILE
+fi
+```
+
+```
+# 赋予这两个文件可执行权限
+chmod 777 /usr/local/bin/iterm2-*
+```
+
+置好配置文件之后，开始对iTerm2进行配置
+
+点击 iTerm2 的设置界面 Perference-> Profiles -> Default -> Advanced -> Triggers 的 Edit 按钮，加入以下配置
+
+添加两条trigger，分别设置 Regular expression，Action，Parameters，Instant如下：
+
+![clash-copy-shell](images/clash-download-brew-5.png)
+
+```
+Regular expression: rz waiting to receive.\*\*B0100
+Action: Run Silent Coprocess
+Parameters: /usr/local/bin/iterm2-send-zmodem.sh
+Instant: checked
+
+Regular expression: \*\*B00000000000000
+Action: Run Silent Coprocess
+Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
+Instant: checked
+```
+
+当我们SSH到一个安装了rzsz的server之后，就可以通过在server的命令行输入rzsz来上传和下载文件了。
+
+```
+sz用法：
+
+	下载一个文件
+	sz filename 
+
+	下载多个文件
+	sz filename1 filename2
+
+	下载dir目录下的所有文件，不包含dir下的文件夹
+	sz dir/*
+
+rz用法：
+
+	输入rz回车后，会出现文件选择对话框，选择需要上传文件，一次可以指定多个文件，上传到服务器的路径为当前执行rz命令的目录。
+```
+
+rz与sz只适合小的文件传输，大文件还是使用Filezilla与xftp等工具进行传输；
+
+只能传输文件，而不能传输文件夹；
+
+不是所有工具都支持rz与sz，必须支持ZModem协议才行，例如putty不能使用rz与sz。
+
+原文链接：<https://wsgzao.github.io/post/lrzsz/>
+
+## brew install java
+
+```
+openjdk: A full installation of Xcode.app is required to compile
+this software. Installing just the Command Line Tools is not sufficient.
+
+Xcode can be installed from the App Store.
+Error: openjdk: An unsatisfied requirement failed this build.
+```
+
+
+
+## Idea
+
+历史版本：<https://www.jetbrains.com/idea/download/other.html>。
+
+# 待解决问题
+
+- High Sierra 10.13.6这个版本的下载地址非常少。如果从App Store下载，是个Stub版本(只有几十M，不是10多G)，不能用来制作bootable installer，尝试从网上找到的资源，比如[Archive](https://archive.org/details/macOS.High.Sierra.10.13.6)，又Verify失败，所以我就放弃了这个版本。
+
+  当时之所以计划安装这个版本，是想从Sierra 10.12.6直接到Sonoma 14，Open Coare Legacy Patcher提示需要这个版本。后来直接从Sierra到Big Sur，就放弃这个版本了。
+
+- Monterey 12的安装过程，错误日志也提示过no compatibility bundle的问题并安装失败，但是重试了两次，就成功了。
+
+- Ventura 13/Sonoma 14/Sequoia 15，都尝试多次，但是安装失败。
+
+  - 开始安装后，字体马上变得特别小，几乎看不清。
+
+  - 可能和无线WIFI存在某种兼容问题，第一步选择网络时，识别网络并加入成功，后续安装过程中出现WIFI断网（实际WIFI是正常的）。
+
+
+  - 有错误日志：no compatibility bundle on this version of macos. will assume compatible，然后安装失败。Google了一下，有说Date问题，有说U盘问题。我确认过系统时间，是对的，U盘也多次制作，没有成功。
 
 # 后记
 
-- 沉下心来研究，问题总能一个一个解决！
-- 沉下心来研究，问题总能一个一个解决！
-- 沉下心来研究，问题总能一个一个解决！
+2021年，Big Sur(11)发布的时候，官宣是支持这个机型的，但是安装系统失败并不能启动。
+
+当时需要快速修复并有日常的开发工作，并没有很多时间研究系统问题，于是快速回退到Sierra。
+
+本次用10年前的Mac老本升级到MacOS Monterey(12)，用时约3天。
+
+这期间遇到过操作系统和硬件兼容性问题，科学上网不稳定问题，应用不支持当前OS版本问题，应用软件的配置使用问题。
+
+最终通过Google搜索，尝试，看日志，看代码，把问题一个一个解决！让其重新成为一个稳定运行的系统。

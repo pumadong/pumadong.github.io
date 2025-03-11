@@ -1,3 +1,15 @@
+---
+
+layout: single
+title: RHEL运维的常用脚本、命令及性能分析
+permalink: /os/the-common-rhel-command.html
+
+classes: wide
+
+author: Bob Dong
+
+---
+
 # 前言
 
 在中小公司使用Linux命令较多；在头部公司使用较多的是定位问题，查看日志，其IT基础设施完善，大多都是通过Web界面进行管理配置，并自动化运行。研发人员主要精力可以专注于业务研发。
