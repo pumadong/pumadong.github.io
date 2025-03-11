@@ -284,7 +284,13 @@ end
 
 [https://github.com/mmistakes/minimal-mistakes/blob/master/docs/Gemfile](https://github.com/mmistakes/minimal-mistakes/blob/master/docs/Gemfile)
 
+_config.yum在本地和远端的配置是不一样的，如果不更改，不希望提交到远端：
 
+`git update-index --assume-unchanged logs/*.log`
+
+有更改需要提交的时候，做如下更改：
+
+`git update-index --no-assume-unchanged`
 
 # 注意问题
 
