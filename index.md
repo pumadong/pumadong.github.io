@@ -5,6 +5,7 @@
 layout: single
 toc: false
 classes: wide
+breadcrumbs: false
 
 author_profile: true
 author: Bob Dong
