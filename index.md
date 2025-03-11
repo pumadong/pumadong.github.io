@@ -9,10 +9,6 @@ author: Bob Dong
 
 ---
 
-
-
-
-
 # OS
 
 [install-macos-monterey-on-Retina-15-inch-Mid-2014.html](os/install-macos-monterey-on-Retina-15-inch-Mid-2014.html)

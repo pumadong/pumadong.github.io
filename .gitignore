@@ -3,6 +3,7 @@
 Gemfile.lock
 _posts/
 _site/
+_config.yml
 
 *.class
 

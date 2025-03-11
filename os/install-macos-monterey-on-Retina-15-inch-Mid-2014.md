@@ -245,6 +245,47 @@ section {
 
 [https://github.com/mmistakes/minimal-mistakes/discussions/1219](https://github.com/mmistakes/minimal-mistakes/discussions/1219)
 
+GitHub部署，配置_config.yml和Gemfile这两个文件，
+
+```
+# _config.yml
+
+remote_theme: "mmistakes/minimal-mistakes@master"
+
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+  - jemoji
+  - jekyll-include-cache
+```
+
+```
+# Gemfile
+group :jekyll_plugins do
+  gem "jekyll-paginate"
+  gem "jekyll-sitemap"
+  gem "jekyll-gist"
+  gem "jekyll-feed"
+  gem "jemoji"
+  gem "jekyll-include-cache"
+  gem "jekyll-algolia"
+end
+```
+
+参考：
+
+[https://github.com/mmistakes/minimal-mistakes/issues/1992](https://github.com/mmistakes/minimal-mistakes/issues/1992)
+
+[https://github.com/mmistakes/minimal-mistakes/issues/1875](https://github.com/mmistakes/minimal-mistakes/issues/1875)
+
+[https://github.com/mmistakes/minimal-mistakes/blob/master/docs/_config.yml](https://github.com/mmistakes/minimal-mistakes/blob/master/docs/_config.yml)
+
+[https://github.com/mmistakes/minimal-mistakes/blob/master/docs/Gemfile](https://github.com/mmistakes/minimal-mistakes/blob/master/docs/Gemfile)
+
+
+
 # 注意问题
 
 1. High Sierra 10.13.6这个版本的下载地址非常少。如果从App Store下载，是个Stub版本(只有几十M，不是10多G)，不能用来制作bootable installer，尝试从网上找到的资源，比如[Archive](https://archive.org/details/macOS.High.Sierra.10.13.6)，又Verify失败，所以我就放弃了这个版本。
