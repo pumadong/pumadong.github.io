@@ -64,7 +64,12 @@ github_username:  jekyll
 remote_theme: "mmistakes/minimal-mistakes@master"
 
 plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
   - jekyll-feed
+  - jemoji
+  - jekyll-include-cache
 
 # Exclude from processing.
 # The following items will not be processed, by default.
