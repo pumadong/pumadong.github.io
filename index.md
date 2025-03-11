@@ -5,6 +5,7 @@
 layout: single
 toc: false
 classes: wide
+permalink: /index.html
 breadcrumbs: false
 
 author_profile: true
