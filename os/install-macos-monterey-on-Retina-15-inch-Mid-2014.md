@@ -447,6 +447,8 @@ rz与sz只适合小的文件传输，大文件还是使用Filezilla与xftp等工
 
 ## brew install java
 
+需要先安装Xcode，否则会报如下错误。
+
 ```
 openjdk: A full installation of Xcode.app is required to compile
 this software. Installing just the Command Line Tools is not sufficient.
@@ -455,11 +457,39 @@ Xcode can be installed from the App Store.
 Error: openjdk: An unsatisfied requirement failed this build.
 ```
 
+Xcode下载地址：<https://xcodereleases.com/>，Monterey只能安装版本14，下载8G，安装后23G。
 
+Xcode安装完毕，brew install java就可以正常安装了。安装完毕后，进行如下系统配置：
+
+```
+For the system Java wrappers to find this JDK, symlink it with
+  sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+
+openjdk is keg-only, which means it was not symlinked into /usr/local,
+because macOS provides similar software and installing this software in
+parallel can cause all kinds of trouble.
+
+If you need to have openjdk first in your PATH, run:
+  echo 'export PATH="/usr/local/opt/openjdk/bin:$PATH"' >> /Users/bob/.bash_profile
+
+For compilers to find openjdk you may need to set:
+  export CPPFLAGS="-I/usr/local/opt/openjdk/include"
+```
+
+2015最新的版本已经是23了。
+
+```
+Bobs-MacBook-Pro:pumadong.github.io bob$ java --version
+openjdk 23.0.2 2025-01-21
+OpenJDK Runtime Environment Homebrew (build 23.0.2)
+OpenJDK 64-Bit Server VM Homebrew (build 23.0.2, mixed mode, sharing)
+```
 
 ## Idea
 
 历史版本：<https://www.jetbrains.com/idea/download/other.html>。
+
+本次安装版本：ideaIC-2024.3.4.1.dmg。
 
 # 待解决问题
 
