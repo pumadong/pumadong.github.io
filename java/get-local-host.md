@@ -1,7 +1,7 @@
 ---
 
 layout: single
-title: Case Study（记一次InetAddress.getLocalHost()引起的项目启动变慢）
+title: Case Study（Java类InetAddress.getLocalHost()中的坑）
 permalink: java/get-local-host.html
 
 classes: wide
@@ -47,11 +47,7 @@ debug工程，发现 java.net.InetAddress.getLocalHost 每次都会锁5秒，很
 
 初步解决
 
-
 修改/etc/hosts，增加两行，IP地址到 hostname 对应的主机名的映射，OK了。
-————————————————
-
-                            版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。
 
 原文链接：https://blog.csdn.net/puma_dong/article/details/53096149
 
