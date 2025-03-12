@@ -301,16 +301,16 @@ GitHub部署参考：
 
 [https://github.com/mmistakes/minimal-mistakes/blob/master/docs/Gemfile](https://github.com/mmistakes/minimal-mistakes/blob/master/docs/Gemfile)
 
-_config.yum在本地和远端的配置是不一样的，如果不更改，不希望提交到远端：
+_config.yml在本地和远端的配置是不一样的，如果不更改，不希望提交到远端：
 
 ```
-git update-index --assume-unchanged logs/*.log
+git update-index --assume-unchanged _config.yml
 ```
 
 有更改需要提交的时候，做如下更改：
 
 ```
-git update-index --no-assume-unchanged
+git update-index --no-assume-unchanged _config.yml
 ```
 
 ## rzsz
