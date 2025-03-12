@@ -3,7 +3,7 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: single
-title: ' '
+title: ''
 permalink: /index.html
 toc: false
 classes: wide
@@ -18,7 +18,7 @@ author: Bob Dong
 
 [老旧MacPro[2014]安装MacOS Monterey](os/install-macos-monterey-on-Retina-15-inch-Mid-2014.html)
 
-[配置RHEL运行环境](os/set-up-rhel_environment.html)
+[配置RHEL运行环境](os/set-up-rhel-environment.html)
 
 [RHEL运维的常用脚本、命令及性能分析](os/the-common-rhel-command.html)
 
@@ -28,6 +28,8 @@ author: Bob Dong
 
 [读一本书《深入理解Java虚拟机》](java/deep-in-jvm-diary.html)
 
+[读一本书《Java性能权威指南》](java/java-performance-definitive.html)
+
 [读一本书《How Tomcat Works》](java/how-tomcat-works.html)
 
 [Linux&java进阶（硬件和并发）](java/hardware-and-concurrency.html)
@@ -35,4 +37,6 @@ author: Bob Dong
 [Linux&java进阶（看清操作系统层面的事）](java/java-and-linux.html)
 
 [Case Study（记一次TcpListenOverflows报警解决过程）](java/tcp-listen-over-flows.html)
+
+[Case Study（Java类InetAddress.getLocalHost()中的坑）](java/get-local-host.html)
 
