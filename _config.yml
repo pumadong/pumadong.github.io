@@ -60,8 +60,8 @@ github_username:  jekyll
 
 # Build settings
 # theme: minima
-theme: minimal-mistakes-jekyll
-#remote_theme: "mmistakes/minimal-mistakes@master"
+# theme: minimal-mistakes-jekyll
+remote_theme: "mmistakes/minimal-mistakes@master"
 
 plugins:
   - jekyll-paginate
