@@ -51,7 +51,7 @@ defaults:
       toc_label: "目录"
       toc_icon: "cog"
       toc_sticky: true
-      breadcrumbs: false  # disabled by default
+      breadcrumbs: true  # disabled by default
 
 twitter_username: jekyllrb
 github_username:  jekyll
