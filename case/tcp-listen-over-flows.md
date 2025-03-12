@@ -2,7 +2,7 @@
 
 layout: single
 title: Case Study（记一次TcpListenOverflows报警解决过程）
-permalink: java/tcp-listen-over-flows.html
+permalink: /case/tcp-listen-over-flows.html
 
 classes: wide
 

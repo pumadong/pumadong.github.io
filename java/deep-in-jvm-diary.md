@@ -2,7 +2,7 @@
 
 layout: single
 title: 深入理解Java虚拟机
-permalink: java/deep-in-jvm-diary.html
+permalink: /java/deep-in-jvm-diary.html
 
 classes: wide
 

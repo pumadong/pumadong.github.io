@@ -2,7 +2,7 @@
 
 layout: single
 title: Linux&java进阶（看清操作系统层面的事）
-permalink: java/java-and-linux.html
+permalink: /java/java-and-linux.html
 
 classes: wide
 

@@ -2,7 +2,7 @@
 
 layout: single
 title: Case Study（Java类InetAddress.getLocalHost()中的坑）
-permalink: java/get-local-host.html
+permalink: /case/get-local-host.html
 
 classes: wide
 

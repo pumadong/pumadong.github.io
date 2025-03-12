@@ -2,7 +2,7 @@
 
 layout: single
 title: 读一本书《Java性能权威指南》
-permalink: java/java-performance-definitive.html
+permalink: /java/java-performance-definitive.html
 
 classes: wide
 

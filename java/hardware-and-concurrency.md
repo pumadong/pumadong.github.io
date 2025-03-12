@@ -2,7 +2,7 @@
 
 layout: single
 title: Linux&java进阶（硬件和并发）
-permalink: java/hardware-and-concurrency.html
+permalink: /java/hardware-and-concurrency.html
 
 classes: wide
 
@@ -34,11 +34,11 @@ author: Bob Dong
 在Core 2 3.0 GHz上，大部分简单指令的执行只需要一个时钟周期，也就是1/3纳秒。也就是说，一秒的实际，CPU可以执行30亿次指令，所以我们的定时任务，定到秒级别，定到毫秒级别，CPU都能准时执行，它的调度器完全可以保证。
 
 来自互联网的数据：
-![java-and-linux](images/java-hardware-and-concurrency-1.png)
+![java-and-linux](../images/java-hardware-and-concurrency-1.png)
 
-![java-and-linux](images/java-hardware-and-concurrency-2.png)
+![java-and-linux](../images/java-hardware-and-concurrency-2.png)
 
-![java-and-linux](images/java-hardware-and-concurrency-3.png)
+![java-and-linux](../images/java-hardware-and-concurrency-3.png)
 
 **参考文章：**
 

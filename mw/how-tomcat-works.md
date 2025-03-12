@@ -2,7 +2,7 @@
 
 layout: single
 title: 读一本书《How Tomcat Works》
-permalink: java/how-tomcat-works.html
+permalink: /mw/how-tomcat-works.html
 
 classes: wide
 
