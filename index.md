@@ -3,9 +3,10 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: single
+title: 
+permalink: /index.html
 toc: false
 classes: wide
-permalink: /index.html
 breadcrumbs: false
 
 author_profile: true
