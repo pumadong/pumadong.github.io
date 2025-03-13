@@ -20,7 +20,7 @@ author: Bob Dong
 
 [配置RHEL运行环境](/os/set-up-rhel-environment.html)
 
-[RHEL运维的常用脚本、命令及性能分析](/os/the-common-rhel-command.html)
+[RHEL运维的常用命令、脚本及性能分析](/os/the-common-rhel-command.html)
 
 [Linux学习-文件权限和账号管理、Bash、Curl&Http](/os/the-journey-of-linux.html)
 

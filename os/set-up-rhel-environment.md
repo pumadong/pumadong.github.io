@@ -115,7 +115,7 @@ systemctl get-default
   ONBOOT="yes"
   ```
 
-  
+  参考：<https://www.cnblogs.com/chang09/p/16584045.html>
 
 ## 设置时区、时间自动和标准时间同步
 
@@ -193,88 +193,61 @@ rzsz官网：<https://www.ohse.de/uwe/software/lrzsz.html>
 
 ZMODEM说明：<https://en.wikipedia.org/wiki/ZMODEM>
 
-## linux常用命令
+# Nginx
 
-- [linux系统硬件配置查看方法 ](/os/the-common-rhel-command.html#linux系统硬件配置查看方法)
+- wget http://nginx.org/packages/rhel/7/x86_64/RPMS/nginx-1.8.0-1.el7.ngx.x86_64.rpm
 
-- 系统操作
+  [http://nginx.org/packages/rhel/](http://nginx.org/packages/rhel/)，这是nginx官方下载地址。
 
-  **查看CPU：**grep 'model name' /proc/cpuinfo | wc -l
+- rpm -ivh nginx-release-centos-6-0.el6.ngx.noarch.rpm
 
-  **查看64位还是32位：**getconf LONG_BIT
+  这一步实际是制作了一个yum源，在/etc/yum.repos.d/目录下增加了文件：nginx.repo，内容如下：
 
-  **查看内存：**
+  ```
+  # nginx.repo
+  [nginx]
+  name=nginx repo
+  baseurl=http://nginx.org/packages/rhel/7/$basearch/
+  gpgcheck=0
+  enabled=1
+  ```
 
-  ​	grep MemTotal /proc/meminfo
+  这个文件也可以手动添加。
 
-  ​	free -m
+- yum install nginx
 
-  **查看OS版本信息：**cat /proc/version，  uname -r，  uname -a，cat /etc/redhat-release，file /bin/bash，file /bin/cat
+  关于“libpcre2-8.so.0()(64bit)”的报错，我临时先用--skip-broken的方式解决
 
-  **显示环境变量：**echo $JAVA_HOME 
+- 服务管理
 
-  **更新文件的时间戳：**touch ，比如/etc/rc.d/rc.local中有内容：touch /var/lock/subsys/local 就是代表执行过了的意思
+  systemctl enable nginx.service	# 系统启动时Nginx启动
 
-  **重启：**
+  systemctl start nginx.service	# 启动Nginx服务
 
-  reboot ，shutdown -r now 立刻重启(root用户使用)  
+  systemctl status nginx.service	# 查看Nginx服务状态
 
-  shutdown -r 10 过10分钟自动重启 
-  
-  shutdown -r 20:35 在时间为20:35时候重启
-  
-  **关机：**
-  
-  halt ，poweroff  立刻关机  
-  
-  shutdown -h now 立刻关机(root用户使用)  
-  
-  shutdown -h 10 10分钟后自动关机 
-  **磁盘操作：**
+- 由于我们之前开启了80端口，现在在另一台机器可以通过http://192.168.197.11/访问到Nginx的欢迎界面了。
 
-  df -h  查看磁盘分区情况
+在当前实际的生产中，有很多基于Nginx的二次开发项目，比如：[tengine](https://tengine.taobao.org/)、[OpenResty](https://openresty.org/cn/)，我们在访问各大网站时，可以通过head查看其使用的web server。
 
-  du -sh /usr  查看/usr目录大小
+```
+curl --head www.163.com
 
-  pwd 显示当前目录路径
-
-  **文件操作：**
-
-  mv 移动目录
-
-  cp 拷贝文件 -r递归拷贝
-
-  rm 删除文件
-
-  tar 压缩解压 xzf解压，tar -cvf /tmp/etc.tar /etc<==仅打包，不压缩！tar -zcvf /tmp/etc.tar.gz /etc<==打包后，以 gzip 压缩
-
-  ln 建立链接命令，比如：ln -s /usr/jdk1.7.0_45/bin/java /usr/bin/java
-
-  **文件内容操作：**
-
-  cat 显示内容
-
-  vim 编辑内容
-
-  tail 即时显示最新内容
-
-  **查找定位：**
-
-  whereis xx 查找xx的所在位置
-
-  chkconfig --list xx 查找xx是否作为服务运行
-
-  find 在机器查找文件，比如: find / -type f -name "rabbitmq-server"
-  
-  ps -ef | grep xx 显示包含xx的进程
-  
-  **netstat：**
-  
-  查看Socket连接数命令：netstat -napo | grep 1080 | wc -l
-  
-  查看连接某服务端口最多的的IP地址：netstat -nat | grep "192.168.1.15:22" |awk '{print $5}'|awk -F: '{print $1}'|sort -nr|uniq -c|head -20
-  
-  TCP各种状态列表：netstat -nat |awk '{print $6}'|sort -nr|uniq -c
+HTTP/1.1 301 Moved Permanently
+Server: Tengine
+Date: Thu, 13 Mar 2025 07:18:22 GMT
+Content-Type: text/html
+Content-Length: 262
+Connection: keep-alive
+Location: https://www.163.com/
+Cache-Control: no-cache,no-store,private
+cdn-user-ip: 60.255.133.141
+cdn-source: Ali
+cdn-ip: 60.255.162.251
+Via: ens-cache6.cn7603[,0]
+Timing-Allow-Origin: *
+EagleId: 3cffa29a17418503022216274e
+```
 
 # Java 17
 
@@ -299,39 +272,6 @@ ZMODEM说明：<https://en.wikipedia.org/wiki/ZMODEM>
    ```
    
    可以继续配置JAVA_HOME，JRE_HOME，CLASSPATH能环境变量，以备安装其他应用时使用。
-
-# Nginx
-
-- wget http://nginx.org/packages/rhel/7/x86_64/RPMS/nginx-1.8.0-1.el7.ngx.x86_64.rpm
-
-  [http://nginx.org/packages/rhel/](http://nginx.org/packages/rhel/)，这是nginx官方下载地址。
-
-- rpm -ivh nginx-release-centos-6-0.el6.ngx.noarch.rpm
-
-  这一步实际是制作了一个yum源，在/etc/yum.repos.d/目录下增加了文件：nginx.repo，内容如下：
-  ```
-  # nginx.repo
-  [nginx]
-  name=nginx repo
-  baseurl=http://nginx.org/packages/rhel/7/$basearch/
-  gpgcheck=0
-  enabled=1
-  ```
-  这个文件也可以手动添加。
-
-- yum install nginx
-
-  关于“libpcre2-8.so.0()(64bit)”的报错，我临时先用--skip-broken的方式解决
-
-- 服务管理
-
-  systemctl enable nginx.service	# 系统启动时Nginx启动
-
-  systemctl start nginx.service	# 启动Nginx服务
-
-  systemctl status nginx.service	# 查看Nginx服务状态
-
-- 由于我们之前开启了80端口，现在在另一台机器可以通过http://192.168.197.11/访问到Nginx的欢迎界面了。
 
 # 服务治理
 
