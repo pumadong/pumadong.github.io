@@ -14,135 +14,135 @@ author: Bob Dong
 
 2015年学习Linux时写的笔记，原文链接：[1](https://blog.csdn.net/puma_dong/article/details/49435195)，[2](https://blog.csdn.net/puma_dong/article/details/49722141)，[3](https://blog.csdn.net/puma_dong/article/details/49456829)。
 
-Linux是最常用的服务器端操作系统；
+Linux是最常用的服务器端操作系统。
 
-可以在日常工作中，通过Linux命令解决，快速排查、解决问题；
+在日常工作中，会通过Linux命令排查问题、解决问题；任何语言都要编译成操作系统API。
 
-任何语言都要编译成操作系统API，擅长Linux，对于深入理解编程语言极有帮助。
+所以熟悉Linux，对于工作效率提高，深入理解编程语言很有帮助。
 
 # 文件权限和账号管理
 
-- 基本知识
+## 基本知识
 
-  - 用户与用户组
+- 用户与用户组
 
-    Linux系统中，默认情况下，账号都是记录在 /etc/passwd 这个文件中；个人密码则是记录在 /etc/shadow 这个文件下；所有的组名都记录在 /etc/group
+  Linux系统中，默认情况下，账号都是记录在 /etc/passwd 这个文件中；个人密码则是记录在 /etc/shadow 这个文件下；所有的组名都记录在 /etc/group。
 
-  - 文件权限的概念
+- 文件权限的概念
 
-    文件权限，对于用户组的设置，是相当重要的，尤其对于初学者来说。
+  文件权限，对于用户组的设置，是相当重要的，尤其对于初学者来说。
 
-    因为文件的权限和属性是学习Linux的一个相当重要的关卡，如果没有这部分的概念，那么你很可能老是听不懂别人在讲什么。比如屏幕出现了“Permission deny”，不要担心，肯定是权限设置错误。
+  因为文件的权限和属性是学习Linux的一个相当重要的关卡，如果没有这部分的概念，那么你很可能老是听不懂别人在讲什么。比如屏幕出现了“Permission deny”，不要担心，肯定是权限设置错误。
 
-  - 隐藏文件
+- 隐藏文件
 
-    第一个字符为“.”的文件
+  第一个字符为“.”的文件
 
-  - 设置权限
+- 设置权限
 
-    修改 Linux 文件与目录的属性之前，一定要先搞清楚，什么数据是可变的，什么是不可变的。
+  修改 Linux 文件与目录的属性之前，一定要先搞清楚，什么数据是可变的，什么是不可变的。
 
-  - 目录与文件的权限意义
+- 目录与文件的权限意义
 
-    **权限对文件的重要性：**对于文件的rwx，主要都是针对“文件的内容”而言，与文件名的存在与否是没有关系的。因为文件记录的是实际的数据。w是更新文件内容（但不含删除文件）
+  **权限对文件的重要性：**对于文件的rwx，主要都是针对“文件的内容”而言，与文件名的存在与否是没有关系的。因为文件记录的是实际的数据。w是更新文件内容（但不含删除文件）
 
-    **权限对目录的重要性：**
+  **权限对目录的重要性：**
 
-    - r（read contents in directory），w（modify contents of directory），x（access directory）进入目录的权限，作为工作目录。
-    - 工作目录对于命令的执行是非常重要的，如果你在某目录下不具有x的权限，那么你就无法切换到该目录下，也就无法执行该目录下的任何命令，即使你具有该目录的r权限。
+  - r（read contents in directory），w（modify contents of directory），x（access directory）进入目录的权限，作为工作目录。
+  - 工作目录对于命令的执行是非常重要的，如果你在某目录下不具有x的权限，那么你就无法切换到该目录下，也就无法执行该目录下的任何命令，即使你具有该目录的r权限。
 
-- 命令
+## 命令
 
-  - 改变文件属性与权限的命令
+- 改变文件属性与权限的命令
 
-    - chgrp：改变文件所属用户组
+  - chgrp：改变文件所属用户组
 
-    - chown：改变文件所有者，这个命令即可以修改所有者，也可以修改用户组织，完全可以代替chgrp；比如chown owner:group directory
+  - chown：改变文件所有者，这个命令即可以修改所有者，也可以修改用户组织，完全可以代替chgrp；比如chown owner:group directory
 
-    - chmod：改变文件的权限 ，数字类型改变文件权限（chmod 777 filename），符号类型改变文件权限（chmod u=rwx,go=rx filename、chmod r+x ）
+  - chmod：改变文件的权限 ，数字类型改变文件权限（chmod 777 filename），符号类型改变文件权限（chmod u=rwx,go=rx filename、chmod r+x ）
 
-    - chgrp/chown的使用场景：复制行为（cp），会复制执行者的属性和权限，如果复制问题给别人使用，复制完毕后，要修改users/group，以让目标用户可以使用。
+  - chgrp/chown的使用场景：复制行为（cp），会复制执行者的属性和权限，如果复制问题给别人使用，复制完毕后，要修改users/group，以让目标用户可以使用。
 
-  - “./run.sh”，这个命令的意义是什么？
+- “./run.sh”，这个命令的意义是什么？
 
-    由于命令的执行需要环境变量的支持，若你的执行文件放置在本目录，并且本目录并非正规的执行文件目录（/bin、/usr/bin 等为正规目录），此时要执行命令就得要严格指定该执行文件。
+  由于命令的执行需要环境变量的支持，若你的执行文件放置在本目录，并且本目录并非正规的执行文件目录（/bin、/usr/bin 等为正规目录），此时要执行命令就得要严格指定该执行文件。
 
-    “./” 代表 “本目录” 的意思，所以 “./run.sh” 代表执行本目录下名为 run.sh 的文件。
+  “./” 代表 “本目录” 的意思，所以 “./run.sh” 代表执行本目录下名为 run.sh 的文件。
 
-  - 用户标识符：UID与GID
+- 用户标识符：UID与GID
 
-    账号只是为了人们容易记忆，Linux只会认识ID，而ID与账号的对应关系就在 /etc/passwd当中；组相关的信息在 /etc/group 中； 密码相关的信息在 /etc/shadow 中。
+  账号只是为了人们容易记忆，Linux只会认识ID，而ID与账号的对应关系就在 /etc/passwd当中；组相关的信息在 /etc/group 中； 密码相关的信息在 /etc/shadow 中。
 
-  -  用户管理
+-  用户管理
 
-    - 增加用户
+  - 增加用户
 
-      学习阶段，可以一步一步的加，用户、组、主目录、Shell等；日常应用中用Perl脚本：adduser（/usr/sbin/adduser），截图如下：
+    学习阶段，可以一步一步的加，用户、组、主目录、Shell等；日常应用中用Perl脚本：adduser（/usr/sbin/adduser），截图如下：
 
-      ![add user](images/the-journey-of-linux-1.png)
+    ![add user](../images/the-journey-of-linux-1.png)
 
-    - 修改密码
+  - 修改密码
 
-      passwd pumatest
+    passwd pumatest
 
-    - 显示用户ID
+  - 显示用户ID
 
-      id pumatest
+    id pumatest
 
-    - 删除用户
+  - 删除用户
 
-      userdel pumatest
+    userdel pumatest
 
-  - 用户身份切换
+## 用户身份切换
 
-    su是最简单的身份切换命令，它可以进行任何身份的切换，使用总结：
+su是最简单的身份切换命令，它可以进行任何身份的切换，使用总结：
 
-    - 若要完整地切换到新用户的环境，必须要使用 “su -username” 或 “su -l username”，才会连同 PATH/USER/MAIL 等变量都转成新用户的环境；
+- 若要完整地切换到新用户的环境，必须要使用 “su -username” 或 “su -l username”，才会连同 PATH/USER/MAIL 等变量都转成新用户的环境；
 
-    - 如果仅想要执行一次 root 的命令，可以使用“su - -c 命令串” 的方式来处理；
+- 如果仅想要执行一次 root 的命令，可以使用“su - -c 命令串” 的方式来处理；
 
-    - 使用 root 切换成为任何用户时，并不需要输入新用户的密码。
+- 使用 root 切换成为任何用户时，并不需要输入新用户的密码。
 
-    sudo的执行仅需要自己的密码即可，根据 /etc/sudoers 决定可以执行什么权限，这个文件的配置使用工具 visudo，会有语法检查，使用 visudo ，可以通过用户、用户组、别名等方式进行配置。
+sudo的执行仅需要自己的密码即可，根据 /etc/sudoers 决定可以执行什么权限，这个文件的配置使用工具 visudo，会有语法检查，使用 visudo ，可以通过用户、用户组、别名等方式进行配置。
 
-    sudo的不用输入密码的时间间隔，默认5分钟，也可以在 /etc/sudoers 中设置，不用输入密码。
+sudo的不用输入密码的时间间隔，默认5分钟，也可以在 /etc/sudoers 中设置，不用输入密码。
 
-    sudo 和 su 搭配的技巧，sudo su -，不需要root密码，也能切换到root身份。
+sudo 和 su 搭配的技巧，sudo su -，不需要root密码，也能切换到root身份。
 
-    还有一种配置：sudo -u 某账号 -i 
+还有一种配置：sudo -u 某账号 -i 
 
-  - 文件和目录操作
+## 文件和目录操作
 
-    常用命令：cd、pwd、mkdir、rmdir、echo、ls、mv、cp、rm
+常用命令：cd、pwd、mkdir、rmdir、echo、ls、mv、cp、rm
 
-    取得路径的文件名与目录名称：basename、dirname
+取得路径的文件名与目录名称：basename、dirname
 
-    文件内容查询：cat、tac、nl、more、less、head、tail、od、touch
+文件内容查询：cat、tac、nl、more、less、head、tail、od、touch
 
-    head -n 3 file  头部3行；head -n +3 头部3行；head -n -3 去掉最后3行的所有头部；
+head -n 3 file  头部3行；head -n +3 头部3行；head -n -3 去掉最后3行的所有头部；
 
-    tail -n 3 file 末尾3行；tail -n -3 末尾三行；tail -n +3 从头部第三行开始的所有末尾
+tail -n 3 file 末尾3行；tail -n -3 末尾三行；tail -n +3 从头部第三行开始的所有末尾
 
-    几个时间的概念：mtime(modification time)、ctime（status)、atime（access）
+几个时间的概念：mtime(modification time)、ctime（status)、atime（access）
 
-    文件默认权限：umask
+文件默认权限：umask
 
-    查看文件类型：file
+查看文件类型：file
 
-    文件查询：
+文件查询：
 
-    which 是根据path查询，所以一般用来查询命令；
+which 是根据path查询，所以一般用来查询命令；
 
-    whereis 根据linux的文件系统数据库查询，所以可能不是最新的，linux的文件数据库系统一般是一天更新一次；
+whereis 根据linux的文件系统数据库查询，所以可能不是最新的，linux的文件数据库系统一般是一天更新一次；
 
-    find 是直接搜索磁盘，功能强劲，但是速度不如以上两种。
+find 是直接搜索磁盘，功能强劲，但是速度不如以上两种。
 
-    find . -type f -mtime 4  代表 4天之前的“一天之内”被更改过的文件
+find . -type f -mtime 4  代表 4天之前的“一天之内”被更改过的文件
 
-    find . -type f -mtime +4  代表 4天之前（不含4天本身）被更改过的文件
+find . -type f -mtime +4  代表 4天之前（不含4天本身）被更改过的文件
 
-    find . -type f -mtime -4 代表4天之内（含4天之内）被更改过的文件
-    ![the-journey-of-linux](images/the-journey-of-linux-2.png)
+find . -type f -mtime -4 代表4天之内（含4天之内）被更改过的文件
+![the-journey-of-linux](../images/the-journey-of-linux-2.png)
 
 # Bash
 
