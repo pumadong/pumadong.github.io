@@ -13,18 +13,18 @@ author: Bob Dong
 
 # 前言
 
-2014年中期的15寸MacPro，闲置已久，偶尔用来上下网。
+2014年中期的15寸MacPro，闲置已久，偶尔用来上网。
 
 根据[官方说明](https://support.apple.com/zh-cn/111980)，可以支持到Big Sur版本（MacOS 11），过去尝试升级到此版本，并没有成功。
 
-最近拿出两天时间(2025/03/05-03/06)尝试进行系统升级。
+最近拿出两天时间(2025/03/05-03/06)，尝试进行系统升级。
 
 # 为什么进行升级
 
 当前版本Sierra 10.12.6存在的问题：
 
-- Chrome版本最高只能到90，很多插件已经不再支持这个版本。
--  科学上网全局代理客户端（e.g. ClashX），已经不支持这个版本。导致一些功能（比如Google全页翻译，Homebrew安装软件）用不了。
+- [Chrome](https://google-chrome.en.uptodown.com/mac/versions)版本最高只能到90，很多插件已经不再支持这个版本。
+-  科学上网全局代理客户端（e.g. , ClashX），已经不支持这个版本。导致一些功能（比如Google全页翻译，Homebrew安装软件）用不了。
 - 其他很多软件在低版本运行，新特性无法使用。
 
 # 升级准备
@@ -45,7 +45,7 @@ author: Bob Dong
 
   这个MacOS 10也是这个机器的最初版本。安装过程很顺利。
 
-- [官网](https://support.apple.com/en-us/102662)下载并升级到Sierra 10.12.6，直接安装PKG到/Applications下进行安装即可，这个过程也很顺利。
+- [官网](https://support.apple.com/en-us/102662)下载并升级到Sierra 10.12.6，直接安装PKG到/Applications下，进行系统升级即可，这个过程也很顺利。
 
 - 使用[Open Core Legacy Patcher](https://dortania.github.io/OpenCore-Legacy-Patcher/)制作Monterey 12 bootable installer。
 
@@ -61,7 +61,7 @@ Google搜索安装即可，smoothly！
 
 - 官网不再技术支持Monterey 12以及通过OpenCore升级的版本。但是依然可以安装最新的4.4.23版本。
 
-- 使用官方提供的bash脚本，是会报一些Connection方面的错误的，需要全局代理。另外，Mac终端默认是不会用代理的，需要在终端执行命令：
+- 使用官方提供的bash脚本，是会报一些Connection方面的错误的，需要全局代理。另外，Mac终端默认是不开启代理的，需要在终端执行命令：
 
   ```
   `export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890`
@@ -71,7 +71,7 @@ Google搜索安装即可，smoothly！
 
   这个命令是在通过ClashX的Copy Shell Command拷贝得来。如下：
 
-  ![clash-copy-shell](images/clash-copy-shell.png)
+  ![clash-copy-shell](../images/clash-copy-shell.png)
 
   我执行完这个命令，通过智能选择速度最快的香港代理服务器，依然不能安装，后来通过手工更改VPN为一个美国代理点解决。
 
@@ -83,6 +83,20 @@ Google搜索安装即可，smoothly！
   brew cleanup --help
   brew cleanup --prune=all
   ```
+
+- 有趣的 Homebrew 命名逻辑
+
+  首先， brew 本身是酿造、酿酒的意思，会用这个字的原因是 homebrew 的安装方式为下载 source code 回来做编译，由于是在自己电脑做 local compile 编译套件，所以这个工具叫做 homebrew 自家酿酒。
+
+  酿酒需要有配方 formula，当你需要安装套件时，流程就是下 brew 命令去根据配方 formula, 酿造出一桶（ keg）酒来。所以 keg 指的是整个编译完成的套件资料夹。
+
+  再来，放置套件的位置在 /usr/local/Cellar/， Cellar 就是地窖，一桶一桶酿好的酒当然要存放在地窖里囖！所以编译安成的套件资料夹 keg 预设目录在 /usr/local/Cellar/。
+
+  最后回到「keg-only」整个词，字面上意思现在就很清除，表示这个套件只会存放在桶子里，不会跑出桶子外。实际上的行为是 brew 不会帮你做 symlink 到 /usr/local，避免你的原生系统内还有一套 readline 而打架，所以提示消息说 readline 套件是 keg-only。
+
+  
+
+  转自：<https://wildjcrt.pixnet.net/blog/post/29182044>。
 
 ## 安装Typo
 
@@ -115,16 +129,16 @@ Google搜索安装即可，smoothly！
   > Are you sure you want to continue connecting (yes/no)?
   ```
 
-  因为之前用http方式pull的，所以现在依然是通过http方式验证。需要更改拉取方式，一下3种方式，任选其一：
+  因为之前用http方式pull的，所以现在依然是通过http方式验证。需要更改仓库地址，下面3种方式均可：
 
   ```
   # 1.修改 git remote set-url origin [url]
   # 2.先删后加 
-  	# 移除远程分支，config文件中的[remote "origin"]和[branch "main"]节点
+  	# 移除远程分支，即config文件中的[remote "origin"]和[branch "main"]节点
   	git remote remove origin; 
-  	# 增加远程分支，config文件中的[remote "origin"]节点
+  	# 增加远程分支，即config文件中的[remote "origin"]节点
   	git remote add origin [url]
-  	# 建立远程分支和本地分支的关联,config文件中的[branch "main"]节点
+  	# 建立远程分支和本地分支的关联，即config文件中的[branch "main"]节点
   	git branch --set-upstream-to=origin/main main
   # 3.直接修改config文件，把项目地址换成新的。vim .git/config
   
@@ -149,14 +163,12 @@ Google搜索安装即可，smoothly！
   	merge = refs/heads/main
   ```
 
+  Git仓库地址使用SSH方式拉取：
+
+  ```
+git clone git@github.com:pumadong/pumadong.github.io.git
+  ```
   
-
-  Git仓库地址使用SSH方式拉取。
-
-  ```
-  git clone git@github.com:pumadong/pumadong.github.io.git
-  ```
-
 - 参考：
 
   [GitHub Docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
@@ -165,9 +177,9 @@ Google搜索安装即可，smoothly！
 
 ## brew install ruby@3.3
 
-遇到openssl3.4.1因为test通不过停止安装的问题
+遇到openssl3.4.1因为test通不过停止安装的问题：
 
-![clash-copy-shell](images/clash-download-brew-3.png)
+![clash-copy-shell](../images/clash-download-brew-3.png)
 
 下载源码自行编译安装可以解决这个问题：
 
@@ -178,7 +190,6 @@ tar xzfv openssl-3.4.1.tar.gz
 
 cd openssl-3.4.1
 
-# 不喜欢用 perl, 直接 ./config 干净利落
 ./config \
   --prefix=/usr/local/Cellar/openssl@3/3.4.1 \
   --openssldir=/usr/local/openssl@3 \
@@ -196,7 +207,7 @@ sudo make install MANDIR=/usr/local/Cellar/openssl@3/3.4.1/share/man MANSUFFIX=s
 
 新开终端, 验证确认：openssl --version
 
-homebrew 链接 openssl，让 brew 正确识别, 后续安装 python@3.10 分析依赖, 自然就会跳过 openssl@3 安装
+homebrew 链接 openssl，让 brew 正确识别，后续安装 python@3.10 分析依赖, 自然就会跳过 openssl@3 安装
 
 ```
 brew link openssl@3
@@ -208,9 +219,9 @@ brew link openssl@3
 
 ## brew install ruby@3.1
 
-![clash-copy-shell](images/clash-download-brew-4.png)
+![clash-copy-shell](../images/clash-download-brew-4.png)
 
-安装过程顺利，需要手工把安装路径加到~/.bash_profile中。
+安装过程顺利，根据提示，配置PATH等环境变量。
 
 安装ruby(>=2.7)的目的是为了安装jekyll，这个blog生成工具可以和github.io很好的配合。
 
@@ -222,7 +233,7 @@ brew link openssl@3
 
 直接用gem install jekyll后，安装成功，但是找不到位置执行jekyll。
 
-找到这个解决办法：[https://jekyllrb.com/docs/troubleshooting/#installation-problems](https://jekyllrb.com/docs/troubleshooting/#installation-problems)。
+找到这个解决办法：<https://jekyllrb.com/docs/troubleshooting/#jekyll--macos>。
 
 ```
 gem install -n /usr/local/bin jekyll
@@ -257,7 +268,7 @@ bundle exec jekyll serve
 
 通过：http://localhost:4000/，可以看到模版的展示结果了
 
-根据[Config Guide](https://mmistakes.github.io/minimal-mistakes/docs/configuration/)，通过系统变量、展示布局等参数的更改，定制站点的展示结果。
+参考[Config Guide](https://mmistakes.github.io/minimal-mistakes/docs/configuration/)，更改配置，定制站点展示。
 
 关于默认字体太大的问题，拷贝assets/css/main.scss，做如下修改。
 
@@ -329,7 +340,14 @@ GitHub部署参考：
 
 [https://github.com/mmistakes/minimal-mistakes/blob/master/docs/Gemfile](https://github.com/mmistakes/minimal-mistakes/blob/master/docs/Gemfile)
 
-_config.yml在本地和远端的配置是不一样的，如果不更改，不希望提交到远端：
+_config.yml在本地和远端的配置不一样，因为我们使用的minimal-mistakes-jekyll，不是github pages默认的theme，所以不能有theme配置，而本地运行jekyll，需要这个节点。
+
+```
+theme: minimal-mistakes-jekyll	# 本地需要
+remote_theme: "mmistakes/minimal-mistakes@master"	# 远程需要
+```
+
+所以，不希望提交到远端时，做如下更改：
 
 ```
 git update-index --assume-unchanged _config.yml
@@ -343,7 +361,7 @@ git update-index --no-assume-unchanged _config.yml
 
 ## rzsz
 
-iterm2配置rzsz，档SSH到某个Server后，可以与server通过ZMODEM协议快捷交换文件。
+iterm2配置rzsz，当SSH到某个Server后，可以与server通过ZMODEM协议快捷交换文件。
 
 mac下这是最好的rzsz配置方式，putty是不支持ZMODEM协议的，SecureCRT是收费的。
 
@@ -426,13 +444,11 @@ fi
 chmod 777 /usr/local/bin/iterm2-*
 ```
 
-置好配置文件之后，开始对iTerm2进行配置
-
 点击 iTerm2 的设置界面 Perference-> Profiles -> Default -> Advanced -> Triggers 的 Edit 按钮，加入以下配置
 
 添加两条trigger，分别设置 Regular expression，Action，Parameters，Instant如下：
 
-![clash-copy-shell](images/clash-download-brew-5.png)
+![clash-copy-shell](../images/clash-download-brew-5.png)
 
 ```
 Regular expression: rz waiting to receive.\*\*B0100
@@ -487,7 +503,7 @@ Error: openjdk: An unsatisfied requirement failed this build.
 
 Xcode下载地址：<https://xcodereleases.com/>，Monterey只能安装版本14，下载8G，安装后23G。
 
-Xcode安装完毕，brew install java就可以正常安装了。安装完毕后，进行如下系统配置：
+Xcode安装完毕，进行如下系统配置：
 
 ```
 For the system Java wrappers to find this JDK, symlink it with
@@ -503,6 +519,8 @@ If you need to have openjdk first in your PATH, run:
 For compilers to find openjdk you may need to set:
   export CPPFLAGS="-I/usr/local/opt/openjdk/include"
 ```
+
+brew install java 就可以正常安执行了。
 
 2015最新的版本已经是23了。
 
@@ -523,7 +541,7 @@ OpenJDK 64-Bit Server VM Homebrew (build 23.0.2, mixed mode, sharing)
 
 - High Sierra 10.13.6这个版本的下载地址非常少。如果从App Store下载，是个Stub版本(只有几十M，不是10多G)，不能用来制作bootable installer，尝试从网上找到的资源，比如[Archive](https://archive.org/details/macOS.High.Sierra.10.13.6)，又Verify失败，所以我就放弃了这个版本。
 
-  当时之所以计划安装这个版本，是想从Sierra 10.12.6直接到Sonoma 14，Open Coare Legacy Patcher提示需要这个版本。后来直接从Sierra到Big Sur，就放弃这个版本了。
+  当时之所以计划安装这个版本，是想从Sierra 10.12.6直接到Sonoma 14，但是Open Coare Legacy Patcher提示需要这个版本。后来直接从Sierra到Big Sur，就放弃这个版本了。
 
 - Monterey 12的安装过程，错误日志也提示过no compatibility bundle的问题并安装失败，但是重试了两次，就成功了。
 
@@ -532,17 +550,16 @@ OpenJDK 64-Bit Server VM Homebrew (build 23.0.2, mixed mode, sharing)
   - 开始安装后，字体马上变得特别小，几乎看不清。
 
   - 可能和无线WIFI存在某种兼容问题，第一步选择网络时，识别网络并加入成功，后续安装过程中出现WIFI断网（实际WIFI是正常的）。
-
-
-  - 有错误日志：no compatibility bundle on this version of macos. will assume compatible，然后安装失败。Google了一下，有说Date问题，有说U盘问题。我确认过系统时间，是对的，U盘也多次制作，没有成功。
+  
+    - 有错误日志：no compatibility bundle on this version of macos. will assume compatible，然后安装失败。Google了一下，有说Date问题，有说U盘问题。我确认过系统时间，是对的，U盘也多次制作，没有成功。
 
 # 后记
 
 2021年，Big Sur(11)发布的时候，官宣是支持这个机型的，但是安装系统失败并不能启动。
 
-当时需要快速修复并有日常的开发工作，并没有很多时间研究系统问题，于是快速回退到Sierra。
+当时有日常的开发工作，并没有很多时间研究系统问题，于是快速回退到Sierra。
 
-本次用10年前的Mac老本升级到MacOS Monterey(12)，用时约3天。
+本次用10年前的Mac老本升级到MacOS Monterey(12)，并安装常用软件和开发工具完毕，用时约3天。
 
 这期间遇到过操作系统和硬件兼容性问题，科学上网不稳定问题，应用不支持当前OS版本问题，应用软件的配置使用问题。
 

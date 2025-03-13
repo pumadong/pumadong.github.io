@@ -13,7 +13,7 @@ author: Bob Dong
 
 # 前言
 
-2013年刚刚从.Net开发转向Java开发不久，本篇是当时对[RHEL Server环境搭建](https://blog.csdn.net/puma_dong/article/details/17889593)的学习记录。
+2013年刚刚从.Net转向Java不久，当时写了很多学习记录，本篇链接：[RHEL Server环境搭建](https://blog.csdn.net/puma_dong/article/details/17889593)。
 
 现在是2025年了，重新整理一次，进行一次知识复盘和梳理。
 
@@ -24,7 +24,7 @@ author: Bob Dong
 
 2. 安装虚拟机
 
-   ![clash-copy-shell](images/install-rhel7-in-vw fusion-13.5.2-1.png)![clash-copy-shell](images/install-rhel7-in-vw fusion-13.5.2-2.png)
+   ![set-up-rhel-environment](../images/install-rhel7-in-vw fusion-13.5.2-1.png)![set-up-rhel-environment](../images/install-rhel7-in-vw fusion-13.5.2-2.png)
 
 3. Login
 
@@ -34,217 +34,213 @@ author: Bob Dong
 
 # 常用配置
 
-1. 启动方式
+## 启动方式
+
+默认已经在命令行界面，graphical.target方式。
+
+vim /etc/inittab 已经失效，提示使用systemctl命令。
+
+```
+# 查看当前启动方式
+systemctl get-default
+```
+
+## 配置IP地址
+
+可以使用图形工具nmtui，修改完成后执行systemctl restart network。
+
+我使用了如下的命令行方式：
+
+- ip addr，找出网卡的名字，比如下面的ens33。
+
+- route -n，找出网卡的当前配置，网关，掩码。
+
+- vim /etc/sysconfig/network-scripts/ifcfg-ens33，修改配置。
+  
+  ```
+  TYPE="Ethernet"
+  PROXY_METHOD="none"
+  BROWSER_ONLY="no"
+  BOOTPROTO="STATIC"	# 修改，原来尾dhcp
+  DEFROUTE="yes"
+  IPV4_FAILURE_FATAL="no"
+  IPADDR0=192.168.197.11	# 新增
+  NETMASK0=255.255.255.0	# 新增
+  GATEWAY0=192.168.197.2	# 新增
+  DNS1=8.8.8.8
+  IPV6INIT="yes"
+  IPV6_AUTOCONF="yes"
+  IPV6_DEFROUTE="yes"
+  IPV6_FAILURE_FATAL="no"
+  IPV6_ADDR_GEN_MODE="stable-privacy"
+  NAME="ens33"
+  UUID="faf695c7-9140-4a72-ba33-a607eb33aa7e"
+  DEVICE="ens33"
+  ONBOOT="yes"
+  ```
+  
+  备注：IPADDR0、NETMASK0和GATEWAY0后面的0代表第一个地址，IPADDR1代表第二个地址，以此类推；DNS是以1为代表第一个地址；后面的数值必须要写，否则配置不生效。
+  
+- systemctl restart network，使配置生效
 
-   默认已经在命令行界面，graphical.target方式。
+## 设置时区、时间自动和标准时间同步
 
-   vim /etc/inittab 已经失效，提示使用systemctl命令。
+- 设置Linux的时区
 
-   ```
-   # 查看当前启动方式
-   systemctl get-default
-   ```
+  查看时区：timedatectl
 
-2. 配置IP地址
+  设置时区：timedatectl  set-timezone Asia/Shanghai 
 
-   可以使用图形工具nmtui，修改完成后执行systemctl restart network。
+- 设置时间自动和标准时间同步
 
-   我使用了如下的命令行方式：
+  /etc/chrony.conf，注释默认时间源，增加公共NTP服务器地址。
 
-   - ip addr，找出网卡的名字，比如下面的ens33。
-
-   - route -n，找出网卡的当前配置，网关，掩码。
-
-   - vim /etc/sysconfig/network-scripts/ifcfg-ens33，修改配置。
-     
-     ```
-     TYPE="Ethernet"
-     PROXY_METHOD="none"
-     BROWSER_ONLY="no"
-     BOOTPROTO="STATIC"	# 修改，原来尾dhcp
-     DEFROUTE="yes"
-     IPV4_FAILURE_FATAL="no"
-     IPADDR0=192.168.197.11	# 新增
-     NETMASK0=255.255.255.0	# 新增
-     GATEWAY0=192.168.197.2	# 新增
-     DNS1=8.8.8.8
-     IPV6INIT="yes"
-     IPV6_AUTOCONF="yes"
-     IPV6_DEFROUTE="yes"
-     IPV6_FAILURE_FATAL="no"
-     IPV6_ADDR_GEN_MODE="stable-privacy"
-     NAME="ens33"
-     UUID="faf695c7-9140-4a72-ba33-a607eb33aa7e"
-     DEVICE="ens33"
-     ONBOOT="yes"
-     ```
-     
-     备注：IPADDR0、NETMASK0和GATEWAY0后面的0代表第一个地址，IPADDR1代表第二个地址，以此类推；DNS是以1为代表第一个地址；后面的数值必须要写，否则配置不生效。
-     
-   - systemctl restart network，使配置生效
+  ```
+  [bob@localhost ~]$ cat /etc/chrony.conf
+  # Use public servers from the pool.ntp.org project.
+  # Please consider joining the pool (http://www.pool.ntp.org/join.html).
+  # server 0.rhel.pool.ntp.org iburst
+  # server 1.rhel.pool.ntp.org iburst
+  # server 2.rhel.pool.ntp.org iburst
+  # server 3.rhel.pool.ntp.org iburst
+  server	ntp.ntsc.ac.cn	iburst	# 新增
+  ```
+  
+  常用的公共NTP服务器：<https://dns.icoa.cn/ntp/>
+  
+  重启服务：systemctl restart chronyd
+  
+  查看时间源：chronyc sources -v
 
-3. 设置时区、时间自动和标准时间同步
+## 关掉Red Hat Subscription Manager
 
-   - 设置Linux的时区
+vim /etc/yum/pluginconf.d/subscription-manager.conf
 
-     查看时区：timedatectl
+修改enabled=0，目的是避免使用yum时一直提示注册。
 
-     设置时区：timedatectl  set-timezone Asia/Shanghai 
+参考：[cnblogs](https://www.cnblogs.com/ajunyu/p/13297449.html)、[serverfault](https://serverfault.com/questions/764900/how-to-remove-this-warning-this-system-is-not-registered-to-red-hat-subscriptio)。
 
-   - 设置时间自动和标准时间同步
+## 防火墙
 
-     /etc/chrony.conf，注释默认时间源，增加公共NTP服务器地址。
+- 关闭SELinux：
+  修改/etc/selinux/config文件中的SELINUX="" 为 disabled ，然后重启。如果不想重启系统，使用命令setenforce 0
+  注：
+  setenforce 1 设置SELinux 成为enforcing模式
+  setenforce 0 设置SELinux 成为permissive模式
 
-     ```
-     [bob@localhost ~]$ cat /etc/chrony.conf
-     # Use public servers from the pool.ntp.org project.
-     # Please consider joining the pool (http://www.pool.ntp.org/join.html).
-     # server 0.rhel.pool.ntp.org iburst
-     # server 1.rhel.pool.ntp.org iburst
-     # server 2.rhel.pool.ntp.org iburst
-     # server 3.rhel.pool.ntp.org iburst
-     server	ntp.ntsc.ac.cn	iburst	# 新增
-     ```
-     
-     常用的公共NTP服务器：https://dns.icoa.cn/ntp/
-     
-     重启服务：systemctl restart chronyd
-     
-     查看时间源：chronyc sources -v
+- 开启80端口
 
-4. 关掉Red Hat Subscription Manager
+  ```
+    firewall-cmd --zone=public --add-port=80/tcp --permanent
+    firewall-cmd --reload
+    iptables-save | grep 80
+  ```
+  看到如下提示，开启成功。
+  ```
+  -A IN_public_allow -p tcp -m tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+  ```
 
-   vim /etc/yum/pluginconf.d/subscription-manager.conf
+## 安装rzsz，方便Mac/Windows通过ZMODEM协议和虚拟机交换文件
 
-   修改enabled=0，目的是避免使用yum时一直提示注册。
+```
+ wget https://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz
+ tar zxvf lrzsz-0.12.20.tar.gz && cd lrzsz-0.12.20
+ ./configure && make && make install
+ # 上面安装过程默认把lsz和lrz安装到了/usr/local/bin/目录下，现在我们并不能直接使用
+ # 可以把/usr/local/bin加到PATH系统变量，也可以创建软链接，并命名为rz/sz：
+ cd /usr/bin
+ ln -s /usr/local/bin/lrz rz
+ ln -s /usr/local/bin/lsz sz
+```
 
-   参考：[cnblogs](https://www.cnblogs.com/ajunyu/p/13297449.html)、[serverfault](https://serverfault.com/questions/764900/how-to-remove-this-warning-this-system-is-not-registered-to-red-hat-subscriptio)。
+在server安装rzsz完毕后，Windows下通过（putty, SecureCRT），Mac下通过iTerm2，SSH到Server后，就可以在server的命令行窗口输入rzsz，接收和发送文件。
 
-5. 防火墙
+rzsz官网：<https://www.ohse.de/uwe/software/lrzsz.html>
 
-   - 关闭SELinux：
-     修改/etc/selinux/config文件中的SELINUX="" 为 disabled ，然后重启。如果不想重启系统，使用命令setenforce 0
-     注：
-     setenforce 1 设置SELinux 成为enforcing模式
-     setenforce 0 设置SELinux 成为permissive模式
+ZMODEM说明：<https://en.wikipedia.org/wiki/ZMODEM>
 
-   - 开启80端口
+## linux常用命令
 
-     firewall-cmd --zone=public --add-port=80/tcp --permanent
+- [linux系统硬件配置查看方法 ](/os/the-common-rhel-command.html#linux系统硬件配置查看方法)
 
-     firewall-cmd --reload
+- 系统操作
 
-     iptables-save | grep 80
+  **查看CPU：**grep 'model name' /proc/cpuinfo | wc -l
 
-     看到如下提示，开启成功。
-     
-     ```
-     -A IN_public_allow -p tcp -m tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
-     ```
+  **查看64位还是32位：**getconf LONG_BIT
 
-6. 安装rzsz，方便Mac/Windows通过ZMODEM协议和虚拟机交换文件
+  **查看内存：**
 
-   ```
-    wget https://www.ohse.de/uwe/releases/lrzsz-0.12.20.tar.gz
-    tar zxvf lrzsz-0.12.20.tar.gz && cd lrzsz-0.12.20
-    ./configure && make && make install
-    # 上面安装过程默认把lsz和lrz安装到了/usr/local/bin/目录下，现在我们并不能直接使用
-    # 可以把/usr/local/bin加到PATH系统变量，也可以创建软链接，并命名为rz/sz：
-    cd /usr/bin
-    ln -s /usr/local/bin/lrz rz
-    ln -s /usr/local/bin/lsz sz
-   ```
+  ​	grep MemTotal /proc/meminfo
 
-   在server安装rzsz完毕后，Windows下通过（putty, SecureCRT），Mac下通过iTerm2，SSH到Server后，就可以在server的命令行窗口输入rzsz，接收和发送文件。
+  ​	free -m
 
-   rzsz官网：<https://www.ohse.de/uwe/software/lrzsz.html>
+  **查看OS版本信息：**cat /proc/version，  uname -r，  uname -a，cat /etc/redhat-release，file /bin/bash，file /bin/cat
 
-   ZMODEM说明：<https://en.wikipedia.org/wiki/ZMODEM>
+  **显示环境变量：**echo $JAVA_HOME 
 
-7. linux常用命令
+  **更新文件的时间戳：**touch ，比如/etc/rc.d/rc.local中有内容：touch /var/lock/subsys/local 就是代表执行过了的意思
 
-   - linux系统硬件配置查看方法 
+  **重启：**
 
-     http://blog.csdn.net/puma_dong/article/details/16843069
+  reboot ，shutdown -r now 立刻重启(root用户使用)  
 
-   - 系统操作
+  shutdown -r 10 过10分钟自动重启 
+  
+  shutdown -r 20:35 在时间为20:35时候重启
+  
+  **关机：**
+  
+  halt ，poweroff  立刻关机  
+  
+  shutdown -h now 立刻关机(root用户使用)  
+  
+  shutdown -h 10 10分钟后自动关机 
+  **磁盘操作：**
 
-     **查看CPU：**grep 'model name' /proc/cpuinfo | wc -l
+  df -h  查看磁盘分区情况
 
-     **查看64位还是32位：**getconf LONG_BIT
+  du -sh /usr  查看/usr目录大小
 
-     **查看内存：**
+  pwd 显示当前目录路径
 
-     ​	grep MemTotal /proc/meminfo
+  **文件操作：**
 
-     ​	free -m
+  mv 移动目录
 
-     **查看OS版本信息：**cat /proc/version，  uname -r，  uname -a，cat /etc/redhat-release，file /bin/bash，file /bin/cat
+  cp 拷贝文件 -r递归拷贝
 
-     **显示环境变量：**echo $JAVA_HOME 
+  rm 删除文件
 
-     **更新文件的时间戳：**touch ，比如/etc/rc.d/rc.local中有内容：touch /var/lock/subsys/local 就是代表执行过了的意思
+  tar 压缩解压 xzf解压，tar -cvf /tmp/etc.tar /etc<==仅打包，不压缩！tar -zcvf /tmp/etc.tar.gz /etc<==打包后，以 gzip 压缩
 
-     **重启：**
+  ln 建立链接命令，比如：ln -s /usr/jdk1.7.0_45/bin/java /usr/bin/java
 
-     reboot ，shutdown -r now 立刻重启(root用户使用)  
+  **文件内容操作：**
 
-     shutdown -r 10 过10分钟自动重启 
-     
-     shutdown -r 20:35 在时间为20:35时候重启
-     
-     **关机：**
-     
-     halt ，poweroff  立刻关机  
-     
-     shutdown -h now 立刻关机(root用户使用)  
-     
-     shutdown -h 10 10分钟后自动关机 
-     **磁盘操作：**
+  cat 显示内容
 
-     df -h  查看磁盘分区情况
+  vim 编辑内容
 
-     du -sh /usr  查看/usr目录大小
+  tail 即时显示最新内容
 
-     pwd 显示当前目录路径
+  **查找定位：**
 
-     **文件操作：**
+  whereis xx 查找xx的所在位置
 
-     mv 移动目录
+  chkconfig --list xx 查找xx是否作为服务运行
 
-     cp 拷贝文件 -r递归拷贝
-
-     rm 删除文件
-
-     tar 压缩解压 xzf解压，tar -cvf /tmp/etc.tar /etc<==仅打包，不压缩！tar -zcvf /tmp/etc.tar.gz /etc<==打包后，以 gzip 压缩
-
-     ln 建立链接命令，比如：ln -s /usr/jdk1.7.0_45/bin/java /usr/bin/java
-
-     **文件内容操作：**
-
-     cat 显示内容
-
-     vim 编辑内容
-
-     tail 即时显示最新内容
-
-     **查找定位：**
-
-     whereis xx 查找xx的所在位置
-
-     chkconfig --list xx 查找xx是否作为服务运行
-
-     find 在机器查找文件，比如: find / -type f -name "rabbitmq-server"
-     
-     ps -ef | grep xx 显示包含xx的进程
-     
-     **netstat：**
-     
-     查看Socket连接数命令：netstat -napo | grep 1080 | wc -l
-     
-     查看连接某服务端口最多的的IP地址：netstat -nat | grep "192.168.1.15:22" |awk '{print $5}'|awk -F: '{print $1}'|sort -nr|uniq -c|head -20
-     
-     TCP各种状态列表：netstat -nat |awk '{print $6}'|sort -nr|uniq -c
+  find 在机器查找文件，比如: find / -type f -name "rabbitmq-server"
+  
+  ps -ef | grep xx 显示包含xx的进程
+  
+  **netstat：**
+  
+  查看Socket连接数命令：netstat -napo | grep 1080 | wc -l
+  
+  查看连接某服务端口最多的的IP地址：netstat -nat | grep "192.168.1.15:22" |awk '{print $5}'|awk -F: '{print $1}'|sort -nr|uniq -c|head -20
+  
+  TCP各种状态列表：netstat -nat |awk '{print $6}'|sort -nr|uniq -c
 
 # Java 17
 
