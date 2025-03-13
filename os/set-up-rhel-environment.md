@@ -83,6 +83,40 @@ systemctl get-default
   
 - systemctl restart network，使配置生效
 
+- 网络连接方式
+
+  默认是NAT方式，这种方式和宿主机互相访问没有问题，访问外网也没有问题，但是不能被其他机器访问到。
+
+  如果需要被其他机器访问到，需要更改为Bridge访问。如此一来，虚拟机就像局域网一台独立的机器一样。注意，如果宿主机改变网络时，需要更改虚拟机的网络配置。
+
+  我更改为了和我的宿主机一样网段的固定IP(192.168.8.11)：
+
+  ```
+  TYPE="Ethernet"
+  PROXY_METHOD="none"
+  BROWSER_ONLY="no"
+  BOOTPROTO="STATIC"
+  DEFROUTE="yes"
+  IPV4_FAILURE_FATAL="no"
+  # IPADDR0=192.168.197.11
+  IPADDR0=192.168.8.11
+  NETMASK0=255.255.255.0
+  # GATEWAY0=192.168.197.2
+  GATEWAY0=192.168.8.1
+  DNS1=8.8.8.8
+  IPV6INIT="yes"
+  IPV6_AUTOCONF="yes"
+  IPV6_DEFROUTE="yes"
+  IPV6_FAILURE_FATAL="no"
+  IPV6_ADDR_GEN_MODE="stable-privacy"
+  NAME="ens33"
+  UUID="faf695c7-9140-4a72-ba33-a607eb33aa7e"
+  DEVICE="ens33"
+  ONBOOT="yes"
+  ```
+
+  
+
 ## 设置时区、时间自动和标准时间同步
 
 - 设置Linux的时区
