@@ -118,10 +118,38 @@ Google搜索安装即可，smoothly！
   因为之前用http方式pull的，所以现在依然是通过http方式验证。需要更改拉取方式，一下3种方式，任选其一：
 
   ```
-  # 1.修改 git remote origin set-url [url]
-  # 2.先删后加 git remote rm origin; git remote add origin [url]
+  # 1.修改 git remote set-url origin [url]
+  # 2.先删后加 
+  	# 移除远程分支，config文件中的[remote "origin"]和[branch "main"]节点
+  	git remote remove origin; 
+  	# 增加远程分支，config文件中的[remote "origin"]节点
+  	git remote add origin [url]
+  	# 建立远程分支和本地分支的关联,config文件中的[branch "main"]节点
+  	git branch --set-upstream-to=origin/main main
   # 3.直接修改config文件，把项目地址换成新的。vim .git/config
+  
+  # ssh格式的[url]，比如：git@github.com:pumadong/pumadong.github.io.git
   ```
+
+  以上其实修改的是.git/config文件：
+
+  ```
+  [core]
+  	repositoryformatversion = 0
+  	filemode = false
+  	bare = false
+  	logallrefupdates = true
+  	symlinks = false
+  	ignorecase = true
+  [remote "origin"]
+  	url = git@github.com:pumadong/pumadong.github.io.git
+  	fetch = +refs/heads/*:refs/remotes/origin/*
+  [branch "main"]
+  	remote = origin
+  	merge = refs/heads/main
+  ```
+
+  
 
   Git仓库地址使用SSH方式拉取。
 
