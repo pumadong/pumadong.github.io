@@ -7,8 +7,8 @@ main:
     url: /mw/index.html
   - title: "Case Study"
     url: /case/index.html
-  - title: "Collections"
-    url: /collection-archive/
+  - title: "常用资源"
+    url: /link.html
   - title: "External Link"
     url: https://google.com
     target: _blank

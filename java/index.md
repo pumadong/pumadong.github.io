@@ -3,7 +3,7 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: single
-title: ''
+title: '编程语言'
 permalink: /java/index.html
 toc: false
 classes: wide
