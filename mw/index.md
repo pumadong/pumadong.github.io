@@ -3,7 +3,7 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: single
-title: ''
+title: '中间件'
 permalink: /mw/index.html
 toc: false
 classes: wide
