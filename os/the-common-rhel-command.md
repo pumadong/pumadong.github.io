@@ -89,6 +89,25 @@ author: Bob Dong
   有时我们执行sudo java -version，报错“bash: java: command not found”，是因为root账户并没有把java加入环境变量。
   ```
 
+- 查看当前正在运行的shell
+
+  ```
+  # 一个名为 "$$" 的特殊参数 表示当前你正在运行的shell实例的 PID。此参数是只读的，不能被修改。
+  Bobs-MacBook-Pro:pumadong.github.io bob$ ps -p $$
+    PID TTY           TIME CMD
+   1326 ttys001    0:00.07 -bash
+  # 使用特殊参数 “$0” ，它表示当前正在运行的shell的名称
+  Bobs-MacBook-Pro:pumadong.github.io bob$ echo $0
+  -bash
+  ```
+  
+  查看默认shell（不一定是当前正在运行的shell）：
+  
+  ```
+  echo $SHELL
+  grep root /etc/passwd	# 查看root用户的默认shell
+  ```
+  
 - 查看当前用户的历史命令：
 
   ```
