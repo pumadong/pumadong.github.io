@@ -238,7 +238,7 @@ author: Bob Dong
   find . -type f -mtime +4  代表 4天之前（不含4天本身）被更改过的文件
   find . -type f -mtime -4 代表4天之内（含4天之内）被更改过的文件
   find 。 -type f -name "rabbitmq*"	# 查找当前目录下，文件名以rabbitmq开头的文件列表
-  find . -type f -exec grep -l "10.10.20.90" {} \	# 查找当前目录下包含10.10.20.90的所有文
+  find . -type f | grep -l "10.10.20.90"	# 查找当前目录下包含10.10.20.90的所有文
   find . -type f -name "*.*" | xargs grep -rnl  "Hello" # 查找当前目录含有Hello字符串的所有文件，r递归，n显示行号，l只显示文件名
   find / -name access.log 2>/dev/null	# 在根目录下查找所有的access.log，包括子文件夹，遇到没有权限访问等错误，不会显示
   ```
