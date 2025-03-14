@@ -287,7 +287,7 @@ author: Bob Dong
 
 ```
 ps -ef | grep 'xx' 查看xx进程的id，第二列是PID，第三列是PPID
-cd /proc/PPID
+cd /proc/PID
 ll -s
 cwd，是你要查找的进程所在路径
 jps 查看java进程
