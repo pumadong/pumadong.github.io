@@ -16,7 +16,7 @@ author: Bob Dong
 
 本篇是《深入理解Java虚拟机-Java 高级特性与最佳实践》学习笔记，周志明著，Understanding the JVM-Advanced Features and Best Practices，机械工业出版社，2011.6出版。
 
-重温Java JVM知识，重点学习了与日常开发工作相关性最大的“自动化内存管理”模块，对Java容器优化、内存问题解决很有帮助；习惯了从互联网看电子书，难以集中和记忆，现在找几本纸质书重温，可以很清静、很安静的理解和消化，受益匪浅。
+重温Java JVM知识，重点学习了与日常开发工作相关性最大的“自动化内存管理”模块，对Java容器优化、内存问题解决很有帮助；习惯了从互联网看电子书，现在找几本纸质书重温，可以很清静、很安静的理解和消化，受益匪浅。
 
 # 自动内存管理机制
 
@@ -63,7 +63,7 @@ Java虚拟机的内存管理与垃圾回收，是虚拟机结构体系中最重�
 
 - 直接内存（Direct Memory）
 
-  直接内存不是虚拟机运行时数据区的一部分，是使用Native函数库直接分配的堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用，目的是在一些场景中显著提高性能，因为避免了再Java对和Native堆中来回复制数据；
+  直接内存不是虚拟机运行时数据区的一部分，是使用Native函数库直接分配的堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用，目的是在一些场景中显著提高性能，因为避免了在Java堆和Native堆中来回复制数据；
 
   可以通过-XX:MaxDirectMemorySize指定，如果不指定，则默认与Java堆的最大值（-Xmx指定）一样；会报溢出错误:OutOfMemoryError
 
@@ -77,7 +77,9 @@ Java虚拟机的内存管理与垃圾回收，是虚拟机结构体系中最重�
 
 如果我们需要知道，JVM虚拟机的默认参数配置，可以使用命令查看：
 
+```
 java -XX:+PrintFlagsInitial | grep Ratio
+```
 
 我们可以看到，新生代和老年代的默认比值是2；Survior和Eden的默认比值是8.
 
@@ -89,13 +91,13 @@ java -XX:+PrintFlagsInitial | grep Ratio
 
 但是如果写了个递归死循环，循环递归，则马上会报StackOverFlow，因为随着递归函数的调用，大量的本地变量被声明，很快，栈空间就满了；
 
-另，对于不同的JDK，可能会变化，比如String的常量String.intern()，在JDK6中存放在“方法区”的“运行时常量池”中，但是在JDK7中，就存放在堆中了，所以，很多细节也是在一直变化中的。。。
+另，对于不同的JDK，可能会变化，比如String的常量String.intern()，在JDK6中存放在“方法区”的“运行时常量池”中，但是在JDK7中，就存放在堆中了，所以，很多细节也是在一直变化中的。
 
 参考网址：
 
-http://blog.csdn.net/kthq/article/details/8618052
+<http://blog.csdn.net/kthq/article/details/8618052>
 
-http://www.open-open.com/lib/view/open1324736648468.html
+<http://www.open-open.com/lib/view/open1324736648468.html>
 
 ## 垃圾收集器与内存分配策略
 
@@ -145,7 +147,7 @@ http://www.open-open.com/lib/view/open1324736648468.html
 
   - Parallel Scavenge
 
-    生代使用，并行，多线程，吞吐量优先，适用于在后头运算而不需要太多交互的任务，复制算法
+    新生代使用，并行，多线程，吞吐量优先，适用于在后头运算而不需要太多交互的任务，复制算法
 
   - CMS
 
@@ -179,9 +181,9 @@ http://www.open-open.com/lib/view/open1324736648468.html
 
 - JVM默认的客户端还是服务器模式，取决于下面的情况
 
-  ![deep-in-jvm](images/deep-in-jvm-diary-1.png)
+  ![deep-in-jvm](../images/deep-in-jvm-diary-1.png)
 
--  内存分配策略
+- 内存分配策略
 
   对象优先在Eden分配、大对象直接进入老年代、长期存活的对象将进入老年代、动态对象年龄判定、空间分配担保
 
@@ -191,39 +193,37 @@ http://www.open-open.com/lib/view/open1324736648468.html
 
   也由此可见，内存分配策略具有非常复杂的规则，不仅仅是这几条规则所能描述的。
 
-  **总结：**经过半个世纪的发展，内存的动态分配和回收技术已经相当成熟；但是当需要排查各种内存溢出、内存泄露问题时，当垃圾收集成为系统达到更高并发量的瓶颈时，我们就需要对这些“自动化”的技术实施必要的监控和调节。
+  **总结：**
+
+  经过半个世纪的发展，内存的动态分配和回收技术已经相当成熟；
+
+  但是当需要排查各种内存溢出、内存泄露问题时，当垃圾收集成为系统达到更高并发量的瓶颈时，我们就需要对这些“自动化”的技术实施必要的监控和调节。
 
 - 查看JVM进程使用的垃圾回收器
 
-  jinfo -flag UseSerialGC 60282
-
+  ```
+jinfo -flag UseSerialGC 60282
   jinfo -flag UseParNewGC 60282
-
-  jinfo -flag UseParallelGC 60282
-
+jinfo -flag UseParallelGC 60282
   jinfo -flag UseParallelOldGC 60282
-
-  jinfo -flag UseConcMarkSweepGC 60282
+jinfo -flag UseConcMarkSweepGC 60282
+  ```
 
 - jstat -gccause -h10 pid 2000
 
   查看GC情况。
 
-  ![deep-in-jvm](images/java-deep-in-jvm-diary-2.png)
+  ![deep-in-jvm](../images/java-deep-in-jvm-diary-2.png)
 
-  http://phl.iteye.com/blog/2004211
+  
 
   参考文章：
 
-  http://jeromecen1021.blog.163.com/blog/static/18851527120117274624888/
+  <http://blog.csdn.net/gugemichael/article/details/9345803>  讲GC的，S0、S1为什么总有一个是空的
 
-  http://blog.csdn.net/gugemichael/article/details/9345803  讲GC的，S0、S1为什么总有一个是空的
+  <http://www.fasterj.com/articles/oraclecollectors1.shtml>
 
-  http://www.fasterj.com/articles/oraclecollectors1.shtml
-
-  http://blog.csdn.net/dc_726/article/details/7934101
-
-  http://jbutton.iteye.com/blog/1569746
+  <http://blog.csdn.net/dc_726/article/details/7934101>
 
 ## 内存性能分析与故障处理工具
 
@@ -267,6 +267,14 @@ http://www.open-open.com/lib/view/open1324736648468.html
 
   -printcompilation: 输出已经被JIT编译的方法
 
+  ```
+jstat -gcutil -h10 pid 1000
+  ```
+  
+  GC的时间单位是：second
+
+  ![deep-in-jvm](../images/java-deep-in-jvm-diary-3.png)
+
 - jinfo
 
   Configuration Info for Java，显示虚拟机配置信息
@@ -278,6 +286,10 @@ http://www.open-open.com/lib/view/open1324736648468.html
 - jmap
 
   Memory Map for Java，生成虚拟机的内存转储快照（heapdump文件）
+
+  ```
+  jmap -dump:format=b,file=xxx.bin pid
+  ```
 
   -dump: 生成Java堆转储快照。
 
@@ -303,38 +315,32 @@ http://www.open-open.com/lib/view/open1324736648468.html
 
   Stack Trace for Java，显示虚拟机的线程快照
 
+  ```
+  jstack  -l -F 15348 >> 169.txt 
+  sudo -u root /usr/java/jdk1.6.0_26/bin/jstack -F 15348
+  ```
+
   -F: 当正常输出的请求不被响应时，强制输出线程堆栈
 
   -l: 除堆栈外，显示关于锁的附加信息
 
   -m: 如果调用到本地方法的话，可以显示C/C++的堆栈
 
-  ```
-  jstack  -l -F 15348 >> 169.txt 
-  sudo -u root /usr/java/jdk1.6.0_26/bin/jstack -F 15348
-  ```
-
-  在JDK6U23之前，执行jstack,jmap -F会有Bug，看这个文章：http://developer.51cto.com/art/201203/321359.htm
-
-  jstat -gcutil -h10 pid 1000
-
-  GC的时间单位是：second
-
-  ![deep-in-jvm](images/java-deep-in-jvm-diary-3.png)
-
 - MAT
 
-  除了以上之外，另外推荐一个内存分析工具，下载地址：http://www.eclipse.org/mat/downloads.php，它分析的是JVM内存的dump文件，此文件可以通过jmap -dump:format=b,file=xxx.bin pid将内存dump出来，也可以通过设置-XX:+HeapDumpOnOutOfMemoryError参数，在JVM出现OOM时自动输出到文件；或者在VisualVM中直接对监控的JVM进程单击右键，选择“Heap Dump”，将JVM的内存dump出来。
+  除了以上之外，另外推荐一个内存分析工具，下载地址：<http://www.eclipse.org/mat/downloads.php>，它分析的是JVM内存的dump文件，此文件可以通过jmap -dump:format=b,file=xxx.bin pid将内存dump出来，也可以通过设置-XX:+HeapDumpOnOutOfMemoryError参数，在JVM出现OOM时自动输出到文件；或者在VisualVM中直接对监控的JVM进程单击右键，选择“Heap Dump”，将JVM的内存dump出来。
 
 - BTrace
 
-  下载地址：https://kenai.com/projects/btrace/downloads/directory/releases
+  下载地址：<https://kenai.com/projects/btrace/downloads/directory/releases>
 
-  写一段脚本，随时切入正在运行的程序，跟踪代码的调用。写一段Btrace脚本还是很麻烦的，不详述了。
+  写一段脚本，随时切入正在运行的程序，跟踪代码的调用。写Btrace脚本还是比较麻烦。
 
   其他的工具还有：HSDB，Java自带的，执行方式如下：
 
+  ```
   java -classpath .:$JAVA_HOME/lib/sa-jdi.jar sun.jvm.hotspot.CLHSDB
+  ```
 
 - jvisualvm
 
@@ -420,7 +426,7 @@ JNI代码：如果代码中使用JNI调用本地代码库，那本地代码库�
 
 场景：大并发压力下，请求缓慢，通过监控，发现CPU使用率很高，并且CPU占用不是程序本身，通常情况下，用户应用的CPU占用应该占主要地位。
 
-解决步骤：通过开发人员找到答案，每个用户请求，时都要执行一个外部Shell获得系统的一些信息。这些Shell脚本是通过Java的Runtime.getRuntime().exec()方法调用的。Java虚拟机执行这个命令的过程是：首先克隆一个和当前虚拟机拥有一样环境变量的进程，再用这个新的进程执行外部命令，最后再退出这个进程。如果频繁执行这个操作，系统的消耗会很大，不仅是CPU，内存的负担也很重。
+解决步骤：通过开发人员找到答案，每个用户请求时，都要执行一个外部Shell获得系统的一些信息。这些Shell脚本是通过Java的Runtime.getRuntime().exec()方法调用的。Java虚拟机执行这个命令的过程是：首先克隆一个和当前虚拟机拥有一样环境变量的进程，再用这个新的进程执行外部命令，最后再退出这个进程。如果频繁执行这个操作，系统的消耗会很大，不仅是CPU，内存的负担也很重。
 
 解决：去掉这个shell脚本的执行，改用Java的API去获取这些信息。
 
@@ -443,7 +449,7 @@ JNI代码：如果代码中使用JNI调用本地代码库，那本地代码库�
 
 篇章：《类文件结构》、《虚拟机类加载机制》、《虚拟机字节码执行引擎》、《类加载及执行子系统的案例与实战》、《编译器优化》、《运行期优化》
 
-这些篇章介绍了Class文件格式、类加载及迅疾执行引擎，这些内容是虚拟机中必不可少的部分，了解了虚拟机如何执行程序，才能更好地理解怎样才能写出优秀的代码。
+这些篇章介绍了Class文件格式、类加载及虚拟机执行引擎，这些内容是虚拟机中必不可少的部分，了解了虚拟机如何执行程序，才能更好地理解怎样才能写出优秀的代码。
 
 代码编译的结果从本地机器码变为字节码，是存储格式发展的一小步，却是编程语言发展的一大步。
 
@@ -452,6 +458,8 @@ Java语言规范和Java虚拟机规范是分别定义的，这说明任何语言
 Java程序从源码编译成字节码和从字节码编译成本地机器码的过程，Javac字节码编译器与虚拟机内的JIT编译器的执行过程合并起来，其实就等于一个传统的编译器所执行的编译过程。
 
 对Java编译器的深入了解，有助于在工作中分辨哪些代码是编译器可以帮我们处理的，哪些代码需要自己调节以便更适合编译器的优化。
+
+讲解JIT的比较好的文章：[基本功-Java即时编译器原理解析及实践](https://tech.meituan.com/2020/10/22/java-jit-practice-in-meituan.html)
 
 # 高效并发
 
@@ -559,3 +567,8 @@ class ByteBufferOOM {
 
 # 后记
 
+这篇文章中的绝大多数的知识，代码，放在现在依然是有效的。
+
+用G1垃圾回收器的依然非常多，尤其一些核心系统，在非常稳定的情况下，并不一定需要升级到Java17.
+
+[Java 8 vs Java 17 垃圾收集器](https://huminxi.netlify.app/2022/07/06/java%208%20vs%20java%2017%20%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/)。

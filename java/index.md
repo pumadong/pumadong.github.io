@@ -17,6 +17,8 @@ author: Bob Dong
 
 [读一本书《Java性能权威指南》](/java/java-performance-definitive.html)
 
+[读一本书《代码大全》](/java/code-complete.html)
+
 [Linux&java进阶（硬件和并发）](/java/hardware-and-concurrency.html)
 
 [Linux&java进阶（看清操作系统层面的事）](/java/java-and-linux.html)
