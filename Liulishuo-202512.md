@@ -104,3 +104,30 @@ Next time, you should brush up(复习，捡回已经生疏的知识) on the basi
 **snooze** <非正式> 小睡，打盹 Exactly. Rather than hitting the snooze button eight times, I only hit it seven times before getting up.
 
 **freak out** To freak out means to become very upset or extremely emotional. 极度兴奋；疯了；颓废；吓坏了；行为异常 I freaked out over his new album.
+
+# 2025-12-17
+
+**ambulance / ˈæmbjələns / 注意重音**
+
+**emergency / ɪˈmɜːrdʒənsi / 注意发音**
+
+**coping with the injury，first aid 急救**
+
+1. bleeding：clean up the cut  brandage up
+
+2. burn：run cool water onver the burn
+3. sprain：put a cold pack on the sprain
+4. fracture 骨折：call an amburance
+
+**run the light or jump the light** Did the other driver run the light?
+
+**that serves you right** 你活该！ That serves you right. You know how dangerous distracted riding can be.
+
+**descendant** Yeah, it's a gift from one of my descendants from the 22nd century.
+
+**time leap** 时间跳跃 So I time leaped to two a.m, four a.m, and dix a.m. and asked the future men for help.
+
+**recklessly** 鲁莽地 I told you no to drive recklessly. It serves you right.
+
+**soak 浸泡 get soaked** It's your own fault for not listening to the weather forecast and got soaked.
+
