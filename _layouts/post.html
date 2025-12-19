@@ -37,19 +37,13 @@ layout: base
     {{ content }}
   </div>
 
-  <div class="post-container">
-    <article class="post-content">
-      {{ content }}
-    </article>
-
-    <aside class="post-toc">
-      <h3>目录</h3>
-      <div id="toc-container">
-        * TOC
-        {:toc}
-      </div>
-    </aside>
-  </div>
+  <aside class="post-toc">
+    <h3>目录</h3>
+    <div id="toc-container">
+      * TOC
+      {:toc}
+    </div>
+  </aside>
 
   {% if jekyll.environment == 'production' -%}
     {% if page.comments == false -%}
