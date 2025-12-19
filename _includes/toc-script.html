@@ -1,53 +1,56 @@
-<script>
 document.addEventListener("DOMContentLoaded", function() {
-  const content = document.querySelector('#markdown-content');
-  const toc = document.querySelector('#toc');
-  const headings = content.querySelectorAll('h1, h2, h3');
+  const postContent = document.querySelector('.post-content');
+  const tocContent = document.getElementById('toc-content');
   
-  if (headings.length === 0) return;
+  if (!postContent || !tocContent) return;
+
+  // 1. 获取所有标题 (h1, h2, h3)
+  const headings = postContent.querySelectorAll('h1, h2, h3');
+  if (headings.length === 0) {
+    document.getElementById('toc-container').style.display = 'none';
+    return;
+  }
 
   const tocList = document.createElement('ul');
 
   headings.forEach((heading, index) => {
-    // 确保标题有 ID
+    // 确保标题有 ID，否则创建一个
     if (!heading.id) {
       heading.id = 'heading-' + index;
     }
 
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = '#' + heading.id;
-    a.textContent = heading.textContent;
-    a.classList.add('toc-link');
-    
-    // 根据 H 级别添加缩进
-    li.style.marginLeft = (heading.tagName === 'H3' ? '1rem' : '0');
-    
-    li.appendChild(a);
-    tocList.appendChild(li);
+    const listItem = document.createElement('li');
+    listItem.style.marginLeft = (heading.tagName === 'H3' ? '15px' : '0px');
+
+    const link = document.createElement('a');
+    link.href = '#' + heading.id;
+    link.textContent = heading.textContent;
+    link.dataset.targetId = heading.id;
+
+    listItem.appendChild(link);
+    tocList.appendChild(listItem);
   });
 
-  toc.appendChild(tocList);
+  tocContent.appendChild(tocList);
 
-  // 滚动监听高亮
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px 0px -80% 0px',
-    threshold: 0
-  };
+  // 2. 滚动监听：高亮当前标题
+  const tocLinks = tocContent.querySelectorAll('a');
+  
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.scrollY + 120; // 偏移量
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        document.querySelectorAll('.toc-link').forEach(link => {
-          link.classList.remove('active');
-        });
-        const activeLink = document.querySelector(`.toc-link[href="#${entry.target.id}"]`);
-        if (activeLink) activeLink.classList.add('active');
+    headings.forEach(heading => {
+      if (scrollPos > heading.offsetTop) {
+        currentId = heading.id;
       }
     });
-  }, observerOptions);
 
-  headings.forEach(heading => observer.observe(heading));
+    tocLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.dataset.targetId === currentId) {
+        link.classList.add('active');
+      }
+    });
+  });
 });
-</script>
