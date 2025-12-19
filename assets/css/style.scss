@@ -6,18 +6,21 @@
   "minima/initialize";
 
   /* TOC 容器基础样式 */
-  .toc-container {
+.toc-container {
     position: fixed;
-    top: 100px;
-    right: calc((100vw - 800px) / 2 - 180px); /* 动态计算位置，假设正文宽800px */
-    width: 400px;
+    top: 120px;
+    /* 核心修正：使用固定宽度，并确保靠右对齐 */
+    width: 400px; 
+    /* 这种定位方式更稳健：先定位到中心，再向右偏移 (正文宽度/2 + 间距) */
+    left: calc(50% + 420px); 
     max-height: 70vh;
     overflow-y: auto;
-    padding: 10px;
-    font-size: 0.9em;
-    border-left: 2px solid #eee;
+    overflow-x: hidden; /* 禁止横向滚动 */
+    padding: 15px;
+    box-sizing: border-box; /* 确保 padding 不增加宽度 */
+    border-left: 1px solid #e8e8e8;
     background: transparent;
-    z-index: 10;
+    z-index: 100;
   }
 
   /* 自定义滚动条：不占用宽度且美观 */
@@ -32,28 +35,22 @@
   /* 链接样式 */
   .toc-link {
     display: block;
-    padding: 4px 0;
-    color: #555;
+    padding: 5px 0;
+    color: #666;
     text-decoration: none;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 14px;
+    line-height: 1.4;
+    
+    /* 修正重点：允许换行，防止撑破容器 */
+    white-space: normal; 
+    word-wrap: break-word;
+    word-break: break-all;
+    
+    transition: color 0.2s ease;
   }
 
-  .toc-link:hover {
-    color: #2a7ae2; /* Minima 经典蓝色 */
-    padding-left: 5px;
-  }
-
-  /* 当前激活的标题 */
-  .toc-link.active {
+  .toc-link:hover, .toc-link.active {
     color: #2a7ae2;
-    font-weight: bold;
-    border-left: 2px solid #2a7ae2;
-    padding-left: 8px;
-    margin-left: -10px;
-  }
 
   /* 响应式：屏幕太小时隐藏 */
   @media (max-width: 1200px) {
