@@ -1,3 +1,8 @@
+---
+layout: post
+title: "流利说-202512"
+---
+
 # 2025-12-12
 
 **restaurant**  / ˈrestrɑːnt /  注意发音
@@ -109,7 +114,7 @@ Next time, you should brush up(复习，捡回已经生疏的知识) on the basi
 
 **ambulance / ˈæmbjələns / 注意重音**
 
-**emergency / ɪˈmɜːrdʒənsi / 注意发音**
+**emergency / ɪˈmɜːrdʒənsi / 注意发音** The article offers six tips on staying calm in an emergency. 注意发音。
 
 scratch 擦伤，抓伤
 
@@ -144,3 +149,11 @@ scratch 擦伤，抓伤
 **no comment** All I will say to the journalists is no comment.
 
 **take one's mind off something** If something takes your mind off a problem, it helps you to forget about it for a while.
+
+**allergic** / əˈlɜːrdʒɪk / I'm allergic to peanuts so I can't eat them.
+
+**public transportation** 公共交通
+
+**out of oder**  out of service If something is broken or not working, it is out of order.
+
+**panic** 恐慌(v/n/adj) panicking/panicked When you panic, you suddenly feel so afraid that you can not think or act reasonably.
