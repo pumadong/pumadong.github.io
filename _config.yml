@@ -1,3 +1,6 @@
+# 在 2025 年，GitHub Pages 默认提供的 Jekyll 环境中，minima 主题默认使用的版本依然是 2.5.x 系列。
+# 我们使用master分支
+remote_theme: jekyll/minima@master
 title: 讨论一下架构
 description: 欢迎来到我的个人博客和项目展示页。
 author: Bob
