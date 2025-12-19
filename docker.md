@@ -356,9 +356,9 @@ ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 | **安全加固** | 使用 `USER` 指令切换非 root 用户         |
 | **时区处理** | 明确安装 `tzdata` 并设置 `Asia/Shanghai` |
 
-# 四、FAQ
+# 四、入门到精通
 
-# 一、Docker是什么？
+# Docker是什么？
 
 简单来说，**Docker 是一个开源的应用容器引擎**。它让开发者可以把应用程序及其所有的依赖项（代码、库、配置文件等）打包进一个标准化的单位中，这个单位就叫**容器（Container）**。
 
@@ -403,7 +403,7 @@ ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 2. **微服务架构：** 将大型应用拆分成多个互相隔离的小容器运行。
 3. **消除环境差异：** “一次构建，到处运行”。
 
-# 二、Docker生命周期
+# Docker生命周期
 
 Docker 容器的生命周期（Lifecycle）是指一个容器从被创建、运行、暂停、停止到最终被删除的完整过程。理解这一过程的关键在于掌握容器在不同阶段的状态转化。
 
@@ -458,7 +458,7 @@ Docker 容器通常会经历以下五个主要状态：
 4. **Running** ➔ `stop` ➔ **Stopped**
 5. **Stopped** ➔ `rm` ➔ **Destroyed**
 
-# 三、Docker核心组件
+# Docker核心组件
 
 Docker 的核心架构采用的是 **客户端-服务器（C/S）架构**。简单来说，它由不同的组件协作，完成从“编写代码”到“容器运行”的全过程。
 
@@ -510,7 +510,7 @@ Docker 的核心架构采用的是 **客户端-服务器（C/S）架构**。简�
 2. **Push:** 将 **Image** 推送到 **Registry**。
 3. **Run:** 从仓库拉取镜像，由 **Daemon** 调用运行时创建并启动 **Container**。
 
-# 四、Docker COPY 与 ADD 区别
+# Docker COPY 与 ADD 区别
 
 在 Dockerfile 中，`COPY` 和 `ADD` 都用于将文件或目录从宿主机（或构建上下文）复制到镜像中。
 
@@ -559,7 +559,7 @@ Docker 的核心架构采用的是 **客户端-服务器（C/S）架构**。简�
 
 > **提示：** 无论使用哪种指令，被复制的文件路径必须在 **Docker 构建上下文（Build Context）** 之内（通常是 Dockerfile 所在的目录及其子目录）。
 
-# 五、Docker Entrypoint 和 CMD的不同
+# Docker Entrypoint 和 CMD的不同
 
 简单来说，`ENTRYPOINT` 和 `CMD` 都是用来指定容器启动时运行的程序的，但它们的**灵活性**和**角色**不同。
 
@@ -634,7 +634,7 @@ CMD ["Hello World"]
 > - 如果你想为用户提供默认的执行选项，请使用 **`CMD`**。
 > - 最灵活的方案是：**`ENTRYPOINT` 定义程序，`CMD` 定义参数。**
 
-# 六、Docker中的网络类型
+# Docker中的网络类型
 
 在 Docker 中，网络（Networking）是容器之间以及容器与外部世界通信的核心。Docker 提供了一套灵活的驱动程序，允许你根据不同的应用场景选择最合适的网络类型。
 
@@ -873,7 +873,7 @@ networks:
 - **隔离性**：将不同的业务模块（如前端、后端、数据库）放在不同的自定义网络中。
 - **安全性**：自定义网络可以控制哪些容器可以互相通信，甚至可以通过配置 `iptables: false` 进一步限制（虽然这属于高级配置）。
 
-# 七、Docker多阶段构建
+# Docker多阶段构建
 
 Docker 的**多阶段构建（Multi-stage builds）**是优化 Dockerfile 的最强大工具之一。它的核心目的是：**在保持镜像尽可能小的同时，简化构建流程。**
 
@@ -965,7 +965,7 @@ docker build --target builder -t myapp:dev .
 
 这在开发环境中非常有用，比如你只想运行测试阶段而不生成最终的发布镜像。
 
-# 八、什么是Distroless镜像
+# 什么是Distroless镜像
 
 简单来说，**Distroless 镜像**是一种极简的容器镜像，它**只包含你的应用程序及其运行所需的最小依赖**，而不包含任何传统的 Linux 发行版组件。
 
@@ -1026,7 +1026,7 @@ COPY --from=build /app/myapp /
 CMD ["/myapp"]
 ```
 
-# 九、Docker单点故障及解决方案
+# Docker单点故障及解决方案
 
 在使用 Docker 的生产环境中，“单点故障”（Single Point of Failure, SPOF）是一个非常关键的架构挑战。如果你的容器只跑在一台服务器上，一旦这台机器宕机、磁盘损坏或网络中断，整个业务就会直接下线。
 
@@ -1106,7 +1106,7 @@ Docker 自带的轻量级集群工具。
 | **中小型生产环境** | 使用 **Docker Swarm** + 外部 **NFS** 存储。           |
 | **大型/复杂业务**  | 部署 **Kubernetes (K8s)** + 分布式存储 + 云负载均衡。 |
 
-# 十、AWS解决Docker单点故障
+# AWS解决Docker单点故障
 
 在 Docker 的单机部署中，最核心的单点故障（SPOF）在于：**如果宿主机挂了，或者 Docker 守护进程崩溃，所有的服务都会中断。**
 
@@ -1171,7 +1171,7 @@ Docker 自带的轻量级集群工具。
 3. **配置 ALB：** 创建一个 Application Load Balancer，并设置健康检查路径。
 4. **定义服务副本：** 在 ECS Service 中设置 `Desired Count` $\ge 2$，并勾选跨可用区部署。
 
-# 十一、Docker Daemon Root 用户问题解决
+# Docker Daemon Root 用户问题解决
 
 在 Docker 的默认安装中，Docker Daemon（守护进程）始终以 `root` 用户身份运行。这意味着普通用户必须使用 `sudo` 才能执行 Docker 命令，这不仅不方便，还存在一定的安全风险。
 
@@ -1293,7 +1293,7 @@ username ALL=(ALL) NOPASSWD: /usr/bin/docker
 | **功能限制**   | 无限制                       | 无法使用某些网络功能或特权模式 |
 | **适用场景**   | 开发环境、受信任的多用户机   | 生产环境、对安全极其敏感的系统 |
 
-# 十二、AWS 中 Docker 资源限制配置
+# AWS 中 Docker 资源限制配置
 
 在 AWS 中限制 Docker 容器的资源（CPU 和内存），主要取决于你使用的服务（如 ECS, Fargate, EC2 或 Lambda）。
 
@@ -1378,7 +1378,7 @@ JSON
 - **OOM 排查**：如果容器频繁重启并显示 `OutOfMemoryError`，请检查是否触发了 **Hard Limit**。
 - **分级预留**：通常设置 `memoryReservation` 为正常运行值，`memory`（硬限制）为正常值的 1.5 - 2 倍。
 
-# 十三、EC2 运行 Docker 的正确姿势
+# EC2 运行 Docker 的正确姿势
 
 这是一个非常经典的问题。简单直接的回答是：**在 AWS EC2 上运行 Docker 不仅不是错误的，反而目前工业界最主流、最成熟的实践方式之一。**
 
@@ -1417,7 +1417,7 @@ JSON
 
 **一句话建议：** 如果你只是刚开始或者需要深度定制系统，用 EC2 跑 Docker 没问题；如果你希望以后不用管服务器补丁和维护，可以看看 **AWS Fargate**。
 
-# 十四、Docker 容器性能监控指南
+# Docker 容器性能监控指南
 
 Docker 容器性能监控是一个多维度的任务，通常根据监控的深度（实时 vs 历史）和规模（单机 vs 集群）分为不同的方案。
 
