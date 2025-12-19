@@ -5,24 +5,71 @@
   "minima/skins/{{ site.minima.skin | default: 'classic' }}",
   "minima/initialize";
 
+/* 1. 容器布局：使用 Flex 或 Grid */
 .post-container {
   display: flex;
-  justify-content: space-between;
+  justify-content:沟通;
+  position: relative;
 }
 
-.js-toc-content {
-  width: 70%; /* 文章宽度 */
+.post-content {
+  width: 75%; /* 给正文留出空间 */
+  padding-right: 20px;
 }
 
-.sidebar {
+/* 2. 侧边栏样式 */
+.post-toc {
   width: 25%;
   position: sticky;
-  top: 20px; /* 距离顶部距离 */
-  height: fit-content;
+  top: 20px;       /* 距离顶部的高度 */
+  height: calc(100vh - 40px); /* 限制高度为屏幕高度 */
+  overflow-y: auto; /* 内容过多时可滚动 */
+  padding-left: 15px;
+  border-left: 1px solid #e8e8e8;
+  font-size: 0.9em;
+
+  /* 隐藏滚动条（可选，保持美观） */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+  }
 }
 
-/* 针对小屏幕隐藏 */
-@media (max-width: 768px) {
-  .sidebar { display: none; }
-  .js-toc-content { width: 100%; }
+/* 3. 针对 Minima 的移动端适配 */
+@media screen and (max-width: 800px) {
+  .post-container {
+    flex-direction: column;
+  }
+  .post-content, .post-toc {
+    width: 100%;
+  }
+  .post-toc {
+    position: static;
+    height: auto;
+    border-left: none;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 20px;
+  }
+}
+
+/* 4. 样式美化（kramdown 生成的是 ul 列表） */
+#markdown-toc {
+  list-style: none;
+  padding-left: 0;
+  
+  ul {
+    list-style: none;
+    padding-left: 15px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #5b5b5b;
+    &:hover {
+      color: #2a7ae2;
+    }
+  }
 }

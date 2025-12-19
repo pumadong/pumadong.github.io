@@ -1,7 +1,7 @@
 ---
 layout: base
 ---
-ddd
+
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
@@ -38,12 +38,16 @@ ddd
   </div>
 
   <div class="post-container">
-    <article class="js-toc-content">
+    <article class="post-content">
       {{ content }}
     </article>
 
-    <aside class="sidebar">
-      <div class="js-toc"></div>
+    <aside class="post-toc">
+      <h3>目录</h3>
+      <div id="toc-container">
+        * TOC
+        {:toc}
+      </div>
     </aside>
   </div>
 
