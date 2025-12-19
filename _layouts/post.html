@@ -36,6 +36,16 @@ layout: base
     {{ content }}
   </div>
 
+  <div class="post-container">
+    <article class="js-toc-content">
+      {{ content }}
+    </article>
+
+    <aside class="sidebar">
+      <div class="js-toc"></div>
+    </aside>
+  </div>
+
   {% if jekyll.environment == 'production' -%}
     {% if page.comments == false -%}
     <div class="comments-disabled-message">
