@@ -81,7 +81,7 @@ title: "Docker从入门到精通"
 
 # 演示2个从GubHub源码构建Docker的例子
 
-## 第1个例子：Python写的HelloWorld
+## 1.Python写的HelloWorld
 
 1. 从GitHub克隆源代码
 
@@ -149,7 +149,7 @@ title: "Docker从入门到精通"
 
    https://hub.docker.com/r/bob0516/docker-python-hello-world
 
-## 第2个例子：多阶段构建Java写的Web应用
+## 2.多阶段构建Java写的Web应用
 
 1. Clone Source Code
 
