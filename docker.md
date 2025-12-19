@@ -3,7 +3,7 @@ layout: post
 title: "Docker从入门到精通"
 ---
 
-# Docker架构图
+# 一、Docker架构图
 
 ![Docker架构图](https://user-images.githubusercontent.com/43399466/217507877-212d3a60-143a-4a1d-ab79-4bb615cb4622.png)
 
@@ -26,7 +26,7 @@ title: "Docker从入门到精通"
 
    这是公用的Docker Image注册中心，Image->Registry，类似于Source Code -> GitHub
 
-# 安装Docker
+# 二、安装Docker
 
 1. 安装
 
@@ -79,7 +79,7 @@ title: "Docker从入门到精通"
    ...
    ```
 
-# 演示2个从GubHub源码构建Docker的例子
+# 三、从源码构建Docker镜像
 
 ## 1.Python写的HelloWorld
 
@@ -216,7 +216,7 @@ title: "Docker从入门到精通"
 
    访问http://公网IP:8080，站点正常显示。
 
-## Java8 Dockerfile最佳实践
+## 3.Java8 Dockerfile最佳实践
 
 ### 1. 选择合适的镜像基座 (Base Image)
 
@@ -356,7 +356,7 @@ ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 | **安全加固** | 使用 `USER` 指令切换非 root 用户         |
 | **时区处理** | 明确安装 `tzdata` 并设置 `Asia/Shanghai` |
 
-# FAQ
+# 四、FAQ
 
 # 一、Docker是什么？
 
