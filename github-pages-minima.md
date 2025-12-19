@@ -30,12 +30,6 @@ https://github.com/jekyll/minima/tree/master
 你可以将以下代码添加到 Jekyll 项目的 `_layouts/post.html` 文件末尾（在 `</article>` 之后），或者封装在 `_includes/toc.html` 中引用。
 
 ```
-{%- include toc.html -%}
-```
-
-
-
-```
 <div id="floating-toc" class="toc-container">
   <div class="toc-title">目录</div>
   <nav id="toc-content"></nav>
