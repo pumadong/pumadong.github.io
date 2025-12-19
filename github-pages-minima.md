@@ -3,7 +3,7 @@ layout: post
 title: "Github Pages Minima滚动条"
 ---
 
-### 说明
+### Jekyll Minima模版说明
 
 GitHub Pages 默认模板（通常是 Jekyll 主题）的布局文件，核心逻辑是通过**“同名覆盖”**机制：只要你在自己的仓库中创建一个与主题源码路径、文件名完全相同的文件夹和文件，GitHub Pages 就会优先使用你的版本。
 
@@ -33,7 +33,7 @@ https://github.com/jekyll/minima/tree/master
 {%- include toc.html -%}
 ```
 
-HTML
+
 
 ```
 <div id="floating-toc" class="toc-container">
