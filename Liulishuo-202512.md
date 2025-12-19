@@ -105,11 +105,13 @@ Next time, you should brush up(复习，捡回已经生疏的知识) on the basi
 
 **freak out** To freak out means to become very upset or extremely emotional. 极度兴奋；疯了；颓废；吓坏了；行为异常 I freaked out over his new album.
 
-# 2025-12-17
+# 2025-12-18
 
 **ambulance / ˈæmbjələns / 注意重音**
 
 **emergency / ɪˈmɜːrdʒənsi / 注意发音**
+
+scratch 擦伤，抓伤
 
 **coping with the injury，first aid 急救**
 
@@ -131,3 +133,14 @@ Next time, you should brush up(复习，捡回已经生疏的知识) on the basi
 
 **soak 浸泡 get soaked** It's your own fault for not listening to the weather forecast and got soaked.
 
+# 2025-12-18
+
+**sandal** 凉鞋 Inside, there are some shirts, a dress, sandals, and a guidebook.
+
+**file for something** The actress filed for divorce from her husband of ten years.
+
+**bankruptcy** 破产 / ˈbæŋkrʌptsi /
+
+**no comment** All I will say to the journalists is no comment.
+
+**take one's mind off something** If something takes your mind off a problem, it helps you to forget about it for a while.

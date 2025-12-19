@@ -645,6 +645,25 @@ CMD ["Hello World"]
 - **适用场景：** 适用于在**同一个 Docker 宿主机**上运行的多个独立容器之间的通信。
 - **特点：** 容器之间可以通过 IP 通信；如果使用自定义 Bridge 网络，还可以直接通过**容器名称**（DNS）进行通信。
 
+```
+docker run -d --name login nginx:latest
+docker run -d --name logout nginx:latest
+
+# 172.17.0.3
+docker inspect login
+
+# 更新软件包列表
+sudo apt update
+# 安装 iputils-ping 软件包
+sudo apt install iputils-ping -y
+
+# 172.17.0.4
+docker inspect logout
+
+docker exec -it login /bin/bash
+ping 172.17.0.4
+```
+
 ------
 
 ### 2. Host（主机网络）
@@ -721,6 +740,133 @@ Docker 的隔离主要依靠 Linux 内核的两大技术：**Namespaces（命名
 **跨服务器分布式架构**：使用 **Overlay**。
 
 **对安全性要求极高的内部处理**：使用 **None**。
+
+### 8.自定义Bridge
+
+在 Docker 中，使用默认的 `bridge` 网络虽然方便，但在生产或复杂开发环境中，**自定义桥接网络 (User-defined Bridge Network)** 是更好的选择。它提供了更好的隔离性、**自动 DNS 解析**（可以通过容器名直接通信）以及更灵活的配置。
+
+以下是定制并使用自定义 Bridge 网络的步骤：
+
+#### 1. 创建自定义 Bridge 网络
+
+你可以通过 `docker network create` 命令来定制子网网段、网关等参数。
+
+Bash
+
+```
+docker network create \
+  --driver bridge \
+  --subnet 192.168.10.0/24 \
+  --gateway 192.168.10.1 \
+  my_custom_network
+```
+
+- **--driver bridge**: 指定驱动类型为桥接。
+- **--subnet**: 手动指定 IP 地址段（避免与宿主机或其他网络冲突）。
+- **--gateway**: 指定该虚拟网段的网关。
+
+------
+
+#### 2. 运行容器并连接到网络
+
+在启动容器时，使用 `--network` 参数将其加入你创建的网络。
+
+- **启动容器 A (Web 服务):**
+
+  Bash
+
+  ```
+  docker run -d --name web_server --network my_custom_network nginx
+  ```
+
+- **启动容器 B (测试工具):**
+
+  Bash
+
+  ```
+  docker run -it --name test_client --network my_custom_network alpine sh
+  ```
+
+------
+
+#### 3. 验证网络特性 (DNS 解析)
+
+自定义网络最强大的地方在于**内置 DNS**。在 `test_client` 容器内部，你可以直接通过容器名访问 `web_server`，而不需要知道它的 IP 地址。
+
+Bash
+
+```
+# 在 test_client 内部执行
+ping web_server
+```
+
+> **注意：** 默认的 `bridge` 网络（即不指定网络时使用的那个）是不支持容器名自动解析的，必须使用自定义网络。
+
+------
+
+#### 4. 管理与维护
+
+如果你有已经运行的容器，想把它移动到新网络中，可以使用以下命令：
+
+- **将容器连接到网络：**
+
+  Bash
+
+  ```
+  docker network connect my_custom_network existing_container
+  ```
+
+- **查看网络详情（查看已连接的容器和 IP 分配）：**
+
+  Bash
+
+  ```
+  docker network inspect my_custom_network
+  ```
+
+- **断开网络连接：**
+
+  Bash
+
+  ```
+  docker network disconnect my_custom_network existing_container
+  ```
+
+------
+
+#### 5. 在 Docker Compose 中使用 (推荐)
+
+如果你使用 Compose，配置自定义网络会更加直观：
+
+YAML
+
+```
+version: '3.8'
+services:
+  web:
+    image: nginx
+    networks:
+      - backend_net
+
+  db:
+    image: mysql
+    networks:
+      - backend_net
+
+networks:
+  backend_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24
+```
+
+------
+
+#### 总结建议
+
+- **隔离性**：将不同的业务模块（如前端、后端、数据库）放在不同的自定义网络中。
+- **安全性**：自定义网络可以控制哪些容器可以互相通信，甚至可以通过配置 `iptables: false` 进一步限制（虽然这属于高级配置）。
 
 # 七、Docker多阶段构建
 
@@ -1226,3 +1372,121 @@ JSON
 - **监控**：使用 **CloudWatch Container Insights** 查看容器的实际 `MemoryUtilized` 和 `CpuUtilized`。
 - **OOM 排查**：如果容器频繁重启并显示 `OutOfMemoryError`，请检查是否触发了 **Hard Limit**。
 - **分级预留**：通常设置 `memoryReservation` 为正常运行值，`memory`（硬限制）为正常值的 1.5 - 2 倍。
+
+# 十三、EC2 运行 Docker 的正确姿势
+
+这是一个非常经典的问题。简单直接的回答是：**在 AWS EC2 上运行 Docker 不仅不是错误的，反而目前工业界最主流、最成熟的实践方式之一。**
+
+虽然从表面上看，在虚拟机（VM）里运行容器（Container）似乎多了一层“虚拟化”，但这种架构背后的逻辑其实非常扎实。
+
+------
+
+### 1. 为什么“虚拟机 + 容器”是黄金搭档？
+
+虽然 Docker 可以在裸机（Bare Metal）上运行，但在云环境下，将它跑在 EC2 上的原因主要有以下几点：
+
+- **强隔离性与安全性：** Docker 容器共享宿主机的内核。如果在裸机上内核出现漏洞，容器间可能发生“逃逸”。EC2（虚拟机）通过硬件虚拟化提供了一层坚固的隔离边界，即使一个 VM 里的容器出问题，也不会威胁到其他用户的 VM。
+- **资源管理的灵活性：** EC2 让你能快速调整底层资源。如果你的 Docker 应用需要更多内存，你可以轻松从 `t3.medium` 升级到 `r5.large`，而不需要搬动物理服务器。
+- **成熟的生态支撑：** AWS 的很多服务（如 EBS 存储、VPC 网络、IAM 身份权限）都是绑定在 EC2 实例上的。在 EC2 上跑 Docker，可以无缝利用这些云原生功能。
+
+### 2. 性能损耗真的很大吗？
+
+这是一个常见的误区。
+
+- **计算损耗极小：** 现代 CPU 都有硬件加速指令（如 Intel VT-x），虚拟机处理指令的损耗通常在 **5% 以内**。
+- **容器几乎“零”损耗：** Docker 并不是虚拟机，它只是宿主机上的一个进程。它直接运行在 EC2 的 Linux 内核上，不会再额外消耗一次虚拟化性能。
+
+### 3. 何时该考虑其他方案？
+
+虽然在 EC2 上手动装 Docker 没错，但随着规模变大，你会发现“管理 EC2 本身”变成了负担（比如需要自己升级操作系统补丁、扩容等）。这时候你可以考虑：
+
+| **方案**          | **特点**                                                     | **适用场景**                           |
+| ----------------- | ------------------------------------------------------------ | -------------------------------------- |
+| **EC2 + Docker**  | 完全控制权，想怎么配置都行。                                 | 实验环境、小型应用、需要特定内核配置。 |
+| **AWS ECS / EKS** | 容器编排服务（底层仍可基于 EC2）。                           | 大规模集群管理、微服务架构。           |
+| **AWS Fargate**   | **无服务器（Serverless）容器**。你不再能看到 EC2，只需给容器分配 CPU 和内存。 | 追求运维极致简单，不想管服务器。       |
+
+### 4. 总结
+
+在虚拟机上跑容器是**“逻辑隔离（Docker）”与“物理隔离（VM）”的结合**。这种组合提供了目前最平衡的安全性、可移植性和性能。
+
+**一句话建议：** 如果你只是刚开始或者需要深度定制系统，用 EC2 跑 Docker 没问题；如果你希望以后不用管服务器补丁和维护，可以看看 **AWS Fargate**。
+
+# 十四、Docker 容器性能监控指南
+
+Docker 容器性能监控是一个多维度的任务，通常根据监控的深度（实时 vs 历史）和规模（单机 vs 集群）分为不同的方案。
+
+以下是针对 Docker 容器性能监控的全面指南：
+
+------
+
+## 1. 核心监控指标 (Metrics)
+
+在监控 Docker 时，以下四类指标最为关键：
+
+- **CPU 指标**：利用率（Usage）、配额限制（Quota）、节流时间（Throttling）。
+- **内存指标**：已用内存（Usage）、缓存（Cache）、限制（Limit）、SWAP 使用情况。
+- **网络 I/O**：入站/出站流量（RX/TX）、丢包数、网络错误。
+- **磁盘 I/O**：读写字节数（Read/Write Bytes）、操作次数（IOPS）。
+
+------
+
+## 2. 常用监控方案对比
+
+根据你的需求，可以选择以下三种主流方案：
+
+### 方案 A：入门级 - Docker 内置命令 (`docker stats`)
+
+适用于单机环境下的**快速查看**和**实时诊断**。
+
+- **用法**：在终端输入 `docker stats`。
+- **优点**：无需安装任何额外软件，原生支持。
+- **缺点**：无法保存历史数据，没有可视化图表，不支持告警。
+
+### 方案 B：主流开源套件 - cAdvisor + Prometheus + Grafana
+
+这是目前生产环境中最流行的**标准化开源方案**。
+
+1. **cAdvisor (Google开源)**：负责从宿主机采集容器的实时资源消耗数据。
+2. **Prometheus**：负责定期抓取 cAdvisor 的数据并进行历史存储。
+3. **Grafana**：负责将 Prometheus 中的数据转化为精美的仪表盘。
+
+### 方案 C：全栈/商业方案 (SaaS)
+
+适用于需要高可用、自动化告警和深度链路追踪的企业。
+
+- **Datadog / New Relic**：功能强大，支持自动发现，但成本较高。
+- **Zabbix**：传统监控工具，通过 Docker 插件也能实现较好的监控效果。
+
+------
+
+## 3. 快速上手：使用 cAdvisor 进行图形化监控
+
+如果你想在几分钟内看到可视化界面，可以直接运行 Google 的 **cAdvisor** 容器：
+
+Bash
+
+```
+docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:ro \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --publish=8080:8080 \
+  --detach=true \
+  --name=cadvisor \
+  google/cadvisor:latest
+```
+
+运行后，访问 `http://localhost:8080` 即可看到当前宿主机上所有容器的实时性能图表。
+
+------
+
+## 4. 总结与建议
+
+| **场景**            | **推荐方案**                             |
+| ------------------- | ---------------------------------------- |
+| **临时查看**        | 使用 `docker stats` 命令行               |
+| **单机可视化**      | 部署 `cAdvisor` 查看 Web 界面            |
+| **中大规模生产**    | 搭建 `Prometheus + Grafana + cAdvisor`   |
+| **Kubernetes 集群** | 使用 `Kube-state-metrics` + `Prometheus` |
