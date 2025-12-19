@@ -40,8 +40,8 @@ https://github.com/jekyll/minima/tree/master
   .toc-container {
     position: fixed;
     top: 100px;
-    right: calc(50% - 600px); /* 动态定位在正文右侧 */
-    width: 220px;
+    right: calc(50% - 800px); /* 动态定位在正文右侧 */
+    width: 300px;
     max-height: 70vh;
     padding: 15px;
     background: #ffffff;
@@ -101,8 +101,8 @@ https://github.com/jekyll/minima/tree/master
   }
 
   /* 不同层级的缩进 */
-  .toc-h3 { padding-left: 15px !important; font-size: 0.8rem !important; }
-  .toc-h4 { padding-left: 25px !important; font-size: 0.75rem !important; }
+  .toc-h2 { padding-left: 15px !important; font-size: 0.8rem !important; }
+  .toc-h3 { padding-left: 25px !important; font-size: 0.75rem !important; }
 
   /* 响应式：屏幕太小时隐藏目录 */
   @media (max-width: 1100px) {
@@ -118,8 +118,8 @@ document.addEventListener("DOMContentLoaded", function() {
   
   if (!postContent || !tocContent) return;
 
-  // 1. 提取标题 (h2, h3, h4)
-  const headings = postContent.querySelectorAll('h2, h3, h4');
+  // 1. 提取标题 (h1, h2, h3)
+  const headings = postContent.querySelectorAll('h1, h2, h3');
   if (headings.length < 2) return; // 标题太少则不显示
 
   tocContainer.style.display = 'block';
