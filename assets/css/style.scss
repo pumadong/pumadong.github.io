@@ -9,7 +9,7 @@
   .toc-container {
     position: fixed;
     top: 100px;
-    right: calc((100vw - 980px) / 2 - 220px); /* 动态计算位置，假设正文宽800px */
+    right: calc((100vw - 800px) / 2 - 180px); /* 动态计算位置，假设正文宽800px */
     width: 400px;
     max-height: 70vh;
     overflow-y: auto;
