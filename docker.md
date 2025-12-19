@@ -7,7 +7,7 @@ title: "Docker从入门到精通"
 
 ![Docker架构图](https://user-images.githubusercontent.com/43399466/217507877-212d3a60-143a-4a1d-ab79-4bb615cb4622.png)
 
-### 总结：它是如何工作的？
+## 它是如何工作的？
 
 当你输入 `docker run hello-world` 时：
 
@@ -16,7 +16,7 @@ title: "Docker从入门到精通"
 3. 如果本地没有，Daemon 会从 **Docker Registry** 拉取。
 4. 最后，Daemon 调用底层驱动创建并启动容器。
 
-### 演示环境准备
+## 演示环境准备
 
 1. AWS，申请一个2核CPU、1G内存，安装ubuntu最新版本的EC2主机。Inbound Rules开放8080端口。
 
