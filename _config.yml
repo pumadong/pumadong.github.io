@@ -5,3 +5,11 @@ title: 讨论一下架构
 description: 欢迎来到我的个人博客和项目展示页。
 author: Bob
 email: puma.dong@hotmail.com
+
+# 确保在 plugins 列表中包含 jekyll-feed
+plugins:
+  - jekyll-feed
+
+# 必须设置 site.url 才能生成正确的绝对链接
+url: "https://pumadong.github.io" 
+baseurl: "" # 如果你的项目在子目录下，请填写子目录名
