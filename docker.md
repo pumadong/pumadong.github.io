@@ -466,7 +466,7 @@ Docker 的核心架构采用的是 **客户端-服务器（C/S）架构**。简�
 
 ------
 
-## 1. Docker 核心三大件 (Core Objects)
+### 1. Docker 核心三大件 (Core Objects)
 
 这是你日常使用 Docker 时接触频率最高的部分：
 
@@ -476,19 +476,19 @@ Docker 的核心架构采用的是 **客户端-服务器（C/S）架构**。简�
 
 ------
 
-## 2. Docker 后端架构 (The Engine)
+### 2. Docker 后端架构 (The Engine)
 
-### **Docker Daemon (dockerd)**
+#### **Docker Daemon (dockerd)**
 
 它是 Docker 的“大脑”，以守护进程的形式运行在后台。它负责管理所有的 Docker 对象，如镜像、容器、网络和存储卷。它通过监听 Docker API 请求来执行指令。
 
-### **Docker Client (docker)**
+#### **Docker Client (docker)**
 
 这是我们最常用的命令行工具（CLI）。当你输入 `docker run` 时，客户端会将命令发送给 `dockerd`。客户端和守护进程可以在同一个系统上运行，也可以连接到远程的 Docker 守护进程。
 
 ------
 
-## 3. 底层运行时组件 (Runtime)
+### 3. 底层运行时组件 (Runtime)
 
 在更深层次，Docker 并不是自己直接去操作 Linux 内核，而是通过以下组件实现的：
 
@@ -497,14 +497,14 @@ Docker 的核心架构采用的是 **客户端-服务器（C/S）架构**。简�
 
 ------
 
-## 4. 网络与存储 (Network & Storage)
+### 4. 网络与存储 (Network & Storage)
 
 - **Docker Networking:** 允许容器之间进行通信，或与外部网络通信。常见的模式有 `bridge`（桥接）、`host`（主机模式）和 `none`。
 - **Docker Volumes:** 容器的文件系统通常是随删随消失的。为了持久化数据（比如数据库的路径），Docker 提供了 **Volumes（卷）**，将宿主机的目录挂载到容器内部。
 
 ------
 
-## 总结：工作流示意
+### 总结：工作流示意
 
 1. **Build:** 编写 `Dockerfile`，构建出 **Image**。
 2. **Push:** 将 **Image** 推送到 **Registry**。
