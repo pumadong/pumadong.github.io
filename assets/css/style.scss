@@ -5,71 +5,59 @@
   "minima/skins/{{ site.minima.skin | default: 'classic' }}",
   "minima/initialize";
 
-/* 1. 容器布局：使用 Flex 或 Grid */
-.post-container {
+/* 文章容器：让内容与 TOC 并排 */
+.post-content-wrapper {
   display: flex;
-  justify-content:沟通;
-  position: relative;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
+/* 文章正文占位 */
 .post-content {
-  width: 75%; /* 给正文留出空间 */
-  padding-right: 20px;
+  width: 75%;
 }
 
-/* 2. 侧边栏样式 */
+/* TOC 侧边栏样式 */
 .post-toc {
-  width: 25%;
-  position: sticky;
-  top: 20px;       /* 距离顶部的高度 */
-  height: calc(100vh - 40px); /* 限制高度为屏幕高度 */
-  overflow-y: auto; /* 内容过多时可滚动 */
-  padding-left: 15px;
-  border-left: 1px solid #e8e8e8;
-  font-size: 0.9em;
-
-  /* 隐藏滚动条（可选，保持美观） */
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #ddd;
-    border-radius: 10px;
-  }
+  width: 22%;
+  display: none; /* 默认隐藏，稍后在媒体查询中对大屏开启 */
 }
 
-/* 3. 针对 Minima 的移动端适配 */
-@media screen and (max-width: 800px) {
-  .post-container {
-    flex-direction: column;
-  }
-  .post-content, .post-toc {
-    width: 100%;
-  }
+@media screen and (min-width: 1000px) {
   .post-toc {
-    position: static;
-    height: auto;
-    border-left: none;
-    border-bottom: 1px solid #e8e8e8;
-    margin-bottom: 20px;
+    display: block;
   }
 }
 
-/* 4. 样式美化（kramdown 生成的是 ul 列表） */
-#markdown-toc {
+.toc-sticky {
+  position: sticky;
+  top: 2rem;
+  max-height: 80vh; /* 限制高度防止溢出屏幕 */
+  overflow-y: auto; /* 关键：内部可滚动 */
+  padding-left: 1rem;
+  border-left: 1px solid #e8e8e8;
+}
+
+.toc-title {
+  font-size: 1rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+#toc ul {
   list-style: none;
-  padding-left: 0;
-  
-  ul {
-    list-style: none;
-    padding-left: 15px;
-  }
-  
-  a {
-    text-decoration: none;
-    color: #5b5b5b;
-    &:hover {
-      color: #2a7ae2;
-    }
-  }
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+
+#toc li a {
+  text-decoration: none;
+  color: #828282;
+  display: block;
+  padding: 2px 0;
+}
+
+#toc li a.active {
+  color: #2a7ae2; /* 高亮颜色 */
+  font-weight: bold;
 }

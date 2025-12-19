@@ -33,17 +33,18 @@ layout: base
     </div>
   </header>
 
-  <div class="post-content e-content" itemprop="articleBody">
-    {{ content }}
-  </div>
-
-  <aside class="post-toc">
-    <h3>目录</h3>
-    <div id="toc-container">
-      * TOC
-      {:toc}
+  <div class="post-content-wrapper">
+    <div class="post-content e-content" itemprop="articleBody" id="markdown-content">
+      {{ content }}
     </div>
-  </aside>
+
+    <aside class="post-toc">
+      <div class="toc-sticky">
+        <h2 class="toc-title">目录</h2>
+        <nav id="toc"></nav>
+      </div>
+    </aside>
+  </div>
 
   {% if jekyll.environment == 'production' -%}
     {% if page.comments == false -%}
@@ -57,3 +58,5 @@ layout: base
 
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
+
+{% include toc-script.html %}
