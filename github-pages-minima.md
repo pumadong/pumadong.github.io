@@ -15,13 +15,23 @@ Minima 的正文通常居中，左右留有空白，这为悬浮 TOC 提供了�
 
 GitHub Pages 目前（2025年）运行的是 `2.5.x` 版本，但 Minima 的主分支已经更新到了 `3.0`（包含深色模式支持）。
 
+我们通过修改_config.xml更改使用的Minima版本：
 
+```
+remote_theme: jekyll/minima@master
+```
 
-以下是一套完整的实现方案，包含 **CSS 样式**和 **JavaScript 逻辑**。
+**这其实也给以后得构建埋下了隐患，不确定master分支的新代码是否向后兼容**，当前没有3.0版本的稳定分支，我们先用master。
+
+https://github.com/jekyll/minima/tree/master
 
 ### 1. 核心代码实现
 
 你可以将以下代码添加到 Jekyll 项目的 `_layouts/post.html` 文件末尾（在 `</article>` 之后），或者封装在 `_includes/toc.html` 中引用。
+
+```
+{%- include toc.html -%}
+```
 
 HTML
 
