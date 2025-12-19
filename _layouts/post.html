@@ -33,16 +33,11 @@ layout: base
     </div>
   </header>
 
-  <div class="post-wrapper">
-    <article class="post-content">
-      {{ content }}
-    </article>
-    
-    <aside id="toc-container" class="toc-container">
-      <div class="toc-title">目录</div>
-      <nav id="toc"></nav>
-    </aside>
+  <div class="post-content e-content" itemprop="articleBody">
+    {{ content }}
   </div>
+
+  <nav id="toc" class="toc-container"></nav>
 
   {% if jekyll.environment == 'production' -%}
     {% if page.comments == false -%}
@@ -57,62 +52,57 @@ layout: base
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
 
-<script type="text/javascript">
+<script>
 document.addEventListener("DOMContentLoaded", function() {
-  const postContent = document.querySelector('.post-content');
   const tocContainer = document.getElementById('toc');
-  if (!postContent || !tocContainer) return;
+  const content = document.querySelector('.post-content');
+  const headings = content.querySelectorAll('h1, h2, h3');
+  
+  if (headings.length === 0) return;
 
-  // 1. 获取所有标题 (h2, h3)
-  const headings = postContent.querySelectorAll('h2, h3');
-  if (headings.length === 0) {
-    document.getElementById('toc-container').style.display = 'none';
-    return;
-  }
-
-  // 2. 生成 TOC HTML 结构
+  // 1. 生成 TOC 列表
   const tocList = document.createElement('ul');
+  tocList.style.listStyle = 'none';
+  tocList.style.padding = '0';
+
   headings.forEach((heading, index) => {
-    // 为没有 ID 的标题自动生成 ID
+    // 为没有 ID 的标题生成 ID
     if (!heading.id) {
-      heading.id = 'heading-' + index;
+      heading.id = `section-${index}`;
     }
 
-    const li = document.createElement('li');
-    li.style.paddingLeft = heading.tagName === 'H3' ? '15px' : '0';
-    
+    const listItem = document.createElement('li');
+    listItem.style.marginLeft = `${(parseInt(heading.tagName[1]) - 1) * 10}px`;
+
     const link = document.createElement('a');
-    link.href = '#' + heading.id;
+    link.href = `#${heading.id}`;
     link.textContent = heading.textContent;
-    link.setAttribute('data-target', heading.id);
+    link.classList.add('toc-link');
     
-    li.appendChild(link);
-    tocList.appendChild(li);
+    listItem.appendChild(link);
+    tocList.appendChild(listItem);
   });
   tocContainer.appendChild(tocList);
 
-  // 3. 滚动高亮逻辑
-  const tocLinks = tocContainer.querySelectorAll('a');
-  
-  function updateActiveToc() {
-    let currentId = '';
-    const scrollPosition = window.scrollY + 100; // 偏移量
+  // 2. 监听滚动高亮 (Intersection Observer API)
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -80% 0px', // 触发点在屏幕顶部附近
+    threshold: 1.0
+  };
 
-    headings.forEach(heading => {
-      if (heading.offsetTop <= scrollPosition) {
-        currentId = heading.id;
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      const tocItem = document.querySelector(`.toc-link[href="#${id}"]`);
+      
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+        tocItem?.classList.add('active');
       }
     });
+  }, observerOptions);
 
-    tocLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('data-target') === currentId) {
-        link.classList.add('active');
-      }
-    });
-  }
-
-  window.addEventListener('scroll', updateActiveToc);
-  updateActiveToc(); // 初始化
+  headings.forEach(heading => observer.observe(heading));
 });
 </script>
