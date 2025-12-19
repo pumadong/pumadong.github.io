@@ -86,8 +86,8 @@ document.addEventListener("DOMContentLoaded", function() {
   
   if (!postContent || !tocContent) return;
 
-  // 1. 提取标题 (h2, h3, h4)
-  const headings = postContent.querySelectorAll('h2, h3, h4');
+  // 1. 提取标题 (h1, h2, h3)
+  const headings = postContent.querySelectorAll('h1, h2, h3');
   if (headings.length < 2) return; // 标题太少则不显示
 
   tocContainer.style.display = 'block';
