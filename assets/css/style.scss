@@ -5,56 +5,65 @@
   "minima/skins/{{ site.minima.skin | default: 'classic' }}",
   "minima/initialize";
 
-  /* TOC 容器基础样式 */
+/* TOC 容器基础样式 */
 .toc-container {
-    position: fixed;
-    top: 120px;
-    /* 核心修正：使用固定宽度，并确保靠右对齐 */
-    width: 400px; 
-    /* 这种定位方式更稳健：先定位到中心，再向右偏移 (正文宽度/2 + 间距) */
-    left: calc(50% + 420px); 
-    max-height: 70vh;
-    overflow-y: auto;
-    overflow-x: hidden; /* 禁止横向滚动 */
-    padding: 15px;
-    box-sizing: border-box; /* 确保 padding 不增加宽度 */
-    border-left: 1px solid #e8e8e8;
-    background: transparent;
-    z-index: 100;
-  }
+  position: absolute;
+  top: 180px;         /* 初始高度，根据 Header 调整 */
+  left: calc(100% + 20px); /* 紧贴正文右侧，留出20px间距 */
+  width: 240px;
+  max-height: 70vh;
+  padding: 15px;
+  background: #fdfdfd;
+  border-left: 2px solid #e8e8e8;
+  font-size: 0.9em;
+  overflow-y: auto;
+  z-index: 10;
+  transition: top 0.3s ease;
+}
 
-  /* 自定义滚动条：不占用宽度且美观 */
-  .toc-container::-webkit-scrollbar {
-    width: 4px;
-  }
-  .toc-container::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
-  }
+/* 滚动条美化：不占用宽度 */
+.toc-container::-webkit-scrollbar {
+  width: 4px;
+}
+.toc-container::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
+.toc-container:hover::-webkit-scrollbar-thumb {
+  background: #bbb;
+}
 
-  /* 链接样式 */
-  .toc-link {
-    display: block;
-    padding: 5px 0;
-    color: #666;
-    text-decoration: none;
-    font-size: 14px;
-    line-height: 1.4;
-    
-    /* 修正重点：允许换行，防止撑破容器 */
-    white-space: normal; 
-    word-wrap: break-word;
-    word-break: break-all;
-    
-    transition: color 0.2s ease;
-  }
+/* 粘性固定效果 */
+.toc-fixed {
+  position: fixed;
+  top: 20px !important;
+}
 
-  .toc-link:hover, .toc-link.active {
-    color: #2a7ae2;
+/* 目录项样式 */
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.toc-item {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.toc-link {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.toc-link:hover, .toc-active {
+  color: #2a7ae2 !important; /* Minima 经典蓝色 */
+  font-weight: 600;
+}
 
-  /* 响应式：屏幕太小时隐藏 */
-  @media (max-width: 1200px) {
-    .toc-container {
-      display: none;
-    }
-  }
+/* 层级缩进 */
+.toc-h3 { margin-left: 15px; font-size: 0.95em; }
+.toc-h4 { margin-left: 30px; font-size: 0.9em; }
+
+/* 响应式：屏幕太小时隐藏 */
+@media screen and (max-width: 1200px) {
+  .toc-container { display: none; }
+}
