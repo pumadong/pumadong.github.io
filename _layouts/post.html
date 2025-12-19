@@ -35,9 +35,9 @@ layout: base
 
   <div class="post-content e-content" itemprop="articleBody">
     {{ content }}
+    <nav id="toc" class="toc-container"></nav>
   </div>
 
-  <nav id="toc" class="toc-container"></nav>
 
   {% if jekyll.environment == 'production' -%}
     {% if page.comments == false -%}
