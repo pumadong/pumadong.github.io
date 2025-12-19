@@ -5,65 +5,75 @@
   "minima/skins/{{ site.minima.skin | default: 'classic' }}",
   "minima/initialize";
 
-/* TOC 容器基础样式 */
-.toc-container {
-  position: absolute;
-  top: 180px;         /* 初始高度，根据 Header 调整 */
-  left: calc(100% + 20px); /* 紧贴正文右侧，留出20px间距 */
-  width: 240px;
-  max-height: 70vh;
-  padding: 15px;
-  background: #fdfdfd;
-  border-left: 2px solid #e8e8e8;
-  font-size: 0.9em;
-  overflow-y: auto;
-  z-index: 10;
-  transition: top 0.3s ease;
-}
+/* 容器样式 */
+  .toc-container {
+    position: fixed;
+    top: 100px;
+    right: calc(50% - 600px); /* 动态定位在正文右侧 */
+    width: 220px;
+    max-height: 70vh;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow-y: auto;
+    z-index: 100;
+    transition: all 0.3s ease;
+    display: none; /* 初始隐藏，由 JS 根据屏幕宽度显示 */
+  }
 
-/* 滚动条美化：不占用宽度 */
-.toc-container::-webkit-scrollbar {
-  width: 4px;
-}
-.toc-container::-webkit-scrollbar-thumb {
-  background: #ddd;
-  border-radius: 10px;
-}
-.toc-container:hover::-webkit-scrollbar-thumb {
-  background: #bbb;
-}
+  /* 标题样式 */
+  .toc-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #2a7ae2; /* Minima 经典蓝色 */
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
 
-/* 粘性固定效果 */
-.toc-fixed {
-  position: fixed;
-  top: 20px !important;
-}
+  /* 导航列表 */
+  #toc-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-/* 目录项样式 */
-.toc-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.toc-item {
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-.toc-link {
-  color: #666;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.toc-link:hover, .toc-active {
-  color: #2a7ae2 !important; /* Minima 经典蓝色 */
-  font-weight: 600;
-}
+  #toc-content li {
+    margin: 5px 0;
+    line-height: 1.4;
+  }
 
-/* 层级缩进 */
-.toc-h3 { margin-left: 15px; font-size: 0.95em; }
-.toc-h4 { margin-left: 30px; font-size: 0.9em; }
+  #toc-content a {
+    text-decoration: none;
+    color: #555;
+    font-size: 0.85rem;
+    display: block;
+    padding: 2px 5px;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+  }
 
-/* 响应式：屏幕太小时隐藏 */
-@media screen and (max-width: 1200px) {
-  .toc-container { display: none; }
-}
+  /* 悬停与激活状态 */
+  #toc-content a:hover {
+    color: #2a7ae2;
+    background: #f8f9fa;
+  }
+
+  #toc-content a.active {
+    color: #2a7ae2;
+    border-left-color: #2a7ae2;
+    background: #f0f7ff;
+    font-weight: 500;
+  }
+
+  /* 不同层级的缩进 */
+  .toc-h3 { padding-left: 15px !important; font-size: 0.8rem !important; }
+  .toc-h4 { padding-left: 25px !important; font-size: 0.75rem !important; }
+
+  /* 响应式：屏幕太小时隐藏目录 */
+  @media (max-width: 1100px) {
+    .toc-container { display: none !important; }
+  }

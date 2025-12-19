@@ -37,7 +37,10 @@ layout: base
     {{ content }}
   </div>
 
-  <nav id="toc" class="toc-container"></nav>
+  <div id="floating-toc" class="toc-container">
+    <div class="toc-title">目录</div>
+    <nav id="toc-content"></nav>
+  </div>
 
 
   {% if jekyll.environment == 'production' -%}
@@ -56,67 +59,60 @@ layout: base
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const postContent = document.querySelector('.post-content');
-  const tocContainer = document.getElementById('toc');
-  if (!postContent || !tocContainer) return;
+  const tocContent = document.getElementById('toc-content');
+  const tocContainer = document.getElementById('floating-toc');
+  
+  if (!postContent || !tocContent) return;
 
-  // 1. 提取标题
+  // 1. 提取标题 (h2, h3, h4)
   const headings = postContent.querySelectorAll('h2, h3, h4');
-  if (headings.length === 0) {
-    tocContainer.style.display = 'none';
-    return;
-  }
+  if (headings.length < 2) return; // 标题太少则不显示
 
-  // 2. 生成目录列表
-  const tocList = document.createElement('ul');
-  tocList.className = 'toc-list';
-  
+  tocContainer.style.display = 'block';
+  const ul = document.createElement('ul');
+
   headings.forEach((heading, index) => {
-    // 确保标题有 ID，用于锚点跳转
+    // 确保标题有 ID
     if (!heading.id) {
-      heading.id = 'toc-anchor-' + index;
+      heading.id = 'toc-item-' + index;
     }
 
-    const listItem = document.createElement('li');
-    listItem.className = `toc-item toc-${heading.tagName.toLowerCase()}`;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
     
-    const link = document.createElement('a');
-    link.href = '#' + heading.id;
-    link.textContent = heading.innerText.replace('¶', ''); // 移除可能的锚点符号
-    link.className = 'toc-link';
+    a.href = '#' + heading.id;
+    a.textContent = heading.innerText;
+    a.classList.add('toc-' + heading.tagName.toLowerCase());
     
-    listItem.appendChild(link);
-    tocList.appendChild(listItem);
-  });
-  
-  tocContainer.appendChild(tocList);
-
-  // 3. 滚动监听：固定位置与高亮
-  const offsetTop = tocContainer.offsetTop;
-  const links = tocContainer.querySelectorAll('.toc-link');
-
-  window.addEventListener('scroll', () => {
-    // A. 处理固定定位
-    if (window.scrollY > offsetTop - 20) {
-      tocContainer.classList.add('toc-fixed');
-    } else {
-      tocContainer.classList.remove('toc-fixed');
-    }
-
-    // B. 处理高亮
-    let currentId = '';
-    headings.forEach(heading => {
-      const top = heading.offsetTop;
-      if (window.scrollY >= top - 100) {
-        currentId = heading.id;
-      }
+    // 点击平滑滚动
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      heading.scrollIntoView({ behavior: 'smooth' });
     });
 
-    links.forEach(link => {
-      link.classList.remove('toc-active');
-      if (link.getAttribute('href') === '#' + currentId) {
-        link.classList.add('toc-active');
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  tocContent.appendChild(ul);
+
+  // 2. 监听滚动，自动高亮当前章节
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -80% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('#toc-content a').forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+        });
       }
     });
-  });
+  }, observerOptions);
+
+  headings.forEach(heading => observer.observe(heading));
 });
 </script>
