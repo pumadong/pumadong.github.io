@@ -40,7 +40,7 @@ layout: base
 
     <aside id="toc-container" class="toc-container">
       <div class="toc-title">目录</div>
-      <div id="toc-content"></div>
+      <nav id="toc"></nav>
     </aside>
   </div>
 
@@ -57,4 +57,62 @@ layout: base
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
 
-{% include toc-script.html %}
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+  const postContent = document.querySelector('.post-content');
+  const tocContainer = document.getElementById('toc');
+  if (!postContent || !tocContainer) return;
+
+  // 1. 获取所有标题 (h2, h3)
+  const headings = postContent.querySelectorAll('h2, h3');
+  if (headings.length === 0) {
+    document.getElementById('toc-container').style.display = 'none';
+    return;
+  }
+
+  // 2. 生成 TOC HTML 结构
+  const tocList = document.createElement('ul');
+  headings.forEach((heading, index) => {
+    // 为没有 ID 的标题自动生成 ID
+    if (!heading.id) {
+      heading.id = 'heading-' + index;
+    }
+
+    const li = document.createElement('li');
+    li.style.paddingLeft = heading.tagName === 'H3' ? '15px' : '0';
+    
+    const link = document.createElement('a');
+    link.href = '#' + heading.id;
+    link.textContent = heading.textContent;
+    link.setAttribute('data-target', heading.id);
+    
+    li.appendChild(link);
+    tocList.appendChild(li);
+  });
+  tocContainer.appendChild(tocList);
+
+  // 3. 滚动高亮逻辑
+  const tocLinks = tocContainer.querySelectorAll('a');
+  
+  function updateActiveToc() {
+    let currentId = '';
+    const scrollPosition = window.scrollY + 100; // 偏移量
+
+    headings.forEach(heading => {
+      if (heading.offsetTop <= scrollPosition) {
+        currentId = heading.id;
+      }
+    });
+
+    tocLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('data-target') === currentId) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveToc);
+  updateActiveToc(); // 初始化
+});
+</script>
