@@ -1,115 +1,117 @@
 ---
-layout: single
+layout: post
 title: 本机环境
-permalink: /local-environment.html
-
-classes: wide
-
-author: Bob Dong
-
-
 ---
 
-# 前言
-
-配置一些本机的常用环境。
-
-# 待解决
-
-- redis的配置文件中如何设置变量：logfile redis-${port}.log这种。
-- Idea 2024 双击文件经常不能打开。
-- Sentinel节点如何相互发现，配置之后如何相互发现。
-- 为什么redis cluster是对16383取模，而不是16384.
+# VMware Fusion虚拟机
+1. 桥接模式：192.168.1.200
+2. 宿主机：Mac 12.7，192.168.1.100
 
 # Redis
+192.168.1.200:6379
 
-**RDB和AOF比较**
+# MySQL
+192.168.1.200:3309
 
-​							RDB 	AOF
-启动优先级：	低		高
-体积：		小		大
-回复速度：	快		慢
-数据安全性：	丢数据	根据策略决定
-轻重：		重		轻
+# Idea
+## Spring Initializr ServerURL
+构建项目时，Spring Initializr Server URL，由默认的start.spring.io，更换为start.aliyun.com是更好的选择。
+[Spring Initializr 构建SpringBoot项目时Server URL选择start.spring.io和start.aliyun.com的区别 原创](https://blog.csdn.net/dengxin686868/article/details/137127524)
 
-**RDB最最佳策略**：
+## Lombok和Java版本兼容问题
 
-- 建议关掉，注意：但是主从全量复制是会自动触发的。
+java: java.lang.NoSuchFieldError: Class com.sun.tools.javac.tree.JCTree$JCImport does not have member field 'com.sun.tools.javac.tree.JCTree qualid'
 
-**AOF最佳策略**：
+这是lombok和java版本的冲突问题，参考这里：[JDK与Lombok版本兼容性冲突解决方案及实践](https://comate.baidu.com/zh/page/9x1taz7ac6m)。
 
-- 建议开，默认宕机可能丢1秒数据。只做缓存可以关闭掉。
-- AOF重写集中管理。
-- everysec
+通过homebrew安装JDK11解决：[LINK](https://www.google.com/search?q=homebrew+install+java+11&sca_esv=5cb444661cf9bcf8&sxsrf=AE3TifMHnSfqVuYYyEFZHKOc76D5hfDEAQ%3A1764937444646&source=hp&ei=5M4yadG9JdbdkPIP_fm6gQk&iflsig=AOw8s4IAAAAAaTLc9LqY2PgOYx0S4FYCjdl_s3dsha3N&oq=homebrew+&gs_lp=Egdnd3Mtd2l6Iglob21lYnJldyAqAggIMgsQABiABBiRAhiKBTILEAAYgAQYkQIYigUyCxAAGIAEGJECGIoFMgoQABiABBhDGIoFMg0QABiABBixAxhDGIoFMgsQABiABBiRAhiKBTIKEAAYgAQYQxiKBTIIEAAYgAQYsQMyChAAGIAEGEMYigUyChAAGIAEGEMYigVI9klQAFj2EHABeACQAQCYAeoCoAGgFqoBBTItNS41uAEDyAEA-AEBmAILoALYFsICChAjGPAFGCcYngbCAgoQIxiABBgnGIoFwgIEECMYJ8ICERAuGIAEGLEDGNEDGIMBGMcBwgIOEAAYgAQYsQMYgwEYigXCAg4QLhiABBixAxiDARiKBcICDRAAGIAEGJECGIoFGArCAgsQABiABBixAxiDAcICBRAAGIAEwgIOEC4YgAQYsQMY0QMYxwHCAg0QLhiABBhDGOUEGIoFwgIQEAAYgAQYsQMYQxiDARiKBcICCxAuGIAEGMcBGK8BmAMAkgcHMS4wLjUuNaAH8FqyBwUyLTUuNbgH1BbCBwcwLjMuNy4xyAco&sclient=gws-wiz)。
 
-**最佳策略：**
+- brew install openjdk@11
+- /usr/local/Cellar/openjdk@11/11.0.29/libexec/openjdk.jdk/Contents/Home
+- /usr/local/Cellar/openjdk/23.0.2/libexec/openjdk.jdk/Contents/Home
+- 在Idea中新增JDK时，通过command+shift+G输入以上路径，更换JDK
+- 在本地通过更改~/.bash_profile更换java版本：export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
 
-- 小分片，maxMemory最大内存4个G，fork或者rdb会较小开销。
-- 监控（硬盘、内存、负载、网络）。
-- 足够的内存。
+# Docker Desktop
 
-**开发运维常见问题：**
+简单来说，**Docker Desktop 的最新版本（v4.55.0+）官方已经不再支持 macOS 12 (Monterey) 了。**
 
-- fork操作：
-  - 问题：同步操作；与内存量息息相关，内存越大，耗时越长（与机器类型相关）；info: lastest_fork_usec执行时间。
-  - 改善：优先使用物理机或者高效支持fork操作的虚拟化技术；控制Redis实例的最大可用内存：maxMemory；合理配置Linux内存分片策略：vm.overcommit_memory=1（默认0，代表内存不足就不分配）；降低fork频率：例如放宽AOF重写自动触发时机，不必要的全量复制。
-- 进程外开销
-  - CPU开销：RDB和AOF文件生成，属于CPU密集型；优化：不做CPU绑定，不和CPU密集型应用一起部署。
-  - 内存开销：fork内存开销，copy-on-write；优化：e'cho never > /sys/kernel/mm/transparent_hugepage/enabled
-  - 硬盘开销：AOF和RDB文件写入，可以结合iostat，iotop分析；优化：不要he高硬盘负载服务部署一起，no-append-fsync-on-rewrite = yes，根据写入量决定磁盘类型，例如ssd，单机多实例持久化文件目录可以考虑分盘。
-- AOF追加阻塞
-  - 主线程对比上次fsync时间，如果大于2秒，会阻塞，小于2秒通过（丢2秒数据）。
-  - 如果发生AOF阻塞，redis日志会有：Asynchronous AOF fsync is taking too long(disk is busy?). 执行命令info persistence，会记录发生delay的次数，例如，oaf_delayed_fsync: 100。
-- 单机多实例部署
+Docker 的官方政策是支持 **最新的三个主要 macOS 版本**。由于目前（2025年底）主流版本为 macOS 15 (Tahoe/Sequoia 相关版本)、14 (Sonoma) 和 13 (Ventura)，因此 macOS 12 已被移出官方支持范围。
 
-# 主从复制
+以下是详细的兼容性说明和建议：
 
-命令：slaveof ip port，无需重启，不便于管理
+------
 
-配置文件：需要重启，便于管理
+## 1. 为什么最新版不支持？
 
-slaveof ip port
+根据 Docker 官方文档的更新记录：
 
-slave-read-only yes
+- **从版本 4.49.0 开始**：Docker Desktop 的安装和更新要求最低版本提升至 **macOS 14 (Sonoma)**。
+- **在 4.48.0 版本中**：官方明确指出对 macOS 13 的支持已结束，下一版本将强制要求 macOS 14。
+- **macOS 12 (Monterey)**：支持更早之前就已经停止。
 
-info replication 查看主从相关信息。
+## 2. macOS 12.7 还能用哪个版本？
 
-**全量复制开销：**
+虽然最新版无法安装，但你可以通过安装 **旧版本** 来继续使用。根据社区反馈和发布记录，以下版本通常是 macOS 12 用户的较稳选择：
 
-- bgsave时间
-- RDB文件网络传输时间
-- 从节点清空数据时间（flushall）
-- 从节点加载RDB的时间
-- 可能的AOF重写时间
+- **推荐版本：Docker Desktop 4.38.0 或更早版本。**
+- 部分用户反馈 **4.42.0** 可能是最后几个能在 Monterey 上尝试运行的版本，但可能会遇到不稳定的情况。
 
-# 网络
+## 3. 如何解决安装问题？
 
-RHEL7.9虚拟主机IP地址：192.168.1.200
+如果你必须在 macOS 12.7 上运行 Docker，请参考以下操作：
 
-Redis端口：6382，本机链接Redis，需要关闭Server的防火墙或者打开6382端口，同时，本地需要把这个IP加入VPN的ByPass中。
+1. **禁止自动更新**：安装旧版本后，务必在设置中关闭“Check for updates”，否则系统会自动下载不兼容的新版导致崩溃。
 
-在redhat7/centos7中，Linux默认的防火墙是firewalld，启动与关闭方式如下：
+2. **手动下载旧版**：你可以前往 [Docker Desktop Release Notes](https://docs.docker.com/desktop/release-notes/) 页面，向下滚动寻找 2024 年上半年或更早的发布版本下载 DMG 安装包
 
-```
-#查看防火墙状态
-firewall-cmd --state 
-systemctl status firewalld
+   - **Apple Silicon (M1/M2/M3 芯片):** [Docker Desktop 4.25.0 (M-series)](https://www.google.com/search?q=https://desktop.docker.com/mac/main/arm64/126437/Docker.dmg)
+   - **Intel 处理器:** [Docker Desktop 4.25.0 (Intel)](https://desktop.docker.com/mac/main/amd64/126437/Docker.dmg)
+   - **备选版本：** 如果 4.25.0 在您的系统上运行异常，可以尝试更保守的 **v4.24.2**（这是最后一个明确对旧系统有极佳兼容性的版本）：
+     - [4.24.2 for Apple Silicon](https://www.google.com/search?q=https://desktop.docker.com/mac/main/arm64/124339/Docker.dmg)
+     - [4.24.2 for Intel](https://desktop.docker.com/mac/main/amd64/124339/Docker.dmg)
 
-#临时开启，重启机器后失效 
-systemctl unmask firewalld 
-systemctl start firewalld 
+3. **替代方案**：如果旧版 Docker Desktop 运行缓慢，可以考虑轻量级的替代品，如 **OrbStack** 或 **Colima**，它们往往对旧版 macOS 有更好的兼容性。
 
-#临时关闭，重启机器后失效 
-systemctl stop firewalld
+4. **配置镜像加速**
 
-#开机自启动 
-systemctl enable firewalld
+   **配置步骤**
 
-#关闭开机自启动
-systemctl disable firewalld
+   1. **打开设置**：点击顶部菜单栏的 Docker 图标，选择 **Settings** (设置)。
+   2. **定位配置页**：在左侧导航栏中选择 **Docker Engine**。
+   3. **修改 JSON**：在右侧的 JSON 编辑框中，找到 `registry-mirrors` 键（如果没有则手动添加）。将镜像地址填入数组中。
+   4. **保存并重启**：点击右下角的 **Apply & Restart**。
 
+   **配置示例：**
 
-# 要确保通过访问firewalld D-Bus接口以及如果需要其他服务也未
-# 启动firewalld firewalld，使用root输入以下命令：
-systemctl mask firewalld
-```
+   JSON
+
+   ```
+   {
+     "registry-mirrors": [
+       "https://docker.1ms.run",
+       "https://docker.xuanyuan.me",
+       "https://docker.m.daocloud.io"
+     ],
+     "builder": {
+       "gc": {
+         "defaultKeepStorage": "20GB",
+         "enabled": true
+       }
+     },
+     "experimental": false
+   }
+   ```
+
+   ------
+
+   **2025 推荐可用加速器地址**
+
+   目前国内直接访问 Docker Hub 极不稳定，以下是近期收集的可用源：
+
+   | **来源**       | **镜像地址**                           | **备注**                      |
+   | -------------- | -------------------------------------- | ----------------------------- |
+   | **1ms (推荐)** | `https://docker.1ms.run`               | 2025 活跃，速度较快           |
+   | **轩辕镜像**   | `https://docker.xuanyuan.me`           | 个人维护，稳定性好            |
+   | **DaoCloud**   | `https://docker.m.daocloud.io`         | 老牌镜像站，可作备选          |
+   | **阿里云**     | `https://<你的ID>.mirror.aliyuncs.com` | 需登录阿里云控制台获取专属 ID |

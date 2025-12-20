@@ -138,7 +138,7 @@ scratch 擦伤，抓伤
 
 **soak 浸泡 get soaked** It's your own fault for not listening to the weather forecast and got soaked.
 
-# 2025-12-18
+# 2025-12-19
 
 **sandal** 凉鞋 Inside, there are some shirts, a dress, sandals, and a guidebook.
 
@@ -157,3 +157,7 @@ scratch 擦伤，抓伤
 **out of oder**  out of service If something is broken or not working, it is out of order.
 
 **panic** 恐慌(v/n/adj) panicking/panicked When you panic, you suddenly feel so afraid that you can not think or act reasonably.
+
+# 2025-12-20
+
+**receipt** / rɪˈsiːt / 收据 **recipe** / ˈresəpi / 菜单

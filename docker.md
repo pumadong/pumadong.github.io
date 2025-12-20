@@ -79,7 +79,7 @@ title: "Docker从入门到精通"
    ...
    ```
 
-# 三、从源码构建Docker镜像
+# 三、构建Docker镜像
 
 ## 1.Python写的HelloWorld
 
@@ -355,6 +355,110 @@ ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 | **内存安全** | 开启 `-XX:+UseContainerSupport`          |
 | **安全加固** | 使用 `USER` 指令切换非 root 用户         |
 | **时区处理** | 明确安装 `tzdata` 并设置 `Asia/Shanghai` |
+
+## 4.Docker Compose的使用场景
+
+Docker Compose 是一个用于定义和运行多容器 Docker 应用程序的工具。简单来说，如果你的项目需要多个服务（比如前端、后端、数据库）共同工作，Compose 可以让你通过一个 YAML 文件来配置它们，并用一条命令全部启动。
+
+以下是 Docker Compose 的几个核心使用场景：
+
+------
+
+### 1. 本地开发环境（最常用）
+
+在开发时，你往往需要数据库（MySQL/Redis）、缓存（Memcached）或消息队列（RabbitMQ）。手动安装这些软件非常繁琐。
+
+- **价值：** 通过 `docker-compose.yml` 描述这些依赖，新同事加入项目后，只需运行 `docker-compose up` 即可搭建出完全一致的开发环境。
+- **特性：** 支持挂载本地代码到容器（Volumes），实现代码修改后容器内立即生效（热更新）。
+
+### 2. 微服务架构的编排
+
+微服务项目通常包含数十个互相通信的服务。
+
+- **价值：** Compose 允许你在同一个网络（Network）中启动这些服务，服务之间可以通过**服务名**（如 `http://backend:8080`）直接通信，无需关心容器的具体 IP 地址。
+
+### 3. 自动化测试环境（CI/CD）
+
+在持续集成过程中，你需要一个干净的环境来运行测试用例。
+
+- **价值：** 测试脚本启动时，Compose 快速拉起测试所需的数据库和应用实例；测试完成后，通过 `docker-compose down` 一键销毁环境，不留任何残余。
+
+### 4. 单机多容器应用部署
+
+虽然在大规模集群中我们会使用 Kubernetes (K8s)，但对于中小型项目或个人服务器，Compose 是完美的部署工具。
+
+- **价值：** 它比 K8s 简单得多，非常适合部署博客、监控系统（Prometheus + Grafana）或企业内部的小型工具。
+
+------
+
+### Docker Compose 的工作流程示例
+
+通常的使用步骤如下：
+
+| **步骤**               | **操作**            | **说明**                                          |
+| ---------------------- | ------------------- | ------------------------------------------------- |
+| **1. 编写 Dockerfile** | 定义单个容器        | 比如你的 Python 或 Java 应用环境。                |
+| **2. 编写 yml 文件**   | 定义服务集合        | 配置 `image`, `ports`, `volumes`, `networks` 等。 |
+| **3. 运行命令**        | `docker-compose up` | 一次性启动并关联所有容器。                        |
+
+### 核心优势总结
+
+- **配置即代码：** 环境配置版本化，可跟随 Git 提交。
+- **环境一致性：** 保证了“在我的电脑上能运行，在你的电脑上也能运行”。
+- **隔离性：** 每个项目可以使用独立的网络和存储卷，互不干扰。
+
+### 演示
+
+```
+git clone https://github.com/docker/awesome-compose.git
+cd awesome-compose/nginx-nodejs-redis/
+docker-compose up	#通过compose.yaml，启动4个容器
+```
+
+compose.yaml
+
+```
+services:
+  redis:
+    image: 'redislabs/redismod'	# 直接从 Docker Hub 下载，无需 Dockerfile
+    ports:
+      - '6379:6379'
+  web1:
+    restart: on-failure
+    build: ./web	# 告诉 Compose 寻找web目录下的 Dockerfile 来构建镜像
+    hostname: web1
+    ports:
+      - '81:5000'
+  web2:
+    restart: on-failure
+    build: ./web
+    hostname: web2	# 告诉 Compose 寻找web目录下的 Dockerfile 来构建镜像
+    ports:
+      - '82:5000'
+  nginx:
+    build: ./nginx
+    ports:
+    - '80:80'
+    depends_on:
+    - web1
+    - web2
+```
+
+web项目的Dockerfile
+
+```
+FROM node:14.17.3-alpine3.14
+
+WORKDIR /usr/src/app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY ./server.js ./
+
+CMD ["npm","start"]
+```
+
+
 
 # 四、入门到精通
 
