@@ -485,7 +485,7 @@ Bash 巴什
 
 ```
 # 创建一个新的 builder 实例并命名为 mybuilder
-docker buildx create --name mybuilder --use
+docker buildx create --name mybuilder --platform linux/amd64,linux/arm64 --driver docker-container --use
 
 # 启动并检查 builder 状态
 docker buildx inspect --bootstrap
