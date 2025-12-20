@@ -6,31 +6,8 @@ title: 本机环境
 # VMware Fusion虚拟机
 1. 桥接模式：192.168.1.200
 2. 宿主机：Mac 12.7，192.168.1.100
-
-# Redis
-192.168.1.200:6379
-
-# MySQL
-192.168.1.200:3309
-
-# Idea
-## Spring Initializr ServerURL
-构建项目时，Spring Initializr Server URL，由默认的start.spring.io，更换为start.aliyun.com是更好的选择。
-[Spring Initializr 构建SpringBoot项目时Server URL选择start.spring.io和start.aliyun.com的区别 原创](https://blog.csdn.net/dengxin686868/article/details/137127524)
-
-## Lombok和Java版本兼容问题
-
-java: java.lang.NoSuchFieldError: Class com.sun.tools.javac.tree.JCTree$JCImport does not have member field 'com.sun.tools.javac.tree.JCTree qualid'
-
-这是lombok和java版本的冲突问题，参考这里：[JDK与Lombok版本兼容性冲突解决方案及实践](https://comate.baidu.com/zh/page/9x1taz7ac6m)。
-
-通过homebrew安装JDK11解决：[LINK](https://www.google.com/search?q=homebrew+install+java+11&sca_esv=5cb444661cf9bcf8&sxsrf=AE3TifMHnSfqVuYYyEFZHKOc76D5hfDEAQ%3A1764937444646&source=hp&ei=5M4yadG9JdbdkPIP_fm6gQk&iflsig=AOw8s4IAAAAAaTLc9LqY2PgOYx0S4FYCjdl_s3dsha3N&oq=homebrew+&gs_lp=Egdnd3Mtd2l6Iglob21lYnJldyAqAggIMgsQABiABBiRAhiKBTILEAAYgAQYkQIYigUyCxAAGIAEGJECGIoFMgoQABiABBhDGIoFMg0QABiABBixAxhDGIoFMgsQABiABBiRAhiKBTIKEAAYgAQYQxiKBTIIEAAYgAQYsQMyChAAGIAEGEMYigUyChAAGIAEGEMYigVI9klQAFj2EHABeACQAQCYAeoCoAGgFqoBBTItNS41uAEDyAEA-AEBmAILoALYFsICChAjGPAFGCcYngbCAgoQIxiABBgnGIoFwgIEECMYJ8ICERAuGIAEGLEDGNEDGIMBGMcBwgIOEAAYgAQYsQMYgwEYigXCAg4QLhiABBixAxiDARiKBcICDRAAGIAEGJECGIoFGArCAgsQABiABBixAxiDAcICBRAAGIAEwgIOEC4YgAQYsQMY0QMYxwHCAg0QLhiABBhDGOUEGIoFwgIQEAAYgAQYsQMYQxiDARiKBcICCxAuGIAEGMcBGK8BmAMAkgcHMS4wLjUuNaAH8FqyBwUyLTUuNbgH1BbCBwcwLjMuNy4xyAco&sclient=gws-wiz)。
-
-- brew install openjdk@11
-- /usr/local/Cellar/openjdk@11/11.0.29/libexec/openjdk.jdk/Contents/Home
-- /usr/local/Cellar/openjdk/23.0.2/libexec/openjdk.jdk/Contents/Home
-- 在Idea中新增JDK时，通过command+shift+G输入以上路径，更换JDK
-- 在本地通过更改~/.bash_profile更换java版本：export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+3. Redis：192.168.1.200:6379
+4. MySQL：192.168.1.200:3309  root/123456
 
 # Docker Desktop
 
@@ -65,12 +42,10 @@ Docker 的官方政策是支持 **最新的三个主要 macOS 版本**。由于�
 
 2. **手动下载旧版**：你可以前往 [Docker Desktop Release Notes](https://docs.docker.com/desktop/release-notes/) 页面，向下滚动寻找 2024 年上半年或更早的发布版本下载 DMG 安装包
 
-   - **Apple Silicon (M1/M2/M3 芯片):** [Docker Desktop 4.25.0 (M-series)](https://www.google.com/search?q=https://desktop.docker.com/mac/main/arm64/126437/Docker.dmg)
    - **Intel 处理器:** [Docker Desktop 4.25.0 (Intel)](https://desktop.docker.com/mac/main/amd64/126437/Docker.dmg)
    - **备选版本：** 如果 4.25.0 在您的系统上运行异常，可以尝试更保守的 **v4.24.2**（这是最后一个明确对旧系统有极佳兼容性的版本）：
-     - [4.24.2 for Apple Silicon](https://www.google.com/search?q=https://desktop.docker.com/mac/main/arm64/124339/Docker.dmg)
      - [4.24.2 for Intel](https://desktop.docker.com/mac/main/amd64/124339/Docker.dmg)
-
+   
 3. **替代方案**：如果旧版 Docker Desktop 运行缓慢，可以考虑轻量级的替代品，如 **OrbStack** 或 **Colima**，它们往往对旧版 macOS 有更好的兼容性。
 
 4. **配置镜像加速**
@@ -115,3 +90,24 @@ Docker 的官方政策是支持 **最新的三个主要 macOS 版本**。由于�
    | **轩辕镜像**   | `https://docker.xuanyuan.me`           | 个人维护，稳定性好            |
    | **DaoCloud**   | `https://docker.m.daocloud.io`         | 老牌镜像站，可作备选          |
    | **阿里云**     | `https://<你的ID>.mirror.aliyuncs.com` | 需登录阿里云控制台获取专属 ID |
+
+# Idea
+
+## Spring Initializr ServerURL
+
+构建项目时，Spring Initializr Server URL，由默认的start.spring.io，更换为start.aliyun.com是更好的选择。
+[Spring Initializr 构建SpringBoot项目时Server URL选择start.spring.io和start.aliyun.com的区别 原创](https://blog.csdn.net/dengxin686868/article/details/137127524)
+
+## Lombok和Java版本兼容问题
+
+java: java.lang.NoSuchFieldError: Class com.sun.tools.javac.tree.JCTree$JCImport does not have member field 'com.sun.tools.javac.tree.JCTree qualid'
+
+这是lombok和java版本的冲突问题，参考这里：[JDK与Lombok版本兼容性冲突解决方案及实践](https://comate.baidu.com/zh/page/9x1taz7ac6m)。
+
+通过homebrew安装JDK11解决：[LINK](https://www.google.com/search?q=homebrew+install+java+11&sca_esv=5cb444661cf9bcf8&sxsrf=AE3TifMHnSfqVuYYyEFZHKOc76D5hfDEAQ%3A1764937444646&source=hp&ei=5M4yadG9JdbdkPIP_fm6gQk&iflsig=AOw8s4IAAAAAaTLc9LqY2PgOYx0S4FYCjdl_s3dsha3N&oq=homebrew+&gs_lp=Egdnd3Mtd2l6Iglob21lYnJldyAqAggIMgsQABiABBiRAhiKBTILEAAYgAQYkQIYigUyCxAAGIAEGJECGIoFMgoQABiABBhDGIoFMg0QABiABBixAxhDGIoFMgsQABiABBiRAhiKBTIKEAAYgAQYQxiKBTIIEAAYgAQYsQMyChAAGIAEGEMYigUyChAAGIAEGEMYigVI9klQAFj2EHABeACQAQCYAeoCoAGgFqoBBTItNS41uAEDyAEA-AEBmAILoALYFsICChAjGPAFGCcYngbCAgoQIxiABBgnGIoFwgIEECMYJ8ICERAuGIAEGLEDGNEDGIMBGMcBwgIOEAAYgAQYsQMYgwEYigXCAg4QLhiABBixAxiDARiKBcICDRAAGIAEGJECGIoFGArCAgsQABiABBixAxiDAcICBRAAGIAEwgIOEC4YgAQYsQMY0QMYxwHCAg0QLhiABBhDGOUEGIoFwgIQEAAYgAQYsQMYQxiDARiKBcICCxAuGIAEGMcBGK8BmAMAkgcHMS4wLjUuNaAH8FqyBwUyLTUuNbgH1BbCBwcwLjMuNy4xyAco&sclient=gws-wiz)。
+
+- brew install openjdk@11
+- /usr/local/Cellar/openjdk@11/11.0.29/libexec/openjdk.jdk/Contents/Home
+- /usr/local/Cellar/openjdk/23.0.2/libexec/openjdk.jdk/Contents/Home
+- 在Idea中新增JDK时，通过command+shift+G输入以上路径，更换JDK
+- 在本地通过更改~/.bash_profile更换java版本：export PATH="/usr/local/opt/openjdk@11/bin:$PATH"

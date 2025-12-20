@@ -161,3 +161,9 @@ scratch 擦伤，抓伤
 # 2025-12-20
 
 **receipt** / rɪˈsiːt / 收据 **recipe** / ˈresəpi / 菜单
+
+suite room 套房，注意发音 / swiːt /    suit / suːt /是西装
+
+single room 单人房，double room 大床房，twin room 双人房
+
+room service 客房服务（餐饮） housekeeping 客房服务（清洁，维修）

@@ -458,7 +458,62 @@ COPY ./server.js ./
 CMD ["npm","start"]
 ```
 
+## 5.Docker多平台镜像构建与推送
 
+在 Ubuntu 上的 Docker 是**完全支持**多平台（Multi-platform）构建与 Push 的。
+
+虽然传统的 `docker build` 命令主要针对当前宿主机的架构，但通过 Docker 的 **Buildx** 插件（现已默认集成在 Docker Engine 中），你可以非常方便地同时构建多种架构（如 `amd64` 和 `arm64`）并将它们推送到远程仓库。
+
+### 核心步骤与实现方式
+
+#### 1. 检查并准备环境
+
+确保你的 Docker 版本在 19.03 以上。在 Ubuntu 上，你需要安装 `qemu-user-static` 来支持跨架构模拟构建。
+
+Bash 巴什
+
+```
+sudo apt-get update
+sudo apt-get install -y qemu-user-static
+```
+
+#### 2. 创建并切换 Builder 实例
+
+默认的 `docker` 驱动不支持多平台输出，你需要创建一个使用 `docker-container` 驱动的新 Builder：
+
+Bash 巴什
+
+```
+# 创建一个新的 builder 实例并命名为 mybuilder
+docker buildx create --name mybuilder --use
+
+# 启动并检查 builder 状态
+docker buildx inspect --bootstrap
+```
+
+#### 3. 构建并同时推送
+
+使用 `docker buildx build` 命令，配合 `--platform` 指定目标架构，并加上 `--push` 参数：
+
+Bash 巴什
+
+```
+docker buildx build --platform linux/amd64,linux/arm64 -t your-username/your-repo:tag --push .
+```
+
+------
+
+### 为什么不能分两次 `docker push`？
+
+在 Docker 的多平台机制中，所谓的“多平台镜像”实际上是一个 **Manifest List（清单列表）**。
+
+- 如果你手动在不同机器上 push 相同 Tag 的镜像，后一次 push 会**覆盖**前一次的架构。
+- 使用 `buildx --push` 时，Docker 会自动生成一个包含所有架构信息的 Manifest，让客户端在 `docker pull` 时能根据自己的硬件架构自动选择正确的层。
+
+### 常见限制
+
+- **无法本地保存**：Docker 默认的本地镜像库（Local Image Store）目前大多数版本仍不支持直接存储多架构镜像。因此，构建多架构镜像时，**通常必须配合 `--push` 直接推送到远程仓库**，或者使用 `--output type=docker` 仅导出单一架构。
+- **构建速度**：跨架构构建是通过 QEMU 模拟实现的，如果代码涉及大量编译过程，ARM 架构的构建速度会显著慢于原生架构。
 
 # 四、入门到精通
 
