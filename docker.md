@@ -356,7 +356,7 @@ ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 | **安全加固** | 使用 `USER` 指令切换非 root 用户         |
 | **时区处理** | 明确安装 `tzdata` 并设置 `Asia/Shanghai` |
 
-## 4.Docker Compose的使用场景
+## 4.单机编排-Docker Compose的使用场景
 
 Docker Compose 是一个用于定义和运行多容器 Docker 应用程序的工具。简单来说，如果你的项目需要多个服务（比如前端、后端、数据库）共同工作，Compose 可以让你通过一个 YAML 文件来配置它们，并用一条命令全部启动。
 
