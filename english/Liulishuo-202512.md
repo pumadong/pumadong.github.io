@@ -132,7 +132,7 @@ scratch 擦伤，抓伤
 
 **descendant** Yeah, it's a gift from one of my descendants from the 22nd century.
 
-**time leap** 时间跳跃 So I time leaped to two a.m, four a.m, and dix a.m. and asked the future men for help.
+**time leap** 时间跳跃 So I time leaped to two a.m, four a.m, and six a.m. and asked the future me for help.
 
 **recklessly** 鲁莽地 I told you no to drive recklessly. It serves you right.
 
@@ -175,3 +175,7 @@ room service 客房服务（餐饮） housekeeping 客房服务（清洁，维�
 **flyer** 传单 You could have more eyes looking for the dog. Maybe a flyer, too.
 
 **renovation** 整修 / ˌrenəˈveɪʃ(ə)n / I thought you were going out yesterday. What happened? I would've visited the musuem but it was closed for renovations.
+
+**breach** 缺口，漏洞，违反，破坏。(n.v.) security breach 安全漏洞。
+
+**unattended** 无人看管的，无人出席的
