@@ -167,3 +167,11 @@ suite room 套房，注意发音 / swiːt /    suit / suːt /是西装
 single room 单人房，double room 大床房，twin room 双人房
 
 room service 客房服务（餐饮） housekeeping 客房服务（清洁，维修）
+
+# 2025-12-21
+
+**shelter** 收容所 If not, you should also call local shelters and see if anyone has reported finding a dog.
+
+**flyer** 传单 You could have more eyes looking for the dog. Maybe a flyer, too.
+
+**renovation** 整修 / ˌrenəˈveɪʃ(ə)n / I thought you were going out yesterday. What happened? I would've visited the musuem but it was closed for renovations.
