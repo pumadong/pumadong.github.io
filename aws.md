@@ -60,7 +60,7 @@ title: "AWS从入门到精通"
 3. 你创建了一个 **User** 叫 "老王"，把老王拉进 "运维组"。老王现在可以重启服务器了。
 4. 某天老王需要临时处理数据库，你让他 **Assume（扮演）** 一个拥有数据库权限的 **Role**，处理完后，老王变回普通运维。
 
-## Authentication vs Authorization
+## Authentication[认证] Authorization[鉴权]
 
 ### AuthN和AuthZ协同工作
 
@@ -277,11 +277,28 @@ AWS 使用代号来标识这些位置，方便在 API 和 CLI 中调用：
 ### 新建EC2实例
 
 1. Instances -> Launch Instances
+
 2. 操作系统选择ubuntu
+
 3. Create key pair，my-test-key/my-test-key.pem，SSH到机器用的用户名和私钥
+
 4. 几秒之后，机器处于Running状态，1分钟左右，机器初始化完毕
+
 5. chmod 400 "mykey1.pem"
+
 6. ssh -i "mykey1.pem" ubuntu@ec2-13-250-238-183.ap-southeast-1.compute.amazonaws.com
+
+7. 安装Java和Jenkins：
+
+   ```
+   sudo su -
+   # 安装jenkins依赖的java版本，安装jenkins，参考官网
+   https://www.jenkins.io/doc/book/installing/linux/#debianubuntu
+   systemctl status jenkins	# 可以看到jenkins安装成功
+   配置本机的InBound Rules，增加开放8080端口
+   ```
+
+8. 浏览器访问：http://IP:8080/，jenkins已经正常启动，在8080端口提供Web服务。
 
 ### 比较好的SSH工具
 
