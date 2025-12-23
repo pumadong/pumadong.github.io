@@ -179,3 +179,21 @@ room service 客房服务（餐饮） housekeeping 客房服务（清洁，维�
 **breach** 缺口，漏洞，违反，破坏。(n.v.) security breach 安全漏洞。
 
 **unattended** 无人看管的，无人出席的
+
+# 2025-12-22
+
+**parking lot** 停车场 I looked through the parking lot this afternoon and didn't find my car. So a filed a police report.
+
+# 2025-12-23
+
+**pantry** 食品室 / ˈpæntri / We've met dozens of times in the pantry, but I have no idea which department he is from.
+
+**handful** 少数 A handful of means a small number of. Only a handful of eggs didn't break.
+
+**premiere** 首映 Only a handful of people showed up at the premiere of his new movie.
+
+**advertisement** 广告宣传
+
+**particular** / pərˈtɪkjələr / Particular means to be special among others, in particular means specially.
+
+**shatter** 破碎 I put on the brake but the car still bumped into the rock harshly. Most of the eggs shattered into tiny pieces.
