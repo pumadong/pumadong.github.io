@@ -32,5 +32,8 @@ plugins:
 paginate: 2           # 每页显示的文章数
 paginate_path: "/page:num/" # 分页生成的路径格式
 
+# 检查是否有这行，有时安全模式会限制插件
+safe: false
+
 # show_excerpts 是否在首页显示文章摘要。
 # show_excerpts: true
