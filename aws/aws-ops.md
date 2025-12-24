@@ -131,35 +131,23 @@ JSON
 1. **新建VPC demo-vpc (先使用默认配置)**
 
    - 选择“VPC and more”，目的是同时生成子网/网关/路由表等网络资源
-
    - 默认两个可用区
-
    - 每个可用区public subnet/private subnet各一个，所以4个subnet
-
    - 两个public subnet共用一个route table，所以3个route table
-
    - public subnet/private subnet各有自己的网关，所以2个gateway
 
-      
-
-   
+    
 
 2. **生成instance demo-instance**
 
    - os使用ubuntu
-
    - kei pair还是使用mykey1
-
    - network settings
      - vpc改成我们刚才新建的demo-vpc
-     
      - subnet选一个public subnet
-     
      - auto-assign public ip，选择enabled
-     
-       
 
-    
+     
 
 3. **SSH到新建的ec2，安装软件**
 
@@ -174,9 +162,7 @@ JSON
 
    - 不要直接运行 python3 -m http.server 8000，配置较低的实例（如 t2.micro），启动服务时如果触发大量 IO，可能导致系统为了保护自身而杀掉 SSH 进程，这样就只能重启ec2实例了
 
-     
-
-   
+    
 
 4. **配置ec2实例的安全组，inbound rule增加8000端口，http://公网IP:8000/，可以正常访问**
 
