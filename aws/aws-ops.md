@@ -218,8 +218,104 @@ JSON
 ## Create VPC
 
 1. **Name：**aas-prod-example
+
 2. **NAT gateways($)：**Zonal，1 per AZ
+
 3. **VPC endpoints：**none
+
+   
 
 # Create Auto Scaling group
 
+1. **先生成Launch template**
+
+   1. **Name：**aws-prod-example
+
+   2. **OS：** Ubuntu
+
+   3. **Instance type：** t2.micro(Free tier eligible)
+
+   4. **Key pair(login)：** mykey1
+
+   5. **Create secirity group：**使用我们上面新建的VPC，开发22/8000端口
+
+      
+
+2. **根据刚才生成的template新建Auto Scaling group**
+
+   1. **Name：**aws-prod-example
+
+   2. **选择刚才创建的template**，next
+
+   3. **选择VPC：**上面创建的VPC
+
+   4. **subnets：** 两个private子网，因为我们是要对应用部署所在的private subnet自动伸缩，next
+
+   5. **不需要load balancing**，我们是在public subnet进行lb，next
+
+   6. **Desired capacity：**2，min选择1，max选择4，next
+
+   7. **Add notifications - optional**，next，**Add tags - optional**，next
+
+   8. **两个ec2主机新建完毕**
+
+      
+
+## 生成bastion server/jumper server
+
+1. **Name：** bastion-host
+
+2. **OS：** Ubuntu
+
+3. **Instance type：** t2.micro(Free tier eligible)
+
+4. **Key pair(login)：** mykey1
+
+5. **Network settings**
+
+   1. **选择VPC：**上面创建的VPC
+
+   2. **Subnet：**选择public subnet
+
+   3. **Auto-assign public IP：**Enabled
+
+      
+
+## 通过跳板机到两个ec2实例安装应用
+
+1. **登录跳板机：**ssh -i "mykey1.pem" ubuntu@ec2-54-169-19-82.ap-southeast-1.compute.amazonaws.com
+
+2. **复制本地的秘钥到跳板机：**scp -i mykey1.pem mykey1.pem ubuntu@ec2-54-169-19-82.ap-southeast-1.compute.amazonaws.com:/home/ubuntu
+
+3. **到第一个ec2实例部署应用**
+   1. ssh到第一个跳板机
+   2. echo 'hello world, server 1' > index.html
+   3. nohup python3 -m http.server 8000 > output.log 2>&1 &
+   
+4. **到第二个ec2实例部署应用**
+   1. ssh到第二个跳板机
+   
+   2. echo 'hello world, server 2' > index.html
+   
+   3. nohup python3 -m http.server 8000 > output.log 2>&1 &
+   
+   4. 我们也可以不部署第二个ec2实例，可以看到下面将要配置的ALB是有health check的，此时会将所有流量打到第一个ec2实列
+   
+      
+
+## Create Application Load Balancer
+
+1. **Name：**aws-prod-example
+2. **选择VPC：**上面创建的VPC
+3. **可用区和子网：**选择至少2个AZ，每个AZ选择一个public subnet
+4. **选择Security groups：** 选择我们新建ACG时新建的
+5. **Listeners and routing：**
+   1. Listner：Port用默认80
+   2. 新建Target group，并选中
+      1. 端口8000，next
+      2. 选择ec2实例，Include as pending below，next
+6. **报”Not reachable“错误**
+   1. Security，在Security group增加80端口
+7. **浏览器访问ALB的DNS name**
+   1. http://aws-prod-example-759217952.ap-southeast-1.elb.amazonaws.com/
+   2. 可以看到流量均匀的打到两台server
