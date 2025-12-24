@@ -12,7 +12,13 @@ email: puma.dong@hotmail.com
 
 minima:
   social_links:
-    rss: false
+    twitter: jekyllrb
+    github:  jekyll
+    facebook: jekyll
+    instagram: jekyll
+    linkedin: jekyll
+    # 如果想关闭某个默认显示的链接（如 rss），可以设为 null 或直接不写
+    rss: null
 
 # 必须设置 site.url 才能生成正确的绝对链接
 url: "https://pumadong.github.io" 
