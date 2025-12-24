@@ -15,7 +15,7 @@ remote_theme: jekyll/minima@master
 
 # light (默认), dark, classic, solarized
 minima:
-  skin: light
+  skin: solarized-light
   # 将此项设置为 true 即可隐藏页脚的 RSS 订阅图标/文字
   hide_site_feed_link: true
 
