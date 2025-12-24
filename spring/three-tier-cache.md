@@ -5,7 +5,7 @@ title: "Spring 三级缓存解决循环依赖"
 
 # 架构图
 
-![架构图](https://cdn.jsdelivr.net/gh/pumadong/assets@master/spring/spring-three-tier-cache.png)
+[![架构图](https://cdn.jsdelivr.net/gh/pumadong/assets@master/spring/spring-three-tier-cache.png)](https://cdn.jsdelivr.net/gh/pumadong/assets@master/spring/spring-three-tier-cache.png)
 
 **Spring Bean的生命周期：实例化  ->  属性注入 -> (......)  ->  初始化**
 
