@@ -206,5 +206,10 @@ I mean it. 我是认真的。 I don't mean it.我不是故意的。
 
 **intentionally** Intentionally means on purpose. 故意地。
 
-**b'y mistake / by accident** If you did something by mistake, you didn't do it on purpose. 意外地。
+**by mistake / by accident** If you did something by mistake, you didn't do it on purpose. 意外地。
 
+**conclusion：**
+
+- focus on what you can control
+- go easy on yourself
+- learn from mistake
