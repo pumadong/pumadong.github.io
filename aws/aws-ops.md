@@ -191,11 +191,15 @@ JSON
 
 # VPC/EC2/Auto Scaling/ALB生产级实践
 
+# 架构图
+
+![架构图](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/vpc-example-private-subnets.png)
+
 ## 工程说明
 
 1. 生成一个生产可用的VPC
 
-2. 部署Server在2个可用区，通过Auto Scaling和Application Load Balancertig提高应用弹性
+2. 部署Server在2个可用区，通过Auto Scaling和Application Load Balancertig提高故障恢复能力
 
 3. 部署Server在private subnet增加安全性
 
@@ -203,11 +207,19 @@ JSON
 
 5. Server通过NAT gateway访问internet
 
-6. 每个可用区部署一个NAT gateway，提高弹性
+6. 在两个可用区分别部署NAT gateway，提高故障恢复能力
 
 7. 在public subnet部署bastion server/jumper server，用于访问private subnent
 
     
 
-# 操作部署
+## 工程实现
+
+## Create VPC
+
+1. **Name：**aas-prod-example
+2. **NAT gateways($)：**Zonal，1 per AZ
+3. **VPC endpoints：**none
+
+# Create Auto Scaling group
 
