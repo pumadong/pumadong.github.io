@@ -191,7 +191,7 @@ JSON
 
 # VPC/EC2/Auto Scaling/ALB生产级实践
 
-# 架构图
+## 架构图
 
 ![架构图](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/vpc-example-private-subnets.png)
 
@@ -225,7 +225,7 @@ JSON
 
    
 
-# Create Auto Scaling group
+## Create Auto Scaling group
 
 1. **先生成Launch template**
 
@@ -306,16 +306,27 @@ JSON
 ## Create Application Load Balancer
 
 1. **Name：**aws-prod-example
+
 2. **选择VPC：**上面创建的VPC
+
 3. **可用区和子网：**选择至少2个AZ，每个AZ选择一个public subnet
+
 4. **选择Security groups：** 选择我们新建ACG时新建的
+
 5. **Listeners and routing：**
    1. Listner：Port用默认80
    2. 新建Target group，并选中
       1. 端口8000，next
       2. 选择ec2实例，Include as pending below，next
+
 6. **报”Not reachable“错误**
+
    1. Security，在Security group增加80端口
+
 7. **浏览器访问ALB的DNS name**
+
    1. http://aws-prod-example-759217952.ap-southeast-1.elb.amazonaws.com/
+
    2. 可以看到流量均匀的打到两台server
+
+      
