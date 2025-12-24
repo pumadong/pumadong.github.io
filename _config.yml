@@ -2,13 +2,16 @@
 # 我们使用master分支
 remote_theme: jekyll/minima@master
 title: 讨论一下架构
-description: 对技术高峰，身虽不能至，而心向往之。 GitHub空间：https://github.com/pumadong。
+description: 老骥伏枥，志在千里；烈士暮年，壮心不已^_^
 author: Bob
 email: puma.dong@hotmail.com
 
 # 确保在 plugins 列表中包含 jekyll-feed
-plugins:
-  - jekyll-feed
+#plugins:
+#  - jekyll-feed
+
+social_links:
+    rss: false
 
 # 必须设置 site.url 才能生成正确的绝对链接
 url: "https://pumadong.github.io" 
