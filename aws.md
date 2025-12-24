@@ -567,8 +567,7 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
    - 两个public subnet共用一个route table，所以3个route table
    - public subnet/private subnet各有自己的网关，所以2个gateway
 
-
-2. **生成instance demo-instance**
+3. **生成instance demo-instance**
 
    - os使用ubuntu
    - kei pair还是使用mykey1
@@ -577,8 +576,7 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
      - subnet选一个public subnet
      - auto-assign public ip，选择enabled
 
-
-3. **SSH到新建的ec2，安装软件**
+4. **SSH到新建的ec2，安装软件**
 
    - sudo apt update
 
@@ -591,10 +589,7 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
 
    - 不要直接运行 python3 -m http.server 8000，配置较低的实例（如 t2.micro），启动服务时如果触发大量 IO，可能导致系统为了保护自身而杀掉 SSH 进程，这样就只能重启ec2实例了
 
-
-4. **配置ec2实例的安全组，inbound rule增加8000端口**
-
-5. **http://公网IP:8000/，可以正常访问**
+5. **配置ec2实例的安全组，inbound rule增加8000端口，http://公网IP:8000/，可以正常访问**
 
 6. **VPC配置Network ACLs**
 
@@ -602,8 +597,7 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
    - 增加一个no是80的8000端口的入站拒绝规则，http://公网IP:8000/不能访达
    - 我们把rule number改成120或者删除，http://公网IP:8000/正常访达
 
-
-7. **以上操作简单演示VPC的结构，nacl和security group的关系。**
+8. **以上操作简单演示VPC的结构，nacl和security group的关系。**
 
 # Amazon Route 53
 
