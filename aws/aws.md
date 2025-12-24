@@ -3,7 +3,7 @@ layout: post
 title: "AWS从入门到精通"
 ---
 
-# 1.IAM - Identity and Access Management
+# 一、IAM - Identity and Access Management
 
 简单来说，IAM 解决的是两个核心问题：**你是谁？（认证）** 以及 **你能干什么？（授权）**
 
@@ -132,7 +132,7 @@ title: "AWS从入门到精通"
 - **Azure：** 深度整合 **Entra ID (原 Azure AD)**，利用条件访问策略（Conditional Access）进行动态风控。
 - **GCP：** 利用其清晰的**资源层级结构**（组织 > 文件夹 > 项目）进行权限继承管理。
 
-# 2.EC2 - Amazon Elastic Compute Cloud
+# 二、EC2 - Amazon Elastic Compute Cloud
 
 ## 什么是EC2
 
@@ -272,7 +272,7 @@ AWS 使用代号来标识这些位置，方便在 API 和 CLI 中调用：
 - **区域间备份**：如果需要应对极端的灾难（如整个城市级别的故障），可以使用 **AMI 复制** 功能将镜像备份到另一个地理区域。
 - **端点连接**：访问 EC2 服务时，请确保配置了正确的区域端点（Endpoint），例如 `ec2.us-west-2.amazonaws.com`。
 
-# 3.VPC - Virtual Private Cloud
+# 三、VPC - Virtual Private Cloud
 
 ## VPC基础
 
@@ -516,7 +516,7 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
 9. 解释一个IAM users, groups, roles and policies。
 10. VPI中的private subnet，包含一些实例不能有直接的internet链接。但是由于管理的需要，你需要安全的访问这些实例。
 
-# 4.Amazon Route 53
+# 四、Amazon Route 53
 
 Amazon Route 53 是 AWS 提供的一种**高可用、高可扩展的云端域名系统 (DNS) 网络服务**。它的名字来源于 TCP/UDP 的 53 端口（DNS 服务标准端口）。
 
