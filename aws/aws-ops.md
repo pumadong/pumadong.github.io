@@ -289,8 +289,12 @@ JSON
 
 3. **到第一个ec2实例部署应用**
    1. ssh到第一个跳板机
+   
    2. echo 'hello world, server 1' > index.html
+   
    3. nohup python3 -m http.server 8000 > output.log 2>&1 &
+   
+      
    
 4. **到第二个ec2实例部署应用**
    1. ssh到第二个跳板机
