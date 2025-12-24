@@ -319,19 +319,19 @@ JSON
 
 5. **Listeners and routing：**
    1. Listner：Port用默认80
-   
+
    2. 新建Target group，并选中
       1. 端口8000，next
       
       2. 选择ec2实例，Include as pending below，next
       
          
-   
+
 6. **报”Not reachable“错误**
 
    1. Security，在Security group增加80端口
 
-      
+   
 
 7. **浏览器访问ALB的DNS name**
 
