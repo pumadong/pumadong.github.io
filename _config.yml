@@ -23,15 +23,14 @@ minima:
   date_format: "%Y-%m-%d"
 
 
-# 1. 启用插件
+# 启用插件
 plugins:
   - jekyll-paginate
-  - jekyll-feed
-  - jekyll-seo-tag
+  - jekyll-remote-theme # 如果你用了 remote_theme
 
-# 2. 分页配置
-paginate: 1            # 每页显示的博文数量
-paginate_path: "/page:num/"  # 分页后的 URL 结构，例如 /page2/
+# 分页基础配置
+paginate: 2           # 每页显示的文章数
+paginate_path: "/page:num/" # 分页生成的路径格式
 
 # show_excerpts 是否在首页显示文章摘要。
 # show_excerpts: true
