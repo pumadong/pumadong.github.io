@@ -1,4 +1,48 @@
 ---
-layout: home
-title: Home
+layout: base
 ---
+
+<div class="home">
+  <h1 class="page-heading">Posts</h1>
+
+  {{ content }}
+
+  {% if paginator.posts %}
+    <ul class="post-list">
+      {% for post in paginator.posts %}
+        <li>
+          <span class="post-meta">{{ post.date | date: "%b %d, %Y" }}</span>
+          <h3>
+            <a class="post-link" href="{{ post.url | relative_url }}">
+              {{ post.title | escape }}
+            </a>
+          </h3>
+          {% if site.show_excerpts %}
+            {{ post.excerpt }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% if paginator.total_pages > 1 %}
+    <div class="pagination">
+      {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path | relative_url }}">上一页</a>
+      {% else %}
+        <span>上一页</span>
+      {% endif %}
+
+      <span>第 {{ paginator.page }} 页，共 {{ paginator.total_pages }} 页</span>
+
+      {% if paginator.next_page %}
+        <a href="{{ paginator.next_page_path | relative_url }}">下一页</a>
+      {% else %}
+        <span>下一页</span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  {% else %}
+    <p>没有找到文章。请检查 _posts 文件夹中是否有文件，且日期是否不是未来的日期。</p>
+  {% endif %}
+</div>
