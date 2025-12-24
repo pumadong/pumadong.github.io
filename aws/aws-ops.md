@@ -215,7 +215,7 @@ JSON
 
 ## 工程实现
 
-## Create VPC
+### Create VPC
 
 1. **Name：**aas-prod-example
 
@@ -225,7 +225,7 @@ JSON
 
    
 
-## Create Auto Scaling group
+### Create Auto Scaling group
 
 1. **先生成Launch template**
 
@@ -261,7 +261,7 @@ JSON
 
       
 
-## 生成bastion server/jumper server
+### 生成bastion server/jumper server
 
 1. **Name：** bastion-host
 
@@ -281,7 +281,7 @@ JSON
 
       
 
-## 通过跳板机到两个ec2实例安装应用
+### 通过跳板机到两个ec2实例安装应用
 
 1. **登录跳板机：**ssh -i "mykey1.pem" ubuntu@ec2-54-169-19-82.ap-southeast-1.compute.amazonaws.com
 
@@ -303,7 +303,7 @@ JSON
    
       
 
-## Create Application Load Balancer
+### Create Application Load Balancer
 
 1. **Name：**aws-prod-example
 
