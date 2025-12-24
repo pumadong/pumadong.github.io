@@ -23,7 +23,7 @@ remote_theme: jekyll/minima@master
 
 **这其实也给以后得构建埋下了隐患，不确定master分支的新代码是否向后兼容**，当前没有3.0版本的稳定分支，我们先用master。
 
-https://github.com/jekyll/minima/tree/master
+[https://github.com/jekyll/minima/tree/master](https://github.com/jekyll/minima/tree/master)
 
 ### 1. 核心代码实现
 

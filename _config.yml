@@ -3,8 +3,11 @@
 remote_theme: jekyll/minima@master
 title: 讨论一下架构
 description: 老骥伏枥，志在千里；烈士暮年，壮心不已^_^
-author: Bob
-email: puma.dong@hotmail.com
+
+site:
+  author:
+    name: Bob
+    email: puma.dong@hotmail.com
 
 # 确保在 plugins 列表中包含 jekyll-feed
 #plugins:
