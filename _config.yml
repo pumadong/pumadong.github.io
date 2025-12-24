@@ -25,12 +25,20 @@ minima:
 
 # 插件列表
 plugins:
-  - jekyll-paginate
+  - jekyll-paginate-v2
 
 
 # 分页具体配置
-paginate: 1          # 每页显示的文章数量
-paginate_path: "/page:num/"  # 分页后的 URL 路径结构（例如 /page2/）
+pagination:
+  enabled: true
+  per_page: 1
+  permalink: '/page/:num/'
+  title_suffix: ' - 第 :num 页'
+  sort_field: 'date'
+  sort_reverse: true
+  # 也可以开启按标签分页
+  # category_index_path: '/category/:item/'
+  # tag_index_path: '/tag/:item/'
 
 # show_excerpts 是否在首页显示文章摘要。
 show_excerpts: true
