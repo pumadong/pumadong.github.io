@@ -140,7 +140,7 @@ JSON
 
    - public subnet/private subnet各有自己的网关，所以2个gateway
 
-     
+      
 
    
 
@@ -159,7 +159,7 @@ JSON
      
        
 
-   
+    
 
 3. **SSH到新建的ec2，安装软件**
 
