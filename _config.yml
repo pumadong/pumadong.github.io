@@ -15,6 +15,6 @@ remote_theme: jekyll/minima@master
 
  # light (默认), dark, classic, solarized
 minima:
-  skin: dark
-  hide_site_feed_link： true
+  skin: classic
+  hide_site_feed_link：true
 
