@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Github Pages Minima滚动条"
+title: "Github Pages Minima - 滚动条"
 ---
 
 ### Jekyll Minima模版说明
