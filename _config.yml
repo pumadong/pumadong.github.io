@@ -25,15 +25,12 @@ minima:
 
 # 启用插件
 plugins:
-  - jekyll-paginate
-  - jekyll-remote-theme # 如果你用了 remote_theme
+  - jekyll-remote-theme
+  - jekyll-paginate-v2  # 注意：这需要开启 GitHub Actions 才能运行
 
 # 分页基础配置
-paginate: 2           # 每页显示的文章数
-paginate_path: "/page:num/" # 分页生成的路径格式
-
-# 检查是否有这行，有时安全模式会限制插件
-safe: false
-
-# show_excerpts 是否在首页显示文章摘要。
-# show_excerpts: true
+pagination:
+  enabled: true
+  collection: my_docs # 指向你的自定义文件夹
+  per_page: 5
+  permalink: '/page/:num/'
