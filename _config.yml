@@ -13,9 +13,11 @@ author:
 # 我们使用master分支
 remote_theme: jekyll/minima@master
 
-# light (默认), dark, classic, solarized
+
 minima:
-  skin: solarized-light
+  # 可选值: classic, dark, auto, solarized, solarized-light, solarized-dark
+  skin: solarized-dark
   # 将此项设置为 true 即可隐藏页脚的 RSS 订阅图标/文字
   hide_site_feed_link: true
+  date_format: "%Y-%m-%d"
 
