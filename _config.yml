@@ -10,7 +10,8 @@ email: puma.dong@hotmail.com
 #plugins:
 #  - jekyll-feed
 
-social_links:
+minima:
+  social_links:
     rss: false
 
 # 必须设置 site.url 才能生成正确的绝对链接
