@@ -13,12 +13,11 @@ author:
 # 我们使用master分支
 remote_theme: jekyll/minima@master
 
-# show_excerpts 是否在首页显示文章摘要。
-show_excerpts: true
+
 
 minima:
   # 可选值: classic, dark, auto, solarized, solarized-light, solarized-dark
-  skin: solarized
+  skin: solarized-light
   # 将此项设置为 true 即可隐藏页脚的 RSS 订阅图标/文字
   hide_site_feed_link: true
   date_format: "%Y-%m-%d"
@@ -32,3 +31,6 @@ plugins:
 # 分页具体配置
 paginate: 5          # 每页显示的文章数量
 paginate_path: "/page:num/"  # 分页后的 URL 路径结构（例如 /page2/）
+
+# show_excerpts 是否在首页显示文章摘要。
+show_excerpts: true

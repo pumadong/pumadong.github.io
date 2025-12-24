@@ -1,5 +1,9 @@
 ---
-# index.md
 layout: home
-list_title: "最新文章"
+title: 最新文章
+pagination: 
+  enabled: true
 ---
+
+
+
