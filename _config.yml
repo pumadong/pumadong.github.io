@@ -41,4 +41,4 @@ pagination:
   # tag_index_path: '/tag/:item/'
 
 # show_excerpts 是否在首页显示文章摘要。
-show_excerpts: true
+# show_excerpts: true
