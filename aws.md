@@ -559,7 +559,7 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
 
 ![VPC架构图](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/vpc-architecture.png)
 
-1. 新建VPC demo-vpc (先使用默认配置)
+1. **新建VPC demo-vpc (先使用默认配置)**
 
    - 选择“VPC and more”，目的是同时生成子网/网关/路由表等网络资源
    - 默认两个可用区
@@ -567,7 +567,8 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
    - 两个public subnet共用一个route table，所以3个route table
    - public subnet/private subnet各有自己的网关，所以2个gateway
 
-2. 生成instance demo-instance
+
+2. **生成instance demo-instance**
 
    - os使用ubuntu
    - kei pair还是使用mykey1
@@ -576,7 +577,8 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
      - subnet选一个public subnet
      - auto-assign public ip，选择enabled
 
-3. SSH到新建的ec2，安装软件
+
+3. **SSH到新建的ec2，安装软件**
 
    - sudo apt update
 
@@ -589,17 +591,19 @@ NACL 是按**规则编号（Rule Number）**从小到大顺序匹配的。如果
 
    - 不要直接运行 python3 -m http.server 8000，配置较低的实例（如 t2.micro），启动服务时如果触发大量 IO，可能导致系统为了保护自身而杀掉 SSH 进程，这样就只能重启ec2实例了
 
-4. 配置ec2实例的安全组，inbound rule增加8000端口
 
-5. http://公网IP:8000/，可以正常访问
+4. **配置ec2实例的安全组，inbound rule增加8000端口**
 
-6. VPC配置**Network ACLs**
+5. **http://公网IP:8000/，可以正常访问**
+
+6. **VPC配置Network ACLs**
 
    - nacl默认入站/出站都是打开的，配置一个no是100的全允许，和no是\*的全拒绝，no小的生效后，就不会继续寻找其他规则，所以no是\*的规则不会走到
    - 增加一个no是80的8000端口的入站拒绝规则，http://公网IP:8000/不能访达
    - 我们把rule number改成120或者删除，http://公网IP:8000/正常访达
 
-7. 以上操作简单演示VPC的结构，nacl和security group的关系。
+
+7. **以上操作简单演示VPC的结构，nacl和security group的关系。**
 
 # Amazon Route 53
 

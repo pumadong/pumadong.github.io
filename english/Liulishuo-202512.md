@@ -197,3 +197,14 @@ room service 客房服务（餐饮） housekeeping 客房服务（清洁，维�
 **particular** / pərˈtɪkjələr / Particular means to be special among others, in particular means specially.
 
 **shatter** 破碎 I put on the brake but the car still bumped into the rock harshly. Most of the eggs shattered into tiny pieces.
+
+# 2025-12-24
+
+**genuinely** 真诚地 mean it(认真：表示真心实意，毫不含糊地表达某种意思或承诺。) When you say something genuinely, you mean it.
+
+I mean it. 我是认真的。 I don't mean it.我不是故意的。
+
+**intentionally** Intentionally means on purpose. 故意地。
+
+**b'y mistake / by accident** If you did something by mistake, you didn't do it on purpose. 意外地。
+
