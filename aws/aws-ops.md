@@ -3,7 +3,7 @@ layout: post
 title: "AWS操作实践"
 ---
 
-# EC2 操作实践
+# 1.EC2 操作实践
 
 ## 新建EC2实例
 
@@ -120,7 +120,7 @@ JSON
 
 **请尝试添加 `ec2-instance-connect:SendSSHPublicKey` 权限，通常添加后几秒钟内就会生效。**
 
-# VPC操作实践
+# 2.VPC操作实践
 
 ## 架构图
 
@@ -189,7 +189,7 @@ JSON
 
 6. **以上操作简单演示VPC的结构，nacl和security group的关系。**
 
-# VPC/EC2/Auto Scaling/ALB生产级实践
+# 3.VPC/EC2/Auto Scaling/ALB生产级实践
 
 ## 架构图
 
