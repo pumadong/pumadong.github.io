@@ -33,11 +33,11 @@ title: "AWS操作实践"
 
 ## 比较好的SSH工具
 
-https://termius.com/
+[https://termius.com/](https://termius.com/)
 
-https://iterm2.com/
+[https://iterm2.com/](https://iterm2.com/)
 
-https://mobaxterm.mobatek.net/
+[https://mobaxterm.mobatek.net/](https://mobaxterm.mobatek.net/)
 
 ## Review IAM - SendSSHPublicKey
 
@@ -140,9 +140,7 @@ JSON
 
    - public subnet/private subnet各有自己的网关，所以2个gateway
 
-      
-
-    
+     
 
 2. **生成instance demo-instance**
 
@@ -157,9 +155,7 @@ JSON
      
      - auto-assign public ip，选择enabled
      
-        
-
-     
+       
 
 3. **SSH到新建的ec2，安装软件**
 
@@ -174,9 +170,7 @@ JSON
 
    - 不要直接运行 python3 -m http.server 8000，配置较低的实例（如 t2.micro），启动服务时如果触发大量 IO，可能导致系统为了保护自身而杀掉 SSH 进程，这样就只能重启ec2实例了
 
-      
-
-    
+     
 
 4. **配置ec2实例的安全组，inbound rule增加8000端口，http://公网IP:8000/，可以正常访问**
 
@@ -199,8 +193,20 @@ JSON
 ## 工程说明
 
 1. 生成一个生产可用的VPC
+
 2. 部署Server在2个可用区，通过Auto Scaling和Application Load Balancertig提高应用弹性
+
 3. 部署Server在private subnet增加安全性
+
 4. Server从ALB收到请求
+
 5. Server通过NAT gateway访问internet
+
 6. 每个可用区部署一个NAT gateway，提高弹性
+
+7. 在public subnet部署bastion server/jumper server，用于访问private subnent
+
+    
+
+# 操作部署
+
