@@ -23,21 +23,15 @@ minima:
   date_format: "%Y-%m-%d"
 
 
-# 插件列表
+# 1. 启用插件
 plugins:
-  - jekyll-paginate-v2
+  - jekyll-paginate
+  - jekyll-feed
+  - jekyll-seo-tag
 
-
-# 分页具体配置
-pagination:
-  enabled: true
-  per_page: 1
-  permalink: '/page/:num/'
-  title_suffix: ' - page :num'
-  indexpage: 'index' # 对应你的首页文件名（不含扩展名）
-  limit: 0
-  sort_field: 'date'
-  sort_reverse: true
+# 2. 分页配置
+paginate: 1            # 每页显示的博文数量
+paginate_path: "/page:num/"  # 分页后的 URL 结构，例如 /page2/
 
 # show_excerpts 是否在首页显示文章摘要。
 # show_excerpts: true

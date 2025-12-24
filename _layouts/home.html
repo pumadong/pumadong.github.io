@@ -1,6 +1,7 @@
 ---
 layout: base
 ---
+
 <div class="home">
   {%- if page.title -%}
     <h1 class="page-heading">{{ page.title }}</h1>
@@ -8,13 +9,17 @@ layout: base
 
   {{ content }}
 
-  {%- if paginator.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+  {% if site.paginate %}
+    {% assign posts = paginator.posts %}
+  {% else %}
+    {% assign posts = site.posts %}
+  {% endif %}
+
+  {%- if posts.size > 0 -%}
     <ul class="post-list">
-      {%- for post in paginator.posts -%}
+      {%- for post in posts -%}
       <li>
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        <span class="post-meta">{{ post.date | date: "%b %d, %y" }}</span>
         <h3>
           <a class="post-link" href="{{ post.url | relative_url }}">
             {{ post.title | escape }}
@@ -30,13 +35,17 @@ layout: base
     {% if paginator.total_pages > 1 %}
     <div class="pagination">
       {% if paginator.previous_page %}
-        <a href="{{ paginator.previous_page_path | relative_url }}" class="previous-page">&laquo; Prev</a>
+        <a href="{{ paginator.previous_page_path | relative_url }}" class="previous">上一页</a>
+      {% else %}
+        <span class="previous">上一页</span>
       {% endif %}
-      
-      <span class="page-number">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+
+      <span class="page_number ">第 {{ paginator.page }} 页，共 {{ paginator.total_pages }} 页</span>
 
       {% if paginator.next_page %}
-        <a href="{{ paginator.next_page_path | relative_url }}" class="next-page">Next &raquo;</a>
+        <a href="{{ paginator.next_page_path | relative_url }}" class="next">下一页</a>
+      {% else %}
+        <span class="next">下一页</span>
       {% endif %}
     </div>
     {% endif %}
