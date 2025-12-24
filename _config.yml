@@ -29,7 +29,7 @@ plugins:
 
 
 # 分页具体配置
-paginate: 5          # 每页显示的文章数量
+paginate: 1          # 每页显示的文章数量
 paginate_path: "/page:num/"  # 分页后的 URL 路径结构（例如 /page2/）
 
 # show_excerpts 是否在首页显示文章摘要。
