@@ -142,6 +142,8 @@ JSON
 
      
 
+   
+
 2. **生成instance demo-instance**
 
    - os使用ubuntu
@@ -156,6 +158,8 @@ JSON
      - auto-assign public ip，选择enabled
      
        
+
+   
 
 3. **SSH到新建的ec2，安装软件**
 
@@ -172,6 +176,8 @@ JSON
 
      
 
+   
+
 4. **配置ec2实例的安全组，inbound rule增加8000端口，http://公网IP:8000/，可以正常访问**
 
    
@@ -187,3 +193,14 @@ JSON
      
 
 6. **以上操作简单演示VPC的结构，nacl和security group的关系。**
+
+# VPC/EC2/Auto Scaling/ALB生产级实践
+
+## 工程说明
+
+1. 生成一个生产可用的VPC
+2. 部署Server在2个可用区，通过Auto Scaling和Application Load Balancertig提高应用弹性
+3. 部署Server在private subnet增加安全性
+4. Server从ALB收到请求
+5. Server通过NAT gateway访问internet
+6. 每个可用区部署一个NAT gateway，提高弹性
