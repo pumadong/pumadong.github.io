@@ -161,17 +161,18 @@ JSON
 
    - sudo apt update
 
-   - ```
-     nohup python3 -m http.server 8000 > output.log 2>&1 &
-     > output.log: 日志存到这里。
+   - nohup python3 -m http.server 8000 > output.log 2>&1 &
+   
+     \> output.log: 日志存到这里。
+   
      2>&1: 把错误信息也存进去。
+   
      &: 放入后台运行。
-     ```
-
+   
    - 不要直接运行 python3 -m http.server 8000，配置较低的实例（如 t2.micro），启动服务时如果触发大量 IO，可能导致系统为了保护自身而杀掉 SSH 进程，这样就只能重启ec2实例了
-
+   
      
-
+   
 4. **配置ec2实例的安全组，inbound rule增加8000端口，http://公网IP:8000/，可以正常访问**
 
    
