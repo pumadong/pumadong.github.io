@@ -2,16 +2,44 @@
 layout: post
 title: "Github Pages Minima - 分页列表"
 date: 2025-12-24 18:30:00 +0800  # 标准格式
-description: "记录在GitHub Pages中，通过Minima 3.0实现一个分页列表的过程。"
+description: "记录在GitHub Pages中，通过jekyll-paginate-v2和Minima 3.0实现一个分页列表的过程。"
 ---
 
-### Jekyll Minima模版说明
+### Minima 3.0模版下 jekyll-paginate-v2 分页
 
-记录在GitHub Pages中，通过Minima 3.0实现一个分页列表的过程。
+记录在GitHub Pages中，通过jekyll-paginate-v2和Minima 3.0实现一个分页列表的过程。
 
 [https://github.com/jekyll/minima/tree/master](https://github.com/jekyll/minima/tree/master)
 
-### _config.xml
+# 操作步骤
+
+1. **首先所有需要被分页插件识别的目录都要 "_" 开头**
+
+2. **GitHub Settings ->Pages -> Build and deployment**，更改为GitHub Actions。
+
+3. **GitHub ./github/workflows/**，生成jekyll.yml文件。
+
+4. **_layouts/pagination.html**，作为新的分页模版
+
+5. **/index-all.md**，作为所有文章的分页列表
+
+6. **文章页面的header部分的配置：**
+
+   ```
+   layout: post
+   title: "Github Pages Minima - 分页列表"
+   date: 2025-12-24 18:30:00 +0800  # 标准格式
+   description: "记录在GitHub Pages中，通过jekyll-paginate-v2和Minima 3.0实现一个分页列表的过程。"
+   ```
+
+7. **解决页面head部分显示多个分页页面链接的问题：** _includes/nav-items，改为定制连接，原来是系统自动扫描非 "\_"开头的所有目录。
+
+   
+
+
+# 文件一览
+
+## _config.xml
 
 ```
 # 必须设置 site.url 才能生成正确的绝对链接
@@ -136,171 +164,127 @@ pagination:
 
 
 
-### 1. 核心代码实现
-
-你可以将以下代码添加到 Jekyll 项目的 `_layouts/post.html` 文件末尾（在 `</article>` 之后），或者封装在 `_includes/toc.html` 中引用。
+## jekyll.yml
 
 ```
-<div id="floating-toc" class="toc-container">
-  <div class="toc-title">目录</div>
-  <nav id="toc-content"></nav>
+name: Deploy Jekyll site with Custom Plugins
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2' # 指定 Ruby 版本
+          bundler-cache: true # 自动运行 bundle install 并缓存
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Build with Jekyll
+        # 使用 bundle exec 确保运行的是你 Gemfile 里的插件
+        run: bundle exec jekyll build --baseurl "${{ steps.configurepages.outputs.base_path }}"
+        env:
+          JEKYLL_ENV: production
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+## pagination.html
+
+```
+---
+layout: base
+---
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title | escape }}</h1>
+  </header>
+
+</article>
+
+<div class="post-list">
+  {% for post in paginator.posts %}
+    <article>
+      <h2>
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </h2>
+      <p class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</p>
+      <div class="excerpt">
+        {% if post.description %}
+          {{ post.description }}
+        {% else %}
+          {{ post.excerpt | strip_html | truncate: 150 }}
+        {% endif %}
+      </div>
+    </article>
+    <p>&nbsp;</p>
+  {% endfor %}
 </div>
 
-<style>
-  /* 容器样式 */
-  .toc-container {
-    position: fixed;
-    top: 100px;
-    right: calc(50% - 800px); /* 动态定位在正文右侧 */
-    width: 300px;
-    max-height: 70vh;
-    padding: 15px;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    overflow-y: auto;
-    z-index: 100;
-    transition: all 0.3s ease;
-    display: none; /* 初始隐藏，由 JS 根据屏幕宽度显示 */
-  }
+{% if paginator.total_pages > 1 %}
+<nav class="pagination">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | relative_url }}">&laquo; 上一页</a>
+  {% else %}
+    <span>&laquo; 上一页</span>
+  {% endif %}
 
-  /* 标题样式 */
-  .toc-title {
-    font-weight: bold;
-    font-size: 0.9rem;
-    color: #2a7ae2; /* Minima 经典蓝色 */
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+  {% for trail in paginator.page_trail %}
+    {% if page.url == trail.path %}
+      &nbsp;<span class="current-page">{{ trail.num }}</span>&nbsp;
+    {% else %}
+      &nbsp;<a href="{{ trail.path | relative_url }}">{{ trail.num }}</a>&nbsp;
+    {% endif %}
+  {% endfor %}
 
-  /* 导航列表 */
-  #toc-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  #toc-content li {
-    margin: 5px 0;
-    line-height: 1.4;
-  }
-
-  #toc-content a {
-    text-decoration: none;
-    color: #555;
-    font-size: 0.85rem;
-    display: block;
-    padding: 2px 5px;
-    border-left: 2px solid transparent;
-    transition: all 0.2s;
-  }
-
-  /* 悬停与激活状态 */
-  #toc-content a:hover {
-    color: #2a7ae2;
-    background: #f8f9fa;
-  }
-
-  #toc-content a.active {
-    color: #2a7ae2;
-    border-left-color: #2a7ae2;
-    background: #f0f7ff;
-    font-weight: 500;
-  }
-
-  /* 不同层级的缩进 */
-  .toc-h2 { padding-left: 15px !important; font-size: 0.8rem !important; }
-  .toc-h3 { padding-left: 25px !important; font-size: 0.75rem !important; }
-
-  /* 响应式：屏幕太小时隐藏目录 */
-  @media (max-width: 1100px) {
-    .toc-container { display: none !important; }
-  }
-</style>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const postContent = document.querySelector('.post-content');
-  const tocContent = document.getElementById('toc-content');
-  const tocContainer = document.getElementById('floating-toc');
-  
-  if (!postContent || !tocContent) return;
-
-  // 1. 提取标题 (h1, h2, h3)
-  const headings = postContent.querySelectorAll('h1, h2, h3');
-  if (headings.length < 2) return; // 标题太少则不显示
-
-  tocContainer.style.display = 'block';
-  const ul = document.createElement('ul');
-
-  headings.forEach((heading, index) => {
-    // 确保标题有 ID
-    if (!heading.id) {
-      heading.id = 'toc-item-' + index;
-    }
-
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    
-    a.href = '#' + heading.id;
-    a.textContent = heading.innerText;
-    a.classList.add('toc-' + heading.tagName.toLowerCase());
-    
-    // 点击平滑滚动
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      heading.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    li.appendChild(a);
-    ul.appendChild(li);
-  });
-
-  tocContent.appendChild(ul);
-
-  // 2. 监听滚动，自动高亮当前章节
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px 0px -80% 0px',
-    threshold: 0
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        document.querySelectorAll('#toc-content a').forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
-        });
-      }
-    });
-  }, observerOptions);
-
-  headings.forEach(heading => observer.observe(heading));
-});
-</script>
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | relative_url }}">下一页 &raquo;</a>
+  {% else %}
+    <span>下一页 &raquo;</span>
+  {% endif %}
+</nav>
+{% endif %}
 ```
 
-------
+## /index-all.md
 
-### 2. 设计亮点说明
+```
+---
+layout: pagination
+title: 所有文章
+pagination: 
+  enabled: true
+  collection: all
+  permalink: '/index-all/:num/'
+---
 
-- **配色方案**：使用了 Minima 主题默认的蓝色 (`#2a7ae2`) 作为主色调，配合淡灰色背景和柔和的阴影，确保视觉上与原主题无缝融合。
-- **智能定位**：
-  - 使用 `right: calc(50% - 600px)`。这能保证在宽屏下，目录始终“挂”在文章内容区的右侧边缘，而不是贴在浏览器最右边。
-  - **自动隐藏**：通过媒体查询，在屏幕宽度小于 1100px 时自动隐藏，避免遮挡正文。
-- **交互体验**：
-  - **平滑滚动**：点击目录项时，页面会顺滑滚动到对应位置。
-  - **滚动监听 (ScrollSpy)**：使用 `IntersectionObserver` API，当你阅读文章时，右侧目录会自动高亮对应的章节。
-- **纯 JS 实现**：不依赖 jQuery，加载速度极快，且自动为没有 ID 的标题生成 ID。
+```
 
-------
-
-### 3. 如何调整位置？
-
-如果你的 Minima 主题进行了自定义修改（如改变了正文宽度），你可以调整以下参数：
-
-- **左右间距**：修改 `.toc-container` 中的 `right: calc(50% - 600px)`。如果目录离正文太远，就把 `600px` 调小；如果重叠了，就调大。
-- **上下位置**：修改 `top: 100px`。
