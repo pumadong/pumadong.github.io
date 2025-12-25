@@ -27,6 +27,8 @@ minima:
 plugins:
   - jekyll-remote-theme
   - jekyll-paginate-v2  # 注意：这需要开启 GitHub Actions 才能运行
+  - jekyll-feed
+  - jekyll-seo-tag
 
 # 分页基础配置
 pagination:
