@@ -33,6 +33,12 @@ plugins:
 
 future: true
 
+# The default document collection to paginate if nothing is specified ('posts' is default)
+collections:
+  aws:
+    output: true
+    permalink: /aws/:title/  # 建议手动指定路径格式
+
 # 分页基础配置
 ############################################################
 # Site configuration for the Jekyll 3 Pagination Gem
@@ -44,12 +50,6 @@ pagination:
 
   # Set to 'true' to enable pagination debugging. This can be enabled in the site config or only for individual pagination pages
   debug: false
-
-  # The default document collection to paginate if nothing is specified ('posts' is default)
-  collections:
-    aws:
-      output: true
-      permalink: /aws/:title/  # 建议手动指定路径格式
 
   # How many objects per paginated page, used to be `paginate` (default: 0, means all)
   per_page: 2
