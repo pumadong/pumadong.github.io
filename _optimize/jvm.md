@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "Java JVM 参数优化指南"
+date: 2025-12-16 18:30:00 +0800  # 标准格式
+description: "Java 虚拟机（JVM）参数优化是一个系统性工程，核心目标是在**吞吐量（Throughput）**、**停顿时间（Latency/Pause Time）**和**内存占用（Footprint）**之间寻找最佳平衡点。"
 ---
 
 Java 虚拟机（JVM）参数优化是一个系统性工程，核心目标是在**吞吐量（Throughput）**、**停顿时间（Latency/Pause Time）**和**内存占用（Footprint）**之间寻找最佳平衡点。
