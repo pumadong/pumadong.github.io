@@ -1,11 +1,9 @@
 ---
 layout: home
 title: 全部文章
-permalink: /index-all/         # 强制指定该页面的访问路径
 pagination: 
   enabled: true
-  collection: posts
-  permalink: /index-all/:num/  # 强制指定分页后的路径格式
+  collection: all
 ---
 
 {% for post in pagination.posts %}
