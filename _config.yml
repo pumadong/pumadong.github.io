@@ -40,9 +40,9 @@ pagination:
   sort_field: 'date'
   sort_reverse: true
   collections:
-  aws:
-    output: true
-  tricks:
-    output: true
-  optimize:
-    output: true
+    aws:
+      output: true
+    tricks:
+      output: true
+    optimize:
+      output: true
