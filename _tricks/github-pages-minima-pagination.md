@@ -1,11 +1,11 @@
 ---
 layout: post
 title: "Github Pages Minima - 分页列表"
-date: 2025-12-24 18:30:00 +0800  # 标准格式
+date: 2025-12-02 18:30:00 +0800  # 标准格式
 description: "记录在GitHub Pages中，通过jekyll-paginate-v2和Minima 3.0实现一个分页列表的过程。"
 ---
 
-### Minima 3.0模版下 jekyll-paginate-v2 分页
+# Minima 3.0模版下 jekyll-paginate-v2 分页
 
 记录在GitHub Pages中，通过jekyll-paginate-v2和Minima 3.0实现一个分页列表的过程。
 
