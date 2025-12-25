@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gem "jekyll", "~> 4.3"
 
 # Minima 主题和分页插件
-gem "minima", "~> 3.0"
+gem "jekyll-remote-theme"
 gem "jekyll-paginate-v2", "~> 3.0"
 
 # 必须手动添加这些 Minima 3.0 需要的插件
