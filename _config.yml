@@ -46,9 +46,7 @@ pagination:
   debug: false
 
   # The default document collection to paginate if nothing is specified ('posts' is default)
-  collection: 
-    aws:
-      output: true  # 必须写 output: true，否则分页插件看不见它
+  collection: all
 
   # How many objects per paginated page, used to be `paginate` (default: 0, means all)
   per_page: 2
