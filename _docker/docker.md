@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "Docker从入门到精通"
+date: 2025-12-20 18:30:00 +0800  # 标准格式
+description: "总结Docker容器化技术的基本操作和最佳实践，并通过一些FAQ问题增进理解。"
 ---
 
 # 一、Docker架构图

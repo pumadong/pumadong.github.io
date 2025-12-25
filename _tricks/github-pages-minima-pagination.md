@@ -34,6 +34,8 @@ description: "记录在GitHub Pages中，通过jekyll-paginate-v2和Minima 3.0�
 
 7. **解决页面head部分显示多个分页页面链接的问题：** _includes/nav-items，改为定制连接，原来是系统自动扫描非 "\_"开头的所有目录。
 
+8. **遇到问题怎么办：**看GitHub Actions的日志，md文件增加debug代码。定位是因为jekyll.yml的配置问题导致的插件没有生效，还是_config.yum及相关md文件的配置问题导致的分页不显示。
+
    
 
 
