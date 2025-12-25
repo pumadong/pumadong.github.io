@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 本机环境
+excerpt: "这是我专门为这篇文章写的精简摘要，直接显示在列表页。"
 ---
 
 # VMware Fusion虚拟机
