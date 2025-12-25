@@ -569,3 +569,6 @@ Route 53 可以监控你的应用、服务器或终端节点的“健康状态�
 1. **100% 可用性 SLA：** 它是 AWS 极少数承诺 100% 可用的服务之一。
 2. **与 AWS 深度集成：** 可以无缝连接别名记录（Alias Record）到 ELB、CloudFront 和 S3。
 3. **全球化网络：** 拥有遍布全球的边缘节点，确保解析速度极快。
+
+#  五、Amazon Simple Storage Service
+

@@ -215,3 +215,17 @@ I mean it. 我是认真的。 I don't mean it.我不是故意的。
 - focus on what you can control
 - go easy on yourself
 - learn from mistake
+
+# 2025-12-25
+
+**miss the red flags**  错过危险信号 I think you missed the red flags when she said she had a job in L.A. yet asked a college student for money.
+
+**sober** / ˈsoʊbər / 清醒的
+
+**scam** / skæm / 欺诈，诓骗 (v.n.) It was naive of me to think you'd see the scam. Don't you think you might be getting scammed?
+
+**ghost:** In Chinese, we usually use **玩消失 or **玩失踪** . If it's specifically about social media, you might say **拉黑**。 I can't believe Sasha ghosted me after borrowing a bunch of money.
+
+**我早该预料到的：**He had a history of not meeting his deadlines. I should have seen it coming.
+
+**Most Natural / Colloquial (Feeling "Silly")，Literal "Kick Myself" (Regret)：**I could kick myself for not realizing sooner that the job offer was too good to be true.
