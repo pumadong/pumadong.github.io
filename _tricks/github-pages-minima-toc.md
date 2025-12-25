@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Github Pages Minima - 右侧悬浮目录"
-date: 2025-12-15 18:30:00 +0800  # 标准格式
+date: 2025-12-11 18:30:00 +0800  # 标准格式
 description: "Minima 3.0 主题中实现一个纯 JavaScript 的右侧悬浮目录（TOC）。"
 ---
 
