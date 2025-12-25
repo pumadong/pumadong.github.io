@@ -30,6 +30,9 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
 
+
+future: true
+
 # 分页基础配置
 ############################################################
 # Site configuration for the Jekyll 3 Pagination Gem
@@ -43,7 +46,9 @@ pagination:
   debug: false
 
   # The default document collection to paginate if nothing is specified ('posts' is default)
-  collection: ['aws', 'tricks', 'optimize']
+  collection: 
+    aws:
+      output: true  # 必须写 output: true，否则分页插件看不见它
 
   # How many objects per paginated page, used to be `paginate` (default: 0, means all)
   per_page: 2
