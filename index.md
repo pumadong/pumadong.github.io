@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: default
 title: 全部文章
 pagination: 
   enabled: true
