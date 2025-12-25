@@ -49,6 +49,7 @@ pagination:
   collections:
     aws:
       output: true
+      permalink: /aws/:title/  # 建议手动指定路径格式
 
   # How many objects per paginated page, used to be `paginate` (default: 0, means all)
   per_page: 2
