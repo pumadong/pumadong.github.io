@@ -32,7 +32,6 @@ plugins:
 
 
 header_pages:
-  - index.md
   - architecture.md
 
 future: true
@@ -43,19 +42,28 @@ collections:
   aws:
     output: true
     permalink: /aws/:title/
+  docker:
+    output: true
+    permalink: /docker/:title/
   english:
     output: true
     permalink: /english/:title/
   optimize:
-    output: true    
-
+    output: true
+  others:
+    output: true
+  spring:
+    output: true
+  tricks:
+    output: true
+         
 # 分页基础配置
 # jekyll-paginate-v2参数说明官网：https://github.com/sverrirs/jekyll-paginate-v2/blob/master/README-GENERATOR.md
 pagination:
   
   # Site-wide kill switch, disabled here it doesn't run at all 
   enabled: true
-  
+
   # Set to 'true' to enable pagination debugging. This can be enabled in the site config or only for individual pagination pages
   debug: false
 

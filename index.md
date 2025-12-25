@@ -2,7 +2,6 @@
 layout: home
 title: 首页
 # 专门针对 Minima 或其他通用主题的隐藏开关
-nav_exclude: true
 pagination: 
   enabled: true
   collection: all
