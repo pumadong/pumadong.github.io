@@ -18,7 +18,11 @@ layout: base
       </h2>
       <p class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</p>
       <div class="excerpt">
-        {{ post.excerpt | strip_html | truncate: 160 }}
+        {% if post.manual_excerpt %}
+          {{ post.manual_excerpt }}
+        {% else %}
+          {{ post.excerpt | strip_html | truncate: 150 }}
+        {% endif %}
       </div>
     </article>
     <p>&nbsp;</p>
