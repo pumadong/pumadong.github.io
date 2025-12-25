@@ -1,6 +1,7 @@
 ---
 layout: home
 title: 全部文章
+permalink: /
 pagination: 
   enabled: true
   collection: all
