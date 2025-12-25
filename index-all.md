@@ -1,6 +1,6 @@
 ---
-layout: page
-title: 首页
+layout: pagination
+title: 所有文章
 pagination: 
   enabled: true
   collection: all
