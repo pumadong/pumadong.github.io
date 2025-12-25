@@ -42,9 +42,6 @@ collections:
   aws:
     output: true
     permalink: /aws/:title/
-  docker:
-    output: true
-    permalink: /docker/:title/
   english:
     output: true
     permalink: /english/:title/
