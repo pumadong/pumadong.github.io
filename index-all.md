@@ -1,13 +1,11 @@
 ---
 layout: home
-title: My Blog
-permalink: /
-# 分页核心配置
+title: 全部文章
+permalink: /index-all/         # 强制指定该页面的访问路径
 pagination: 
   enabled: true
-  collection: all
-  permalink: /index-all/page/:num/
-  limit: 5           # 每页显示的条数，会覆盖全局配置
+  collection: posts
+  permalink: /index-all/:num/  # 强制指定分页后的路径格式
 ---
 
 {% for post in pagination.posts %}
