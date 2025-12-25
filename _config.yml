@@ -30,9 +30,12 @@ plugins:
 
 # 分页基础配置
 pagination:
-enabled: true
-  per_page: 1
+  enabled: true
+  per_page: 2
   permalink: '/page/:num/'
-  title_suffix: ' - page :num'
-  indexpage: 'index' # 对应你的首页文件名
-  entities: 'posts'
+  title_suffix: ' - Page :num'
+  # 关键点：限制分页处理的范围（可选）
+  index_limit: 0 
+  # 排序规则
+  sort_field: 'date'
+  sort_reverse: true
