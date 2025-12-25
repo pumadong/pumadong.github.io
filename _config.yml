@@ -22,6 +22,10 @@ minima:
   hide_site_feed_link: true
   date_format: "%Y-%m-%d"
 
+# 添加下面这一行，禁止 SEO 插件自动生成可能有冲突的标签
+seo:
+  canonical: false
+
 
 # 启用插件
 plugins:
@@ -71,8 +75,7 @@ pagination:
   per_page: 2
 
   # The permalink structure for the paginated pages (this can be any level deep)
-  permalink_index: / # 强制第一页不带特殊后缀。
-  # permalink: '/index-all/:num/' # Pages are index.html inside this folder (default)
+  permalink: '/index-all/:num/' # Pages are index.html inside this folder (default)
   #permalink: '/page/:num.html' # Pages are simple html files 
   #permalink: '/page/:num' # Pages are html files, linked jekyll extensionless permalink style.
 
@@ -101,8 +104,8 @@ pagination:
  # Optional,omit or set both before and after to zero to disable. 
  # Controls how the pagination trail for the paginated pages look like. 
   trail: 
-    before: 2
-    after: 2
+    before: 0
+    after: 0
 
   # Optional, the default file extension for generated pages (e.g html, json, xml).
   # Internally this is set to html by default
@@ -112,4 +115,6 @@ pagination:
   # Without file extension
   indexpage: 'index-all'
 
+  # 尝试开启或关闭以下选项查看变化
+  avoid_duplicate_urls: true    # 核心：尝试强制去除重复 URL
 ############################################################
