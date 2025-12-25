@@ -31,6 +31,10 @@ plugins:
   - jekyll-seo-tag
 
 
+header_pages:
+  - index.md
+  - architecture.md
+
 future: true
 
 # Jekyll 的全局核心配置：告诉 Jekyll 核心：“我有这些目录，请把它们当成内容仓库来处理。”
