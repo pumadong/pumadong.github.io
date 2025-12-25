@@ -32,7 +32,6 @@ plugins:
   - jekyll-remote-theme
   - jekyll-paginate-v2  # 注意：这需要开启 GitHub Actions 才能运行
   - jekyll-feed
-  # - jekyll-seo-tag
 
 
 header_pages:
@@ -115,6 +114,4 @@ pagination:
   # Without file extension
   indexpage: 'index-all'
 
-  # 尝试开启或关闭以下选项查看变化
-  avoid_duplicate_urls: true    # 核心：尝试强制去除重复 URL
 ############################################################
