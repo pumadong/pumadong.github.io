@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Github Pages Minima - 滚动条"
+title: "Github Pages Minima - 右侧悬浮目录"
 ---
 
 ### Jekyll Minima模版说明
