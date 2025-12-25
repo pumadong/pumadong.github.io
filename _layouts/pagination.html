@@ -2,6 +2,14 @@
 layout: base
 ---
 
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title | escape }}</h1>
+  </header>
+
+</article>
+
 <div class="post-list">
   {% for post in paginator.posts %}
     <article>
@@ -27,9 +35,9 @@ layout: base
 
   {% for trail in paginator.page_trail %}
     {% if page.url == trail.path %}
-      <span class="current-page">{{ trail.num }}</span>&nbsp;
+      &nbsp;<span class="current-page">{{ trail.num }}</span>&nbsp;
     {% else %}
-      <a href="{{ trail.path | relative_url }}">{{ trail.num }}</a>&nbsp;
+      &nbsp;<a href="{{ trail.path | relative_url }}">{{ trail.num }}</a>&nbsp;
     {% endif %}
   {% endfor %}
 
