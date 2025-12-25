@@ -28,7 +28,7 @@ plugins:
   - jekyll-remote-theme
   - jekyll-paginate-v2  # 注意：这需要开启 GitHub Actions 才能运行
   - jekyll-feed
-  - jekyll-seo-tag
+  # - jekyll-seo-tag
 
 
 header_pages:
@@ -71,7 +71,8 @@ pagination:
   per_page: 2
 
   # The permalink structure for the paginated pages (this can be any level deep)
-  permalink: '/index-all/:num/' # Pages are index.html inside this folder (default)
+  permalink_index: / # 强制第一页不带特殊后缀。
+  # permalink: '/index-all/:num/' # Pages are index.html inside this folder (default)
   #permalink: '/page/:num.html' # Pages are simple html files 
   #permalink: '/page/:num' # Pages are html files, linked jekyll extensionless permalink style.
 
