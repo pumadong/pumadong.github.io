@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "AWS从入门到精通"
+date: 2025-12-12 18:30:00 +0800  # 标准格式
 ---
 
 # 一、IAM - Identity and Access Management

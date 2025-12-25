@@ -3,7 +3,7 @@ layout: home
 title: 首页
 pagination: 
   enabled: true
-  collection: ["aws", "optimize"]
+  collection: all
 ---
 
 <div class="post-list">

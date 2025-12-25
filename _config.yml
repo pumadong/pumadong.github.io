@@ -33,11 +33,17 @@ plugins:
 
 future: true
 
-# The default document collection to paginate if nothing is specified ('posts' is default)
+# Jekyll 的全局核心配置：告诉 Jekyll 核心：“我有这些目录，请把它们当成内容仓库来处理。”
+# 目录必须是_开头，不是_开头的目录，Jekyll 认为里面的文件是 pages（页面），会自动抓取到 Header
 collections:
   aws:
     output: true
-    permalink: /aws/:title/  # 建议手动指定路径格式
+    permalink: /aws/:title/
+  english:
+    output: true
+    permalink: /english/:title/
+  optimize:
+    output: true    
 
 # 分页基础配置
 ############################################################

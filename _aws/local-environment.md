@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 本机环境
+date: 2025-10-12 18:30:00 +0800  # 标准格式
 ---
 
 # VMware Fusion虚拟机
