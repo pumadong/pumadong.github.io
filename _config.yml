@@ -46,8 +46,12 @@ pagination:
   debug: false
 
   # The default document collection to paginate if nothing is specified ('posts' is default)
-  collection: all
-
+  collections:
+    aws:
+      output: true
+    optimize:
+      output: true
+  
   # How many objects per paginated page, used to be `paginate` (default: 0, means all)
   per_page: 2
 
