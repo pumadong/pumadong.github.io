@@ -33,11 +33,9 @@ plugins:
 # 分页基础配置
 pagination:
   enabled: true
-  per_page: 2
+  per_page: 10
   permalink: '/page/:num/'
-  title_suffix: ' - Page :num'
-  # 关键点：限制分页处理的范围（可选）
-  index_limit: 0 
-  # 排序规则
+  title_suffix: ' - page :num'
+  index_page_with_pagnation: true # 关键点：是否在首页启用
   sort_field: 'date'
   sort_reverse: true
