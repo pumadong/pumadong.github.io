@@ -1,7 +1,9 @@
 ---
 layout: post
 title: 本机环境
+date: 2025-12-12 18:30:00 +0800  # 标准格式
 manual_excerpt: "这是我专门为这篇文章写的精简摘要，直接显示在列表页。"
+excerpt: "这接显示在列表页。"
 ---
 
 # VMware Fusion虚拟机
