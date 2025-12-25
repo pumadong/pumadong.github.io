@@ -1,9 +1,9 @@
 ---
 layout: post
 title: 本机环境
-date: 2025-12-12 18:30:00 +0800  # 标准格式
-description: "这是我专门为这篇文章写的精简摘要，直接显示在列表页。"
-excerpt: "这接显示在列表页。"
+date: 2025-10-12 18:30:00 +0800  # 标准格式
+description: "记录居家学习、办公的环境搭建。"
+# excerpt: ""
 ---
 
 # VMware Fusion虚拟机
