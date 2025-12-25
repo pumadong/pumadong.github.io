@@ -1,10 +1,12 @@
 ---
 layout: home
 title: My Blog
+permalink: /
 # 分页核心配置
 pagination: 
   enabled: true
   collection: all
+  permalink: /index-all/page/:num/
   limit: 5           # 每页显示的条数，会覆盖全局配置
 ---
 
