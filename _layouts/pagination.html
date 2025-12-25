@@ -13,6 +13,7 @@ layout: base
         {{ post.excerpt | strip_html | truncate: 160 }}
       </div>
     </article>
+    <p>&nbsp;</p>
   {% endfor %}
 </div>
 
@@ -24,13 +25,11 @@ layout: base
     <span>&laquo; 上一页</span>
   {% endif %}
 
-  {% for page in (1..paginator.total_pages) %}
-    {% if page == paginator.page %}
-      <span class="current-page">{{ page }}</span>
-    {% elsif page == 1 %}
-      <a href="{{ '/' | relative_url }}">{{ page }}</a>
+  {% for trail in paginator.page_trail %}
+    {% if page.url == trail.path %}
+      <span class="current-page">{{ trail.num }}</span>&nbsp;
     {% else %}
-      <a href="{{ site.paginate_path | replace: ':num', page | relative_url }}">{{ page }}</a>
+      <a href="{{ trail.path | relative_url }}">{{ trail.num }}</a>&nbsp;
     {% endif %}
   {% endfor %}
 
