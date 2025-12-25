@@ -49,9 +49,7 @@ pagination:
   collections:
     aws:
       output: true
-    optimize:
-      output: true
-  
+
   # How many objects per paginated page, used to be `paginate` (default: 0, means all)
   per_page: 2
 
