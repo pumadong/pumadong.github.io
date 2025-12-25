@@ -39,3 +39,10 @@ pagination:
   index_page_with_pagnation: true # 关键点：是否在首页启用
   sort_field: 'date'
   sort_reverse: true
+  collections:
+  aws:
+    output: true
+  tricks:
+    output: true
+  optimize:
+    output: true
