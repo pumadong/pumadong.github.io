@@ -622,6 +622,8 @@ S3 的管理逻辑非常直观，主要由以下两个概念组成：
 
 # 六、CLI - Command Line Interface
 
+## 什么是CLI
+
 **AWS CLI**（Amazon Web Services Command Line Interface）是一个开源工具，让你能够通过终端（命令行）与 AWS 服务进行交互。
 
 简单来说，如果你不想在浏览器里点来点去（控制台操作），你可以直接在电脑的黑框框（终端/命令提示符）里输入一行命令来管理你的云端资源。
@@ -831,3 +833,59 @@ Bash
 aws cloudformation create-stack --stack-name my-web-app --template-body file://web-server.yaml
 ```
 
+## VS Code 编写 AWS CloudFormation
+
+[https://code.visualstudio.com/](https://code.visualstudio.com/)
+
+在 AWS 开发中，使用 **Visual Studio Code (VS Code)** 编写 CloudFormation Template (CFT) 是目前**最主流、也是最推荐**的选择。
+
+虽然 AWS 官方控制台提供了一个可视化的 "CloudFormation Designer"，但对于实际的工程项目，开发者几乎都会选择 VS Code。
+
+以下是 VS Code 成为首选的几个核心原因及常用配置：
+
+### 1. 为什么大家都用 VS Code？
+
+- **强大的插件生态：** 通过安装特定插件，可以实现语法高亮、自动补全、实时校验（Linting）和可视化预览。
+- **版本控制：** CFT 作为“基础设施即代码”(IaC)，通常需要托管在 Git (GitHub/GitLab) 上，VS Code 的 Git 集成非常完美。
+- **生产力工具：** 支持代码块（Snippets），按一个 `tab` 键就能生成几十行的资源模板（如 VPC 或 S3），效率远超手动编写。
+- **2025 新动向：** AWS 刚刚推出了 **CloudFormation IDE Experience**，进一步增强了 IDE 内部的开发闭环，减少了在控制台和编辑器之间切换的需求。
+
+------
+
+### 2. 必装的“黄金组合”插件
+
+要在 VS Code 中爽快地写 CFT，你**必须**安装以下插件：
+
+| **插件名称**                         | **功能描述**                                                 |
+| ------------------------------------ | ------------------------------------------------------------ |
+| **AWS Toolkit for VS Code**          | 官方插件。支持一键部署、查看资源、与 Amazon Q (AI 助手) 聊天获取代码建议。 |
+| **CloudFormation Linter (cfn-lint)** | **最重要！** 实时检查语法错误、逻辑冲突（如引用了不存在的资源），在部署前就发现问题。 |
+| **CloudFormation Snippets**          | 提供大量的代码片段，输入 `cfn-s3-bucket` 就能自动补全整个资源定义。 |
+| **YAML (Red Hat)**                   | 如果你写 YAML 格式，这个插件能提供很好的缩进提示和格式化功能。 |
+
+------
+
+### 3. VS Code 里的“黑科技”功能
+
+1. Infrastructure Composer (集成版)：
+
+   现在你可以直接在 VS Code 里打开可视化编辑器。拖拽图标生成架构图，它会自动同步生成对应的 CFT YAML 代码。
+
+2. cfn-lint 实时纠错：
+
+   如果你在属性里写错了一个字母（例如把 BucketName 写成了 BucketNm），VS Code 会直接画红线并报错，而不是等你在 AWS 控制台部署了 5 分钟后才报错失败。
+
+3. SAM 加持：
+
+   如果你在做 Serverless 开发，VS Code 配合 AWS SAM 插件可以让你在本地运行和调试 Lambda 函数。
+
+------
+
+### 4. 相比其他工具的优势
+
+- **对比 IntelliJ/JetBrains：** 虽然 JetBrains 也有插件，但社区反馈在 2025 年其 CloudFormation 插件更新较慢，部分新资源类型支持不够及时。
+- **对比控制台 Designer：** 官方网页版 Designer 只适合画简单的图，处理上千行的复杂模板时非常卡顿，且不支持多人协作开发。
+
+### 总结
+
+**VS Code + AWS Toolkit + cfn-lint** 是目前 AWS 基础设施开发者的“标配”。
