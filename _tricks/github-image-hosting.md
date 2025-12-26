@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Github Pages Minima - 图床"
+title: "Github - 图床"
 date: 2025-12-12 20:30:00 +0800  # 标准格式
 description: "通过GitHub、jsDelivr、PicList搭建图床，以便能很好地集成到 Markdown 文档中。"
 ---
