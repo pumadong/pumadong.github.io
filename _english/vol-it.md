@@ -10,3 +10,5 @@ description: "积累当前比较生疏的IT词汇，帮助形成IT这个特定�
 **boilerplate：**/ ˈbɔɪlərpleɪt / 样板文件，样板代码
 
 **negligible：**/ ˈneɡlɪdʒəb(ə)l /  微不足道的，不值一提的
+
+**encryption：**/ ɪnˈkrɪpʃn / 加密；加密术

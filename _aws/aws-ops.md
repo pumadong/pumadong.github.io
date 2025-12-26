@@ -342,3 +342,126 @@ JSON
    2. 可以看到流量均匀的打到两台server
 
       
+
+# 四、S3操作实践
+
+## 演示设置访问权限
+
+1. 使用账户A，创建S3 bucket
+
+2. Name：app1-payments-prod-examp-bob-dong.com，这个名称在AWS全局唯一
+
+3. 使用账号B，没有S3相关权限，则查看s3 bucket列表，生成bucket，都无法进行
+
+4. 授予账户B，AmazonS3FullAccess，则查看s3 bucket列表，生成bucket，都正常进行
+
+5. 场景限制：即使对方有S3访问权限，也不能访问我的Bucket
+
+   Permission -> Bucket Policy -> Edit
+
+   ```
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Sid": "only-team-x-can-access",
+               "Effect": "Deny",
+               "Principal": "*",
+               "Action": "s3:*",
+               "Resource": "arn:aws:s3:::app1-payments-prod-examp-bob-dong.com",
+               "Condition": {
+                   "StringNotEquals": {
+                       "aws:PrincipalArn": "arn:aws:iam::275695461302:root"
+                   }
+               }
+           }
+       ]
+   }
+   ```
+
+6. 账户B可以在列表中看到Bucket，点击进入看不到内容了：**Insufficient permissions to list objects**
+
+   
+
+## 演示托管静态站点
+
+1. 创建S3 bucket，Name：app2-payments-prod-examp-bob-dong.com
+
+2. 修改：Block public access，设置为on
+
+3. 创建成功后，到Properties页，修改 Static website hosting设置
+
+4. 设置Bucket Policy，让互联网上的每个人都能访问
+
+   ```
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Sid": "PublicReadGetObject",
+               "Effect": "Allow",
+               "Principal": "*",
+               "Action": [
+                   "s3:GetObject"
+               ],
+               "Resource": [
+                   "arn:aws:s3:::app2-payments-prod-examp-bob-dong.com/*"
+               ]
+           }
+       ]
+   }
+   ```
+
+5. https://s3.ap-northeast-2.amazonaws.com/app2-payments-prod-examp-bob-dong.com/index.html，访达。
+
+   
+
+# 五、CLI操作实践
+
+到现在为止，都是通过Brower操作AWS提供的各种服务，看着浏览器经常的龟速刷新，是不是在寻求解决办法？
+
+所以，Command Line来了，因为快速、直接，是必不可少的快捷操作工具^_^
+
+1. 安装：[https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+2. 访问密钥（Access Keys）
+
+   1. 右上角点击用户名，选择Security Credentials
+
+   2. **Access keys** 新建访问密钥，如果此IAM用户被拒绝访问，先授权。
+
+      赋予用户能**查看、创建和删除自己的 Access Keys**的权限。
+
+      ```
+      {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Sid": "AllowManageOwnAccessKeys",
+                  "Effect": "Allow",
+                  "Action": [
+                      "iam:CreateAccessKey",
+                      "iam:DeleteAccessKey",
+                      "iam:ListAccessKeys",
+                      "iam:UpdateAccessKey",
+                      "iam:GetAccessKeyLastUsed"
+                  ],
+                  "Resource": "arn:aws:iam::*:user/${aws:username}"
+              }
+          ]
+      }
+      ```
+
+      #### 为什么必须指定变量 `${aws:username}`？
+
+      使用 `${aws:username}` 变量是一个**安全最佳实践**。它能确保：
+
+      1. **权限自适应**：你把这个策略丢进一个用户组（Group）里，组内所有成员都只能看到“自己的”密钥。
+      2. **横向隔离**：User A 即使有了这个权限，也无法通过 API 看到 User B 的密钥列表，从而防止了权限提升攻击。
+
+3. 本地配置：aws configure
+
+   ![AWS CLI Configure](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/aws-configure.png)
+
+4. 运行命令
+
