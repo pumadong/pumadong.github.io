@@ -59,6 +59,8 @@ collections:
     output: true
   tricks:
     output: true
+  ai:
+    output: true    
          
 # 分页基础配置
 # jekyll-paginate-v2参数说明官网：https://github.com/sverrirs/jekyll-paginate-v2/blob/master/README-GENERATOR.md
