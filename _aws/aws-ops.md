@@ -465,11 +465,13 @@ JSON
 
 ![AWS CLI Configure](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/aws-configure.png)
 
+以上配置可以通过命令`aws configure list`c查看。
+
 ## 运行命令
 
 
 
-**操作的所有命令都是和当前的regin：ap-southeast-1绑定的**
+**默认：操作的所有命令都是和当前的regin：ap-southeast-1绑定的**
 
 
 
@@ -535,7 +537,131 @@ aws ec2 run-instances --image-id ami-00d8fc944fb171e29 --instance-type t3.micro 
 -  **选用的image要和instance type支持的架构类型一致**，这帮你理解机器架构和镜像架构需要一致。
 - **subnet和security group要属于同一个VPC网络**，这帮你理解**Security Group（安全组）** 是在 VPC 级别定义的。它像一个分布式防火墙，虽然最终“作用”在 EC2 的网卡上，但它的**归属权**属于 VPC。
 
-1. 官方命令参考
+## 官方命令参考
 
-   [https://docs.aws.amazon.com/cli/latest/reference/](https://docs.aws.amazon.com/cli/latest/reference/)
+[https://docs.aws.amazon.com/cli/latest/reference/](https://docs.aws.amazon.com/cli/latest/reference/)
 
+## AWS 资源费用排查与关闭
+
+### 1. 快速检查：最容易被忽视的四个扣费大户
+
+请依次运行以下命令排查：
+
+- **NAT 网关 (每小时都在扣费):**
+
+  单个Region：
+
+  ```
+  aws ec2 describe-nat-gateways --query 'NatGateways[*].[NatGatewayId,State]' --output table
+  ```
+
+  遍历Region：
+
+  ```
+  # 获取所有已启用的区域，并针对每个区域执行查询
+  for region in $(aws ec2 describe-regions --query "Regions[].RegionName" --output text); do
+      echo "Checking Region: $region"
+      aws ec2 describe-nat-gateways --region $region --query 'NatGateways[*].[NatGatewayId,State]' --output table
+  done
+  ```
+
+- **负载均衡器 (ALB/NLB):**
+
+  ```
+  aws elbv2 describe-load-balancers --query 'LoadBalancers[*].[LoadBalancerName,Type,State.Code]' --output table
+  ```
+
+  ```
+  # 获取所有已启用的区域名称
+  regions=$(aws ec2 describe-regions --query 'Regions[].RegionName' --output text)
+  
+  for region in $regions; do
+      echo "--- Region: $region ---"
+      aws elbv2 describe-load-balancers \
+          --region $region \
+          --query 'LoadBalancers[*].[LoadBalancerName,Type,State.Code]' \
+          --output table
+  done
+  ```
+
+- **EBS 快照 (按 GB 长期计费):**
+
+  ```
+  aws ec2 describe-snapshots --owner-ids self --query 'Snapshots[*].[SnapshotId,VolumeSize,StartTime]' --output table
+  ```
+
+  ```
+  for region in $(aws ec2 describe-regions --query 'Regions[].RegionName' --output text); do
+      echo "--- Region: $region ---"
+      aws ec2 describe-snapshots \
+          --region $region \
+          --owner-ids self \
+          --query 'Snapshots[*].[SnapshotId,VolumeSize,StartTime]' \
+          --output table
+  done
+  ```
+
+- **关系型数据库 (RDS):**
+
+  ```
+  aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus,Engine]' --output table
+  ```
+
+------
+
+### 2. 自动化脚本：扫描所有区域的资源
+
+如果你不确定资源开在哪个国家/地区，可以用这个简单的 Bash 循环来扫描（以 EC2 为例）：
+
+```
+# 获取所有可用区域
+regions=$(aws ec2 describe-regions --query "Regions[].RegionName" --output text)
+
+for region in $regions; do
+  echo "正在检查区域: $region..."
+  # 查找该区域正在运行的实例
+  instances=$(aws ec2 describe-instances --region $region --query 'Reservations[*].Instances[?State.Name==`running`].InstanceId' --output text)
+  
+  if [ -n "$instances" ]; then
+    echo "⚠️  发现运行中的实例在 $region: $instances"
+  fi
+done
+```
+
+------
+
+### 3.清理资源
+
+#### 使用开源神器 `aws-nuke`（最推荐）
+
+这是社区公认最彻底的工具，专门用于清理整个 AWS 账号或特定区域。
+
+1. **安装**：可以通过 GitHub 下载二进制文件或使用 Homebrew：`brew install aws-nuke`。
+
+2. **配置文件**：创建一个 `config.yml`，指定你要清理的区域（例如 `us-east-1`）。
+
+3. **执行命令**：
+
+   Bash
+
+   ```
+   aws-nuke -c config.yml --profile your-profile-name
+   ```
+
+   *注：它会先进入“待定”状态让你确认，确保你不会误删关键资源。*
+
+------
+### 4. 清理后的关键一步：检查账单看板
+
+即使你在 CLI 删除了资源，账单更新通常有 **24 小时的延迟**。
+
+- **确认状态**：访问 [AWS Billing Dashboard](https://console.aws.amazon.com/billing/home)。
+- **查看 "Bills" 详情**：在 Bills 页面展开每一个服务，如果看到 `Tax` 以外的费用在增长，说明还有残留。
+
+### ⚠️ 特别提醒：
+
+- **终止 vs 停止**：对于 EC2，`stop`（停止）只是不收 CPU 钱，**EBS 磁盘和弹性 IP 依然在扣费**。必须使用 `terminate`（终止）才能彻底释放。
+
+- **CloudWatch 日志**：如果你的服务产生了大量日志，即便关了服务器，日志存储也会扣钱。检查：`aws logs describe-log-groups`。
+
+  

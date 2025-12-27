@@ -229,3 +229,17 @@ I mean it. 我是认真的。 I don't mean it.我不是故意的。
 **我早该预料到的：**He had a history of not meeting his deadlines. I should have seen it coming.
 
 **Most Natural / Colloquial (Feeling "Silly")，Literal "Kick Myself" (Regret)：**I could kick myself for not realizing sooner that the job offer was too good to be true.
+
+# 2025-12-26
+
+**lately/recently/these days**
+
+# 2025-12-27
+
+**be at fault** 有过错 The driver was at fault for not sending the injured passenger to the hospital.
+
+**She lives a life without wants, free from complaints.**
+
+这句话描绘的是一种非常高尚、通透的人生境界，可以用**“知足常乐”**和**“随遇而安”**来概括。
+
+**annoy/annoyed/noisy/noise**
