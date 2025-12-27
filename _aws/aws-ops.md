@@ -422,108 +422,120 @@ JSON
 
 所以，Command Line来了，因为快速、直接，是必不可少的快捷操作工具^_^
 
-1. **安装：[https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)**
+## 安装
 
-2. **配置访问密钥（Access Keys）**
+**[https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)**
 
-   1. 右上角点击用户名，选择Security Credentials
+## 配置访问密钥（Access Keys）
 
-   2. **Access keys** 新建访问密钥，如果此IAM用户被拒绝访问，先授权。
+1. 右上角点击用户名，选择Security Credentials
 
-      赋予用户能**查看、创建和删除自己的 Access Keys**的权限。
+2. **Access keys** 新建访问密钥，如果此IAM用户被拒绝访问，先授权。
 
-      ```
-      {
-          "Version": "2012-10-17",
-          "Statement": [
-              {
-                  "Sid": "AllowManageOwnAccessKeys",
-                  "Effect": "Allow",
-                  "Action": [
-                      "iam:CreateAccessKey",
-                      "iam:DeleteAccessKey",
-                      "iam:ListAccessKeys",
-                      "iam:UpdateAccessKey",
-                      "iam:GetAccessKeyLastUsed"
-                  ],
-                  "Resource": "arn:aws:iam::*:user/${aws:username}"
-              }
-          ]
-      }
-      ```
-
-      #### 为什么必须指定变量 `${aws:username}`？
-
-      使用 `${aws:username}` 变量是一个**安全最佳实践**。它能确保：
-
-      1. **权限自适应**：你把这个策略丢进一个用户组（Group）里，组内所有成员都只能看到“自己的”密钥。
-      2. **横向隔离**：User A 即使有了这个权限，也无法通过 API 看到 User B 的密钥列表，从而防止了权限提升攻击。
-
-3. **本地配置：aws configure**
-
-   ![AWS CLI Configure](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/aws-configure.png)
-
-4. **运行命令**
-
-   
-
-   **操作的所有命令都是和当前的regin：ap-southeast-1绑定的**
-
-   
-
-   **列出s3 bucket：**
+   赋予用户能**查看、创建和删除自己的 Access Keys**的权限。
 
    ```
-   aws s3 ls
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Sid": "AllowManageOwnAccessKeys",
+               "Effect": "Allow",
+               "Action": [
+                   "iam:CreateAccessKey",
+                   "iam:DeleteAccessKey",
+                   "iam:ListAccessKeys",
+                   "iam:UpdateAccessKey",
+                   "iam:GetAccessKeyLastUsed"
+               ],
+               "Resource": "arn:aws:iam::*:user/${aws:username}"
+           }
+       ]
+   }
    ```
 
-   **列出子网：**
+   #### 为什么必须指定变量 `${aws:username}`？
 
-   ```
-   aws ec2 describe-subnets --query 'Subnets[*].{SubnetID:SubnetId, AvailabilityZone:AvailabilityZone, CIDR:CidrBlock}' --output table
-   ```
+   使用 `${aws:username}` 变量是一个**安全最佳实践**。它能确保：
 
-   **列出子网并显示是否为public：**
+   1. **权限自适应**：你把这个策略丢进一个用户组（Group）里，组内所有成员都只能看到“自己的”密钥。
+   2. **横向隔离**：User A 即使有了这个权限，也无法通过 API 看到 User B 的密钥列表，从而防止了权限提升攻击。
 
-   一个子网是 Public 还是 Private，**唯一决定因素**是它的路由表中是否存在一条指向 **Internet Gateway (IGW)** 的路由。
+## 本地配置：aws configure
 
-   ```
-   aws ec2 describe-subnets --query 'Subnets[*].[SubnetId, VpcId, CidrBlock]' --output text | while read subnet vpc cidr; do
-       # 1. 查找直接关联的路由表，如果没有，则查找 VPC 的主路由表
-       rtb=$(aws ec2 describe-route-tables --filters "Name=association.subnet-id,Values=$subnet" --query 'RouteTables[0].RouteTableId' --output text)
-       if [ "$rtb" == "None" ]; then
-           rtb=$(aws ec2 describe-route-tables --filters "Name=vpc-id,Values=$vpc" "Name=association.main,Values=true" --query 'RouteTables[0].RouteTableId' --output text)
-       fi
-   
-       # 2. 检查该路由表中是否有目的地为 0.0.0.0/0 且 Target 为 igw-xxx 的路由
-       is_public=$(aws ec2 describe-route-tables --route-table-ids "$rtb" --query 'RouteTables[0].Routes[?GatewayId && starts_with(GatewayId, `igw-`)].GatewayId' --output text)
-   
-       # 3. 格式化输出
-       type="Private"
-       if [ ! -z "$is_public" ]; then type="Public"; fi
-   
-       printf "%-20s | %-20s | %-18s | %-15s | %-10s\n" "$subnet" "$vpc" "$rtb" "$cidr" "$type"
-   done
-   ```
+![AWS CLI Configure](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/aws-configure.png)
 
-   **列出安全组：**
+## 运行命令
 
-   ```
-   aws ec2 describe-security-groups --query 'SecurityGroups[*].{Name:GroupName, ID:GroupId, VPC:VpcId, Description:Description}' --output table
-   ```
 
-   **生成EC2实例：**
 
-   ```
-   aws ec2 run-instances --image-id ami-00d8fc944fb171e29 --instance-type t3.micro --key-name mykey1 --subnet-id subnet-02313ca720be6bdc7 --security-group-ids sg-0cc7113407dc17567 --tag-specifications 'ResourceType=instance, Tags=[{Key=Name, Value=MyInstanceCreatedByCli}]'
-   ```
+**操作的所有命令都是和当前的regin：ap-southeast-1绑定的**
 
-   **注意事项：**
 
-   -  **选用的image要和instance type支持的架构类型一致**，这帮你理解机器架构和镜像架构需要一致。
-   - **subnet和security group要属于同一个VPC网络**，这帮你理解**Security Group（安全组）** 是在 VPC 级别定义的。它像一个分布式防火墙，虽然最终“作用”在 EC2 的网卡上，但它的**归属权**属于 VPC。
 
-5. 官方命令参考
+**列出s3 bucket：**
+
+```
+aws s3 ls
+```
+
+**一键显示所有 Bucket 及其文件（Shell 循环）**
+
+```
+for bucket in $(aws s3 ls | awk '{print $3}'); do 
+    echo "--- Bucket: $bucket ---"; 
+    aws s3 ls s3://$bucket --recursive --human-readable --summarize; 
+    echo ""; 
+done
+```
+
+**列出子网：**
+
+```
+aws ec2 describe-subnets --query 'Subnets[*].{SubnetID:SubnetId, AvailabilityZone:AvailabilityZone, CIDR:CidrBlock}' --output table
+```
+
+**列出子网并显示是否为public：**
+
+一个子网是 Public 还是 Private，**唯一决定因素**是它的路由表中是否存在一条指向 **Internet Gateway (IGW)** 的路由。
+
+```
+aws ec2 describe-subnets --query 'Subnets[*].[SubnetId, VpcId, CidrBlock]' --output text | while read subnet vpc cidr; do
+    # 1. 查找直接关联的路由表，如果没有，则查找 VPC 的主路由表
+    rtb=$(aws ec2 describe-route-tables --filters "Name=association.subnet-id,Values=$subnet" --query 'RouteTables[0].RouteTableId' --output text)
+    if [ "$rtb" == "None" ]; then
+        rtb=$(aws ec2 describe-route-tables --filters "Name=vpc-id,Values=$vpc" "Name=association.main,Values=true" --query 'RouteTables[0].RouteTableId' --output text)
+    fi
+
+    # 2. 检查该路由表中是否有目的地为 0.0.0.0/0 且 Target 为 igw-xxx 的路由
+    is_public=$(aws ec2 describe-route-tables --route-table-ids "$rtb" --query 'RouteTables[0].Routes[?GatewayId && starts_with(GatewayId, `igw-`)].GatewayId' --output text)
+
+    # 3. 格式化输出
+    type="Private"
+    if [ ! -z "$is_public" ]; then type="Public"; fi
+
+    printf "%-20s | %-20s | %-18s | %-15s | %-10s\n" "$subnet" "$vpc" "$rtb" "$cidr" "$type"
+done
+```
+
+**列出安全组：**
+
+```
+aws ec2 describe-security-groups --query 'SecurityGroups[*].{Name:GroupName, ID:GroupId, VPC:VpcId, Description:Description}' --output table
+```
+
+**生成EC2实例：**
+
+```
+aws ec2 run-instances --image-id ami-00d8fc944fb171e29 --instance-type t3.micro --key-name mykey1 --subnet-id subnet-02313ca720be6bdc7 --security-group-ids sg-0cc7113407dc17567 --tag-specifications 'ResourceType=instance, Tags=[{Key=Name, Value=MyInstanceCreatedByCli}]'
+```
+
+**注意事项：**
+
+-  **选用的image要和instance type支持的架构类型一致**，这帮你理解机器架构和镜像架构需要一致。
+- **subnet和security group要属于同一个VPC网络**，这帮你理解**Security Group（安全组）** 是在 VPC 级别定义的。它像一个分布式防火墙，虽然最终“作用”在 EC2 的网卡上，但它的**归属权**属于 VPC。
+
+1. 官方命令参考
 
    [https://docs.aws.amazon.com/cli/latest/reference/](https://docs.aws.amazon.com/cli/latest/reference/)
 
