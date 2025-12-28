@@ -1,0 +1,51 @@
+<style>
+  .code-wrapper { position: relative; }
+  .copy-code-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    background: #ffffff;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 1;
+    color: #24292e;
+    box-shadow: 0 1px 0 rgba(27,31,35,0.04);
+  }
+  .copy-code-button:hover { background-color: #f3f4f6; }
+  .copy-code-button:active { background-color: #ebecf0; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 适配 Minima 默认生成的 .highlight 结构
+    document.querySelectorAll('pre.highlight').forEach((codeBlock) => {
+      const button = document.createElement('button');
+      button.className = 'copy-code-button';
+      button.type = 'button';
+      button.innerText = 'Copy';
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-wrapper';
+
+      codeBlock.parentNode.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(button);
+      wrapper.appendChild(codeBlock);
+
+      button.addEventListener('click', () => {
+        const code = codeBlock.innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          button.innerText = 'Copied!';
+          button.style.color = '#28a745'; // 成功时变为绿色
+          setTimeout(() => {
+            button.innerText = 'Copy';
+            button.style.color = '#24292e';
+          }, 2000);
+        });
+      });
+    });
+  });
+</script>
