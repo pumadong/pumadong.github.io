@@ -70,7 +70,7 @@ Taking on too much work at once? Remember, you shouldn't bit off more than you c
 
 **back-to-back** 紧接的 There will be three back-to-back exams tomorrow.
 
-**ace** 在……中取得好成绩 I have to ace team all to keep my scholarship.
+**ace** 在……中取得好成绩 I have to ace them all to keep my scholarship.
 
 I'm also cramming for finals these days, but I do most of my studying during the daytime. I love getting an early start to my days because I am more of a morning person.
 
@@ -118,13 +118,13 @@ Next time, you should brush up(复习，捡回已经生疏的知识) on the basi
 
 **emergency / ɪˈmɜːrdʒənsi / 注意发音** The article offers six tips on staying calm in an emergency. 注意发音。
 
-scratch 擦伤，抓伤
+**scratch** 擦伤，抓伤
 
 **coping with the injury，first aid 急救**
 
-1. bleeding：clean up the cut  brandage up
+1. bleeding：clean up the cut,  brandage up the cut
 
-2. burn：run cool water onver the burn
+2. burn：run cool water over the burn
 3. sprain：put a cold pack on the sprain
 4. fracture 骨折：call an amburance
 
@@ -243,3 +243,14 @@ I mean it. 我是认真的。 I don't mean it.我不是故意的。
 这句话描绘的是一种非常高尚、通透的人生境界，可以用**“知足常乐”**和**“随遇而安”**来概括。
 
 **annoy/annoyed/noisy/noise**
+
+# 2025-12-28
+
+**collapse** / kəˈlæps / 倒塌，突然倒下 If something collapses, it falls down because of pressure. If someone collapses, they fall down because there are sick or weak.
+
+**bummer** 同义词 pity <非正式>讨厌的事，令人失望的事；<美>流浪汉，游手好闲的人
+
+**concise** / kənˈsaɪs / 简明的，简洁的
+
+**grad program** 研究生项目  **grad** 校友，毕业生 My grad school program starts in August, but I bought plane tickets for September.
+

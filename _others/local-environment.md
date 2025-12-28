@@ -53,6 +53,33 @@ description: "记录居家学习、办公的环境搭建。"
 - **优点**：15 英寸大屏幕素质依然不错，接口非常丰富（拥有 MagSafe 2 磁吸充电、HDMI、SD 卡槽和 USB-A），16G 内存处理日常文档和轻度办公依然流畅。
 - **缺点**：发布至今已有 10 年，处理器性能较弱，且由于是通过补丁安装的 Monterey 系统，未来升级新功能可能会存在兼容性问题或系统发热。
 
+### 安装软件
+
+#### cfn-lint Mac 安装指南
+
+##### 使用独立安装工具 `uv` (最推荐)
+
+`uv` 是目前 Python 社区最快的包管理工具，它的自我管理能力极强，通常能修好 `pipx` 修不好的环境问题。
+
+1. **安装 uv**：
+
+   Bash
+
+   ```
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   source $HOME/.cargo/env
+   ```
+
+2. **用 uv 运行/安装 cfn-lint**（它会自动创建一个完全隔离的环境）：
+
+   Bash
+
+   ```
+   uv tool install cfn-lint
+   ```
+
+3. **验证**：`cfn-lint --version`
+
 ## 清华同方主机（精锐X950-B102）
 
 ### 1. 硬件配置详细清单
@@ -147,6 +174,8 @@ description: "记录居家学习、办公的环境搭建。"
 | **长方形缺一只角 (HDMI)**    | **HDMI 线**    | 最稳妥，大部分 750Ti 都有。          |
 | **长方形缺两个角 (DP)**      | **DP 线**      | 效果最好，如果显卡上有就买这个。     |
 | **梯形或带螺丝孔 (VGA/DVI)** | **不建议使用** | 无法达到 2K 清晰度，画质会非常模糊。 |
+
+**Mac查看本机WIFI密码：**`security find-generic-password -ga "TP-LINK_F9B2" | grep "password:"`。
 
 # VMware Fusion虚拟机
 

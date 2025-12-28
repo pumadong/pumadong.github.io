@@ -17,11 +17,20 @@ description: "介绍AWS这个全球最全面、应用最广泛、实操份额最
 
 1. **一个服务就看一个精品视频，就20分钟。**
    1. 10分钟快速串讲理论：理解核心、理解架构、理解最佳实践。
+   
    2. 10分钟演示操作实践：理解核心参数、理解基本和关键操作。
+   
    3. **这20分钟的目的理解骨架和脉络。**
+   
+      
+   
 2. **开始实践操作。**
    1. 遇到问题就解决，不会了问AI，回答问题AI最擅长了。
+   
    2. **这大约1-2个小时的操作，通过和AI的交互及解决问题过程，真正领会并实践起来。**
+   
+      
+   
 3. **做，比听来得高效的多。**
 
 # 一、IAM - Identity and Access Management
@@ -739,7 +748,7 @@ S3 的管理逻辑非常直观，主要由以下两个概念组成：
 
 ## 什么是CFT
 
-**官方文档：**[https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-formats.html](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-formats.html)
+**官方文档：**[https://docs.aws.amazon.com/cloudformation/](https://docs.aws.amazon.com/cloudformation/)
 
 **AWS CFT** 是 **AWS CloudFormation Template**（AWS CloudFormation 模板）的缩写。
 
@@ -983,9 +992,14 @@ aws cloudformation create-stack --stack-name my-web-app --template-body file://w
 ### 1. 为什么大家都用 VS Code？
 
 - **强大的插件生态：** 通过安装特定插件，可以实现语法高亮、自动补全、实时校验（Linting）和可视化预览。
+
 - **版本控制：** CFT 作为“基础设施即代码”(IaC)，通常需要托管在 Git (GitHub/GitLab) 上，VS Code 的 Git 集成非常完美。
+
 - **生产力工具：** 支持代码块（Snippets），按一个 `tab` 键就能生成几十行的资源模板（如 VPC 或 S3），效率远超手动编写。
+
 - **2025 新动向：** AWS 刚刚推出了 **CloudFormation IDE Experience**，进一步增强了 IDE 内部的开发闭环，减少了在控制台和编辑器之间切换的需求。
+
+  
 
 ------
 

@@ -219,7 +219,7 @@ JSON
 
 ### Create VPC
 
-1. **Name：**aas-prod-example
+1. **Name：**aws-prod-example
 
 2. **NAT gateways($)：**Zonal，1 per AZ
 
@@ -239,7 +239,7 @@ JSON
 
    4. **Key pair(login)：** mykey1
 
-   5. **Create secirity group：**使用我们上面新建的VPC，开发22/8000端口
+   5. **Create secirity group：**使用我们上面新建的VPC，开放22/8000端口
 
       
 
@@ -475,10 +475,17 @@ JSON
 
 
 
-**列出s3 bucket：**
+**操作bucket：**
 
 ```
+# 列表
 aws s3 ls
+# 清空
+aws s3 rm s3://bucket-name --recursive
+# 删除
+aws s3 rb s3://bucket-name
+# 一键清空并删除
+aws s3 rb s3://bucket-name --force
 ```
 
 **一键显示所有 Bucket 及其文件（Shell 循环）**
@@ -636,6 +643,8 @@ done
 
 这是社区公认最彻底的工具，专门用于清理整个 AWS 账号或特定区域。
 
+**不过，删除一切，破坏性极强，慎用。**
+
 1. **安装**：可以通过 GitHub 下载二进制文件或使用 Homebrew：`brew install aws-nuke`。
 
 2. **配置文件**：创建一个 `config.yml`，指定你要清理的区域（例如 `us-east-1`）。
@@ -665,3 +674,294 @@ done
 - **CloudWatch 日志**：如果你的服务产生了大量日志，即便关了服务器，日志存储也会扣钱。检查：`aws logs describe-log-groups`。
 
   
+
+# 六、CFT操作实践
+
+## S3 Bucket演示Drift Detection
+
+1. Cloud Formation -> Create stack
+
+2. Build from Infrastructure Composer
+
+   ```
+   Resources:
+     Bucket:
+       Type: AWS::S3::Bucket
+       Properties:
+         BucketName: "bob-20251228-bucket-new-test-1"
+         VersioningConfiguration:
+           Status: Enabled
+   ```
+
+3. next
+
+4. **Stack name：**s3-bucket
+
+5. next -> submit
+
+6. 大约1分钟之内，我们可以看到s3 bucket已经生成，我们手工修改**Bucket Versioning**为Suspended
+
+7. 回到Cloud Formation，Stack Actions -> View drift results -> Detect stack drift
+
+8. Just a moment，我们可以看到 Drift Status: DRIFTED，并可以通过View Detail看到具体的改动
+
+9. **偏移检测 (Drift Detection)** 是一个非常重要的功能。它用于识别堆栈（Stack）的当前配置与其预期的配置（即你定义的模板）之间是否存在差异
+
+## 使用VS Code IDE演示生成Ec2实例
+
+1. **安装VS Code：**https://code.visualstudio.com/
+
+   1. 本机需要安装cfn-lint，
+
+   2. VS Code 不自动内置 `cfn-lint` 的原因包括：
+
+      - **版本匹配：** 不同的项目可能需要不同版本的 `cfn-lint`。如果你本地安装，你可以根据需求升级或降级。
+      - **性能：** 如果每个插件都自带一套运行环境（如内置一套 Python 和所有库），VS Code 会变得异常臃肿。
+      - **自定义配置：** 本地安装后，插件可以直接读取你本地的 `.cfnlintrc` 配置文件。
+
+   3. 安装插件：AWS Toolkit、 CloudFormation、CloudFormation Linter、AWS CloudFormation Snippets、Amazon Q、YAML。
+
+   4. Settings：
+
+      ```
+          "yaml.customTags": [
+              "!Ref",
+              "!GetAtt",
+              "!Sub",
+              "!Join",
+              "!FindInMap"
+          ]
+      ```
+
+      避免自定义标签误报红。
+
+   5. **用过一次VS Code再也不会想用Infrastructure Composer。**
+
+   6. **熟悉之后只在必须场景才会去参考官方文档。**
+
+2. 写一个生成Ec2实例的模版
+
+   ```
+   AWSTemplateFormatVersion: "2010-09-09"
+   Description: "A simple EC2 instance template"
+   
+   # 定义参数以便在创建堆栈时指定实例类型
+   Parameters:
+     InstanceType:
+       Type: String
+       Default: t3.micro
+       AllowedValues: [t2.micro, t3.micro, t3.small]
+       Description: "EC2 instance type"
+   
+   Resources:
+     MyEC2Instance:
+       Type: AWS::EC2::Instance
+       Properties:
+         # 注意：ImageId 随区域变化，此 ID 适用于 ap-southeast-1 (Singapore)
+         ImageId: ami-00d8fc944fb171e29
+         KeyName: mykey1 # 请根据实际情况替换为您的密钥对名称
+         InstanceType: !Ref InstanceType
+         SubnetId: subnet-060b1e421af19694f  # 请根据实际情况替换为您的子网 ID
+         SecurityGroupIds:
+           - sg-0bddf0426db33a363  # 请根据实际情况替换为您的安全组 ID
+         Tags:
+           - Key: Name
+             Value: MyInstanceCreatedByCli
+   
+   Outputs:
+     InstanceId:
+       Description: "The ID of the instance"
+       Value: !Ref MyEC2Instance
+   ```
+
+3. 走一遍Create Stack的流程，可以看到Ec2实例也已经建立好了。
+
+4. 演示完毕，清理资源，避免扣费。
+
+   BTW：**Visual Studio Code (VS Code)** 是编写 Shell 脚本的事实标准。
+
+   ```
+   #!/bin/bash
+   
+   # ==============================================================================
+   # 脚本名称: cleanup_vpc.sh
+   # ==============================================================================
+   
+   set -eo pipefail
+   
+   VPC_ID=$(echo "${1:-}" | tr -d '[:space:]')
+   REGION=$(echo "${2:-ap-southeast-1}" | tr -d '[:space:]')
+   
+   if [[ ! "$VPC_ID" =~ ^vpc- ]]; then
+       echo "❌ 格式错误: [$VPC_ID] 不是有效的 VPC ID。"
+       exit 1
+   fi
+   
+   echo "--- 🛡️ 开始清理 VPC: [$VPC_ID] ---"
+   
+   # 1. 终止实例
+   echo "🔍 1. 终止 EC2 实例..."
+   INSTANCES=$(aws ec2 describe-instances --filters Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query 'Reservations[*].Instances[*].InstanceId' --output text)
+   if [[ -n "$INSTANCES" && "$INSTANCES" != "None" ]]; then
+       # shellcheck disable=SC2086
+       aws ec2 terminate-instances --instance-ids $INSTANCES --region "$REGION" > /dev/null
+       # shellcheck disable=SC2086
+       aws ec2 wait instance-terminated --instance-ids $INSTANCES --region "$REGION"
+   fi
+   
+   # 2. 删除终端节点 (VPCE)
+   echo "🔍 2. 删除 VPC 终端节点 (Endpoints)..."
+   VPCE_IDS=$(aws ec2 describe-vpc-endpoints --filters Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query 'VpcEndpoints[*].VpcEndpointId' --output text)
+   for vpce in $VPCE_IDS; do
+       [[ -n "$vpce" && "$vpce" != "None" ]] && aws ec2 delete-vpc-endpoints --vpc-endpoint-ids "$vpce" --region "$REGION"
+   done
+   
+   # 3. 删除 NAT 网关并严格等待
+   echo "🔍 3. 删除 NAT 网关并等待释放..."
+   NAT_IDS=$(aws ec2 describe-nat-gateways --filter Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query 'NatGateways[?State!=`deleted`].NatGatewayId' --output text)
+   
+   if [[ -n "$NAT_IDS" && "$NAT_IDS" != "None" ]]; then
+       for nat in $NAT_IDS; do
+           echo "🗑️ 发起删除 NAT 网关: $nat"
+           aws ec2 delete-nat-gateway --nat-gateway-id "$nat" --region "$REGION" > /dev/null
+       done
+   
+       echo "⏳ 等待 NAT 网关彻底销毁 (状态变为 deleted)..."
+       while true; do
+           STILL_EXIST=$(aws ec2 describe-nat-gateways --filter Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query 'NatGateways[?State!=`deleted`].NatGatewayId' --output text)
+           if [[ -z "$STILL_EXIST" || "$STILL_EXIST" == "None" ]]; then
+               echo "✅ 所有 NAT 网关已销毁。"
+               break
+           fi
+           echo -n "."
+           sleep 10
+       done
+   fi
+   
+   # 4. 删除负载均衡 (ALB/NLB)
+   echo "🔍 4. 删除负载均衡器 (ELB)..."
+   ELB_ARNS=$(aws elbv2 describe-load-balancers --region "$REGION" --query "LoadBalancers[?VpcId=='$VPC_ID'].LoadBalancerArn" --output text)
+   for elb in $ELB_ARNS; do
+       [[ -n "$elb" && "$elb" != "None" ]] && aws elbv2 delete-load-balancer --load-balancer-arn "$elb" --region "$REGION"
+   done
+   
+   
+   # 5. 清理安全组规则
+   echo "🔍 5. 清空所有安全组规则 (包含 Default)..."
+   SG_IDS=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query "SecurityGroups[*].GroupId" --output text)
+   for sg in $SG_IDS; do
+       [[ -z "$sg" || "$sg" == "None" ]] && continue
+       INGRESS=$(aws ec2 describe-security-groups --group-ids "$sg" --region "$REGION" --query 'SecurityGroups[0].IpPermissions' --output json)
+       EGRESS=$(aws ec2 describe-security-groups --group-ids "$sg" --region "$REGION" --query 'SecurityGroups[0].IpPermissionsEgress' --output json)
+       [[ "$INGRESS" != "[]" ]] && aws ec2 revoke-security-group-ingress --group-id "$sg" --region "$REGION" --ip-permissions "$INGRESS" 2>/dev/null || true
+       [[ "$EGRESS" != "[]" ]] && aws ec2 revoke-security-group-egress --group-id "$sg" --region "$REGION" --ip-permissions "$EGRESS" 2>/dev/null || true
+   done
+   
+   # 6. 强制清理残留 ENI (子网删除失败的核心原因)
+   echo "🔍 6. 深度扫描并清理残留 ENI..."
+   ENI_IDS=$(aws ec2 describe-network-interfaces --filters Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query 'NetworkInterfaces[*].NetworkInterfaceId' --output text)
+   for eni in $ENI_IDS; do
+       if [[ -n "$eni" && "$eni" != "None" ]]; then
+           DESC=$(aws ec2 describe-network-interfaces --network-interface-ids "$eni" --region "$REGION" --query 'NetworkInterfaces[0].Description' --output text)
+           echo "🗑️ 强制删除 ENI: $eni (描述: $DESC)"
+           aws ec2 delete-network-interface --network-interface-id "$eni" --region "$REGION" 2>/dev/null || true
+       fi
+   done
+   
+   # 7. 删除子网 (增加重试逻辑)
+   echo "🔍 7. 删除子网..."
+   SUB_IDS=$(aws ec2 describe-subnets --filters Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query 'Subnets[*].SubnetId' --output text)
+   for sub in $SUB_IDS; do
+       if [[ -n "$sub" && "$sub" != "None" ]]; then
+           echo "🗑️ 尝试删除子网: $sub"
+           for retry in {1..5}; do
+               if aws ec2 delete-subnet --subnet-id "$sub" --region "$REGION" 2>/dev/null; then
+                   echo "✅ 子网 $sub 删除成功"
+                   break
+               else
+                   if [ $retry -eq 5 ]; then
+                       echo "❌ 无法删除子网 $sub，查看残留 ENI:"
+                       aws ec2 describe-network-interfaces --filters Name=subnet-id,Values="$sub" --region "$REGION" --query 'NetworkInterfaces[*].{ID:NetworkInterfaceId,Description:Description}' --output table
+                   else
+                       echo "⏳ 子网 $sub 仍有依赖，等待 10 秒重试 ($retry/5)..."
+                       sleep 10
+                   fi
+               fi
+           done
+       fi
+   done
+   
+   # --- 8. 删除自定义安全组 (增加重试与报错捕获) ---
+   echo "🔍 8. 强制删除自定义安全组..."
+   for sg in $SG_IDS; do
+       [[ -z "$sg" || "$sg" == "None" ]] && continue
+       NAME=$(aws ec2 describe-security-groups --group-ids "$sg" --region "$REGION" --query "SecurityGroups[0].GroupName" --output text 2>/dev/null || echo "Deleted")
+       
+       if [[ "$NAME" != "default" && "$NAME" != "Deleted" ]]; then
+           echo "🗑️ 尝试删除安全组: $sg ($NAME)"
+           # 增加 3 次重试，应对资源释放延迟
+           for i in {1..3}; do
+               if aws ec2 delete-security-group --group-id "$sg" --region "$REGION" 2>/dev/null; then
+                   echo "✅ 安全组 $sg 删除成功"
+                   break
+               else
+                   echo "⏳ 安全组 $sg 仍被引用，等待 5 秒重试 ($i/3)..."
+                   sleep 5
+               fi
+           done
+       fi
+   done
+   
+   # 9. 获取所有未关联实例或网卡的 EIP AllocationId
+   echo "🔍 9. 获取所有未关联实例或网卡的 EIP AllocationId..."
+   EIP_ALLOCS=$(aws ec2 describe-addresses --region "$REGION" --query 'Addresses[?AssociationId==null].AllocationId' --output text)
+   
+   for alloc_id in $EIP_ALLOCS; do
+       if [[ -n "$alloc_id" && "$alloc_id" != "None" ]]; then
+           echo "🗑️ 正在释放 EIP: $alloc_id"
+           aws ec2 release-address --allocation-id "$alloc_id" --region "$REGION"
+           echo "✅ EIP $alloc_id 已释放。"
+       fi
+   done
+   
+   # --- 10. 释放网关并彻底销毁 VPC (增加依赖项深度清理) ---
+   echo "🚀 10. 最终清理并销毁 VPC..."
+   
+   # A. 清理非默认路由表 (非主路由表)
+   echo "   - 清理自定义路由表..."
+   RTB_IDS=$(aws ec2 describe-route-tables --filters Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query "RouteTables[?Associations[0].Main!= \`true\`].RouteTableId" --output text)
+   for rtb in $RTB_IDS; do
+       [[ -n "$rtb" && "$rtb" != "None" ]] && aws ec2 delete-route-table --route-table-id "$rtb" --region "$REGION" 2>/dev/null || true
+   done
+   
+   # B. 清理非默认网络 ACL
+   echo "   - 清理自定义网络 ACL..."
+   ACL_IDS=$(aws ec2 describe-network-acls --filters Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query "NetworkAcls[?IsDefault!= \`true\`].NetworkAclId" --output text)
+   for acl in $ACL_IDS; do
+       [[ -n "$acl" && "$acl" != "None" ]] && aws ec2 delete-network-acl --network-acl-id "$acl" --region "$REGION" 2>/dev/null || true
+   done
+   
+   # C. 卸载并删除 Internet 网关
+   IGW_ID=$(aws ec2 describe-internet-gateways --filters Name=attachment.vpc-id,Values="$VPC_ID" --region "$REGION" --query 'InternetGateways[*].InternetGatewayId' --output text)
+   if [[ -n "$IGW_ID" && "$IGW_ID" != "None" ]]; then
+       echo "   - 卸载并删除 IGW: $IGW_ID"
+       aws ec2 detach-internet-gateway --internet-gateway-id "$IGW_ID" --vpc-id "$VPC_ID" --region "$REGION" || true
+       aws ec2 delete-internet-gateway --internet-gateway-id "$IGW_ID" --region "$REGION" || true
+   fi
+   
+   # D. 最终尝试删除 VPC
+   echo "🧨 正在发起最终销毁请求..."
+   if aws ec2 delete-vpc --vpc-id "$VPC_ID" --region "$REGION"; then
+       echo "✨ [成功] VPC $VPC_ID 已彻底从云端移除！"
+   else
+       echo "❌ [失败] VPC 仍拒绝删除。原因通常是还有残留资源。"
+       echo "🔍 深度排查：以下是该 VPC 内目前残留的所有资源类型："
+       aws ec2 describe-vpc-attribute --vpc-id "$VPC_ID" --attribute enableDnsSupport --region "$REGION" > /dev/null
+       echo "--- 残留资源列表 ---"
+       aws ec2 describe-network-interfaces --filters Name=vpc-id,Values="$VPC_ID" --region "$REGION" --query "NetworkInterfaces[*].{ID:NetworkInterfaceId,Type:InterfaceType,Desc:Description}" --output table
+   fi
+   ```
+
+   
+
+# CI
