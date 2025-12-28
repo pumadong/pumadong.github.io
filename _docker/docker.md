@@ -2,7 +2,7 @@
 layout: post
 title: "Docker从入门到精通"
 date: 2025-12-20 18:30:00 +0800  # 标准格式
-description: "总结Docker容器化技术的基本操作和最佳实践，并通过一些FAQ问题增进理解。"
+description: "关于 Docker 容器技术的深度总结，内容涵盖了从 Docker 的基础概念到高级生产环境部署的全流程知识，旨在帮助开发者和运维人员快速掌握容器化技术。"
 ---
 
 # 一、Docker架构图

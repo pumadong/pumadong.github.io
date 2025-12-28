@@ -2,7 +2,7 @@
 layout: post
 title: "Github Pages Minima - 右侧悬浮目录"
 date: 2025-12-11 18:30:00 +0800  # 标准格式
-description: "Minima 3.0 主题中实现一个纯 JavaScript 的右侧悬浮目录（TOC）。"
+description: "由于 Minima 主题在默认配置下会在首页列出所有文章，当文章数量较多时会导致页面过长且加载缓慢。本文详细介绍了如何利用 Jekyll 的官方插件 jekyll-paginate-v2 为 Minima 主题集成标准的分页导航系统。"
 ---
 
 ### Jekyll Minima模版说明

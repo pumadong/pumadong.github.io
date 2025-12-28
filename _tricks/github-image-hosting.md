@@ -2,7 +2,7 @@
 layout: post
 title: "Github - 图床"
 date: 2025-12-12 20:30:00 +0800  # 标准格式
-description: "通过GitHub、jsDelivr、PicList搭建图床，以便能很好地集成到 Markdown 文档中。"
+description: "文章详细介绍了一套低成本、高效率的图床方案，即通过 GitHub 仓库存储图片，并配合 jsDelivr CDN 加速 以及 PicGo 客户端 实现图片的快速上传与引用。"
 ---
 
 # 搭建图床
