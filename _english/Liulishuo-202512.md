@@ -254,3 +254,28 @@ I mean it. 我是认真的。 I don't mean it.我不是故意的。
 
 **grad program** 研究生项目  **grad** 校友，毕业生 My grad school program starts in August, but I bought plane tickets for September.
 
+# 2025-12-29
+
+**ex：**前任 If you hadn't avoided everything about your ex, you would've known it's already closed.
+
+**if only...**要是...就好了，比第三条件句表达惋惜更加强烈。 If only I had started sooner, I would have finished it long ago.
+
+**"this"** 是一个**程度副词 (Adverb of degree)**，用来强调程度之深。这里的 "this" 相当于 **"so"** 或 **"to this degree"**，翻译为**“这么”、“如此”、“到这个地步”**。If only he hadn't complainted so much, I wouldn't have bee this mad. 
+
+**a whole new ballgame** 一个完全不同的情况。 If I had taken that job offer in New York, I would have been in a whole new ballgame.
+
+**sit pretty** 境况良好（尤其指因为金钱自由）If I had put money in that startup a few years ago, I would be sitting pretty now.
+
+**阻止的表达** What held you back?  What did you decide against it?
+
+**skeptical** 怀疑的。 I was skeptical about the market, and I didn't want to risk my savings.
+
+**表示后悔** Now, I'm crying over spilled milk.  I'm kicking myself.
+
+**事后诸葛亮** We're all wise after the event, right?
+
+It's funny how these decisions shape our lives.
+
+**压紧牙关** If had known then what I know now, I would have bitten the bullet and taken that opportunity.
+
+True, but all we can do is learn from our regrets and make better decisions in the future.

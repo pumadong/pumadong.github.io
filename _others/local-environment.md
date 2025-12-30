@@ -55,7 +55,7 @@ description: "记录居家学习、办公的环境搭建。"
 
 ### 安装软件
 
-#### cfn-lint Mac 安装指南
+#### 1.cfn-lint Mac 安装指南
 
 ##### 使用独立安装工具 `uv` (最推荐)
 
@@ -79,6 +79,63 @@ description: "记录居家学习、办公的环境搭建。"
    ```
 
 3. **验证**：`cfn-lint --version`
+
+#### 2. maven 安装
+
+homebrew不支持这个版本了。所以：
+
+##### 使用 SDKMAN! (最推荐)
+
+如果你经常处理 Java 项目，SDKMAN! 是最好的选择。它不需要 sudo 权限，且完全独立于 Homebrew。
+
+- **安装 SDKMAN!:**
+
+  Bash
+
+  ```
+  curl -s "https://get.sdkman.io" | bash
+  source "$HOME/.sdkman/bin/sdkman-init.sh"
+  ```
+
+- **安装 Maven:**
+
+  Bash
+
+  ```
+  sdk install maven
+  ```
+
+- **验证：** `maven --version`。
+
+
+#### 3. NodeJS安装
+
+**nvm** 是 Node.js 社区最标准、使用最广泛的工具。
+
+1. **安装 nvm**：
+
+   Bash
+
+   ```
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+   ```
+
+   *安装后，请重启终端或执行 `source ~/.zshrc`（如果你使用 zsh）。*
+
+   `ps -p $$`显示，我用的是bash。执行：`source ~/.bashrc`。
+
+2. **生成 Node 环境**：
+
+   Bash
+
+   ```
+   nvm install --lts    # 安装最新的长期支持版
+   nvm use --lts        # 切换到该版本
+   ```
+
+3. nvm --version
+
+   
 
 ## 清华同方主机（精锐X950-B102）
 

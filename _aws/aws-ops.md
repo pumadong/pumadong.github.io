@@ -964,4 +964,9 @@ done
 
    
 
-# CI
+# 七、CICD
+
+## CodeCommit
+
+1. 生成Repository：demo-repo-hello
+2. 新建用户：code-commit-user
