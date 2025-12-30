@@ -969,4 +969,119 @@ done
 ## CodeCommit
 
 1. 生成Repository：demo-repo-hello
-2. 新建用户：code-commit-user
+
+2. 新建用户：code-commit-user，可以请管理员帮忙生成：CodeCommit HTTPS Git Credentials。格式如下：
+
+   ```
+   code-commit-user-at-275695461302
+   Y4/omRbSzlfVlKIXvhKyvG67zlUB8qoVUqXpJkAZkPH9RNYD0x/spqStU6Y=
+   ```
+
+3. 这样就可以用这个用户名/密码进行常规Git操作了。
+
+4. 如果误用了code-commit-user的控制台密码，会报403，可以用以下方式解决。
+
+### AWS CodeCommit 403 错误解决
+
+使用 **AWS CLI** 这种更官方的方式，而且你希望通过**更改默认用户（Default Profile）**来解决权限和 403 问题，这是最稳妥的办法。
+
+这种方式的好处是：**你不再需要生成和记忆那一串复杂的“Git 凭证”密码**，Git 会直接调用你本地的 AWS 身份信息（Access Key/Secret Key）来完成握手。
+
+以下是操作步骤：
+
+------
+
+#### 第一步：获取 Access Key
+
+首先，你必须有这个 IAM 用户的“访问密钥”：
+
+1. 在 **IAM 控制台** -> **Users** -> **code-commit-user**。
+2. 切换到 **Security credentials** (安全凭据) 选项卡。
+3. 找到 **Access keys** 面板，点击 **Create access key**。
+4. 选择 **Command Line Interface (CLI)**，下载生成的 `.csv` 文件（包含 `Access Key ID` 和 `Secret Access Key`）。
+
+------
+
+#### 第二步：更新本地 CLI 默认用户
+
+查看当前的用户：`aws sts get-caller-identity`。
+
+运行配置命令。这会覆盖你本地当前的默认身份：
+
+Bash
+
+```
+aws configure
+```
+
+按提示输入：
+
+- **AWS Access Key ID**: 刚才生成的 ID。
+- **AWS Secret Access Key**: 刚才生成的 Secret。
+- **Default region name**: 你的仓库所在区域（如 `us-east-1`）。
+- **Default output format**: 直接回车（默认 json）。
+
+------
+
+#### 第三步：配置 Git 凭据助手 (核心步骤)
+
+配置完 CLI 后，你必须告诉本地的 Git：“以后遇到 AWS 的仓库，请去调用我刚配置好的 CLI 身份”。
+
+在终端运行以下两条全局命令：
+
+Bash
+
+```
+git config --global credential.helper '!aws codecommit credential-helper $@'
+git config --global credential.UseHttpPath true
+```
+
+> **注意：** 这里的 `!` 是命令的一部分，不要漏掉。这两行命令的意思是让 Git 使用 AWS 的“签名验证”模式，而不是传统的“用户名密码”模式。
+
+------
+
+#### 第四步：清理干扰 (针对之前的 403 错误)
+
+因为你之前尝试过用户名密码登录，Git 可能缓存了错误的信息，必须清除：
+
+1. **清除仓库级配置：** 如果你已经在某个文件夹里尝试过克隆，请删除该文件夹，或者进入文件夹运行：
+
+   Bash
+
+   ```
+   git config --local --unset credential.helper
+   ```
+
+2. **重置 URL：** 确保你的克隆链接是纯净的 HTTPS 链接（**不要**带 `username@` 这种前缀）： `https://git-codecommit.us-east-1.amazonaws.com/v1/repos/YourRepo`
+
+------
+
+#### 第五步：验证克隆
+
+现在你可以直接克隆了，**系统不会再弹出用户名密码输入框**，它会在后台自动完成校验：
+
+Bash
+
+```
+git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/YourRepo
+```
+
+### 为什么报403
+
+为了让你彻底理清，我们可以把 AWS 的验证方式看作三扇不同的门：
+
+| **凭据类型**                | **适用场景**             | **格式示例**                                        |
+| --------------------------- | ------------------------ | --------------------------------------------------- |
+| **控制台密码**              | 网页登录 AWS 管理后台    | `my-user-name` / `MyPassword123`                    |
+| **Access Key / Secret Key** | AWS CLI 或代码调用接口   | `AKIA...` / `wJalrXUtn...`                          |
+| **CodeCommit Git 凭据**     | **Git 客户端命令行操作** | `code-commit-user-at-123456` / `随机生成的长字符串` |
+
+你一直在尝试用“第一扇门”的钥匙去开“第三扇门”，所以 AWS 一直报 **403 Forbidden**（拒绝访问）。
+
+### 设置Author和Committer
+
+```
+git config --local user.name "你的新名字"
+git config --local user.email "你的新邮箱@example.com"
+```
+
