@@ -966,6 +966,10 @@ done
 
 # 七、CICD
 
+## 架构图
+
+![VPC架构图](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/aws-cicd.png)
+
 ## CodeCommit
 
 1. 生成Repository：demo-repo-hello
@@ -1084,4 +1088,200 @@ git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/YourRepo
 git config --local user.name "你的新名字"
 git config --local user.email "你的新邮箱@example.com"
 ```
+
+## Code Build
+
+1. 新建Code Build Project：sample-python-service
+
+2. Source provider：我们选择GitHub，通过Persional Access Token来连接GitHub
+
+   https://github.com/pumadong/docker-python-hello-world
+
+3. Service role：codebuild-s-service-role
+
+4. **Buildspec：**使用 **Cursor** 生成buildspec.yml
+
+   ```
+   version: 0.2
+   
+   env:
+     parameter-store:
+       DOCKER_REGISTRY_USERNAME: /myapp/docker-credentials/username
+       DOCKER_REGISTRY_PASSWORD: /myapp/docker-credentials/password
+       DOCKER_REGISTRY_URL: /myapp/docker-credentials/url
+   
+   phases:
+     install:
+       runtime-versions:
+         python: 3.12
+       commands:
+         - echo "正在安装环境依赖..."
+         - pip install --upgrade pip
+         - # 安装项目业务依赖
+         - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+         - # 安装质量检查工具
+         - pip install flake8 bandit mypy pytest pytest-cov
+   
+     pre_build:
+       commands:
+         - echo "开始代码质量检查..."
+         
+         - echo "运行安全扫描 (Bandit)..."
+         - bandit -r . -f txt || echo "Bandit 扫描发现问题，请检查输出"
+         
+         - echo "运行代码风格检查 (Flake8)..."
+         - # 检查语法错误、未定义的变量等严重问题
+         - flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+         - # 检查 PEP8 规范（可选，如果不通过会终止构建）
+         - flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+   
+         - echo "运行静态类型检查 (Mypy)..."
+         - # 注意：如果项目没写 Type Hints，这一步可以先注释掉
+         - mypy . --ignore-missing-imports || echo "Mypy 检查失败，跳过（如果项目没有类型提示，这是正常的）"
+   
+     build:
+       commands:
+         - echo "开始运行单元测试 (Pytest)..."
+         # 即使没有找到测试文件，也会返回 0 (成功)，不会中断构建
+         - pytest --cov=./ --cov-report=term-missing || echo "未找到测试用例，跳过测试。"
+         
+   
+         - echo "正在执行构建/打包逻辑..."
+   
+         - echo "使用管道符传递密码进行非交互式登录..."
+         # 处理 registry URL：去掉协议部分（http:// 或 https://），因为 Docker 镜像名称不能包含协议
+         - REGISTRY_HOST=`echo $DOCKER_REGISTRY_URL | sed 's|^https\?://||'`
+         - export REGISTRY_HOST
+         # 使用管道符传递密码进行非交互式登录（docker login 可以接受带协议的 URL）
+         - echo $DOCKER_REGISTRY_PASSWORD | docker login --username $DOCKER_REGISTRY_USERNAME --password-stdin $DOCKER_REGISTRY_URL
+         
+         - echo "构建Docker镜像..."
+         # Docker 镜像名称格式：registry-host/username/repo:tag（不能包含协议）
+         - docker build -t "$REGISTRY_HOST/$DOCKER_REGISTRY_USERNAME/docker-python-hello-world:latest" .
+   
+         - echo "上传Docker镜像..."
+         - docker push "$REGISTRY_HOST/$DOCKER_REGISTRY_USERNAME/docker-python-hello-world:latest"
+   
+     post_build:
+       commands:
+         - bash -c 'echo "构建与检查流程于 $(date +%Y-%m-%d-%H:%M:%S) 完成"'
+         # 测试一串日期格式
+         - echo "Date debug test start"
+         - echo "Test 1 - Direct date command"
+         - date
+         - echo "Test 2 - Using bash -c for command substitution"
+         - bash -c 'echo "Date is $(date)"'
+         - echo "Test 3 - Using bash -c for formatted date"
+         - bash -c 'echo "Date is $(date +%Y-%m-%d-%H:%M:%S)"'
+         - echo "Test 4 - Variable assignment"
+         - BUILD_DATE=$(date +%Y-%m-%d-%H:%M:%S)
+         - echo "Date is $BUILD_DATE"
+         - echo "Test 5 - Export variable"
+         - export BUILD_DATE=$(date +%Y-%m-%d-%H:%M:%S)
+         - echo "Date is $BUILD_DATE"
+         - echo "Test 6 - Final format Chinese message"
+         - echo "Date debug test end"
+   
+   # artifacts:
+     # 对于 Docker 项目，镜像已推送到 registry，通常不需要保存构建产物
+     # 如果需要保存测试报告或日志，取消下面的注释：
+     # files:
+     #   - 'test-reports/**/*'
+     #   - 'coverage/**/*'
+     #   - '*.log'
+   
+   cache:
+     paths:
+       - '/root/.cache/pip' # 缓存 pip 依赖，加速下次构建
+   ```
+
+   
+
+5. Create Project
+
+### System manager
+
+我们的构建阶段，生成了docker镜像，并推送到hub.docker.com，需要hub的账户密码。
+
+这个不能存在yaml文件里面，所以我们使用AWS的System manager服务来存储。
+
+### CodeBuild Service Role增加访问SSM的权限
+
+**为了遵循“最小权限原则”，建议添加以下特定的权限：**
+
+1. 点击 **Add permissions** -> **Create inline policy**。
+2. 切换到 **JSON** 选项卡，粘贴以下内容：
+
+JSON
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameters",
+                "ssm:GetParameter"
+            ],
+            "Resource": [
+                "arn:aws:ssm:ap-southeast-1:275695461302:parameter/myapp/docker-credentials/*"
+            ]
+        }
+    ]
+}
+```
+
+1. 点击 **Review policy**，给它起个名字（如 `CodeBuildSSMReadPolicy`），然后点击 **Create policy**。
+
+### CodeBuild Service Role 的必要性
+
+在 AWS CodeBuild 中，**Service Role（服务角色）** 是必不可少的，因为 CodeBuild 是一个托管服务，它本身并不直接拥有访问你账户中各种资源的权限。
+
+简单来说，Service Role 就像是给 CodeBuild 签发的一张“通行证”或“授权书”，允许它代表你执行特定的操作。
+
+------
+
+### 为什么需要 Service Role 的核心原因
+
+#### 1. 访问源代码和依赖
+
+CodeBuild 需要从特定的地方拉取你的代码和依赖包。如果没有角色授权，它无法合法进入这些“仓库”：
+
+- **S3 存储桶：** 下载源代码或上传构建好的 Artifacts（制品）。
+- **CodeCommit：** 拉取托管在 AWS 上的代码。
+- **GitHub/Bitbucket：** 虽然通常使用 OAuth，但在处理某些连接凭据时仍需要角色权限。
+
+#### 2. 推送构建镜像
+
+如果你正在构建 Docker 镜像，CodeBuild 需要权限将生成的镜像推送到 **Amazon ECR (Elastic Container Registry)**。没有 Service Role，CodeBuild 无法完成认证，推送过程会报错。
+
+#### 3. 日志记录与监控
+
+为了让你看到构建进度和排查错误，CodeBuild 需要向 **CloudWatch Logs** 写入日志，或者向 **CloudWatch Metrics** 发送指标。角色中必须包含 `logs:CreateLogGroup` 和 `logs:PutLogEvents` 等权限。
+
+#### 4. 这里的“最小特权原则”
+
+AWS 采用**安全责任共担模型**。它不会默认赋予 CodeBuild 你账户下的所有权限，而是要求你明确创建一个 IAM Role，并只赋予该项目所需的权限。
+
+- **安全性：** 如果该构建项目被破坏，损失仅限于该角色拥有的权限。
+- **隔离性：** 你可以为前端项目和后端项目分配不同的 Service Role，互不干扰。
+
+------
+
+#### Service Role 的结构组成
+
+一个典型的 CodeBuild Service Role 通常包含两部分：
+
+1. **Trust Policy（信任策略）：** 规定“谁”可以扮演这个角色。它会声明 `codebuild.amazonaws.com` 是被信任的实体。
+2. **Permissions Policy（权限策略）：** 规定这个角色“能做什么”。
+
+#### 常见的权限示例
+
+| **权限类别** | **常见 Action**                                              |
+| ------------ | ------------------------------------------------------------ |
+| **日志**     | `logs:CreateLogStream`, `logs:PutLogEvents`                  |
+| **S3**       | `s3:GetObject`, `s3:PutObject`                               |
+| **ECR**      | `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability` |
+| **VPC**      | 如果在 VPC 内构建，需要 `ecr:CreateNetworkInterface` 等      |
 

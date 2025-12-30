@@ -14,3 +14,5 @@ description: "积累当前比较生疏的IT词汇，帮助形成IT这个特定�
 **encryption：**/ ɪnˈkrɪpʃn / 加密；加密术
 
 **breach** 缺口，漏洞，违反。(n.v.) security breach 安全漏洞
+
+**compromise** / ˈkɑːmprəmaɪz / 妥协，让步；危及，损害 (n.v.)
