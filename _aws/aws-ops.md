@@ -1103,7 +1103,7 @@ git config --local user.email "你的新邮箱@example.com"
 
 4. **Buildspec：**使用 **Cursor** 生成buildspec.yml
 
-   CI的基本功能是：代码检查、单元测试、打包。下面这个CI配置对于Python是基本可用的。
+   CI的基本功能是：代码检查、单元测试、编译打包。下面这个CI配置对于Python是基本可用的。
 
    ```
    version: 0.2
@@ -1207,8 +1207,44 @@ git config --local user.email "你的新邮箱@example.com"
 
 ### Code Pipeline
 
-1. 新建Pipeline：simple-python-app
-2. 
+**使用GitHub作为源代码管理工具，实际生产用AWS Code Commit作为源代码管理工具的较少，功能弱**。
+
+1. 新建Pipeline：Build custom pipeline
+2. Pipeline name：simple-python-app
+3. Source provider：GitHub（via GitHub App）
+4. Repository name/Default branch：选择代码仓库和分支
+5. Other build providers：选择我们之前建立的code build
+6. Create pipeline
+7. 当GitHub有代码提交，就会通过Code pipeline调用Code build进行构建和Docker推送
+
+### AWS GitHub App
+
+简单来说，**AWS GitHub App** 是 AWS（亚马逊云服务）官方提供的一个集成工具，用于**在 GitHub 仓库和 AWS 服务之间建立安全、便捷的连接**。
+
+过去我们常用 OAuth 令牌或个人访问令牌（PAT）来连接两者，但现在 AWS 推荐使用 **GitHub App** 这种方式，因为它更安全、权限控制更精细。
+
+------
+
+#### 1. 它主要用来做什么？
+
+它的核心作用是实现 **CI/CD（持续集成与持续部署）**。当你把代码托管在 GitHub 上，并使用 AWS 的开发工具（如 CodePipeline, CodeBuild）时，这个 App 充当“桥梁”：
+
+- **自动触发构建**：当你向 GitHub 提交代码（Push）或合并拉取请求（Pull Request）时，AWS 会通过这个 App 收到通知并自动开始构建和部署。
+- **权限管理**：你不需要在 AWS 里存储 GitHub 的账号密码或长期的 Token。相反，你只需在 GitHub 端安装这个 App，并授权它访问特定的仓库。
+- **状态回传**：AWS 可以把构建是否成功、测试是否通过的状态直接显示在 GitHub 的提交记录旁边。
+
+------
+
+#### 2. 核心优势
+
+相比传统的连接方式，AWS GitHub App 有以下优点：
+
+| **特性**       | **传统方式 (OAuth / PAT)**               | **AWS GitHub App (推荐)**                           |
+| -------------- | ---------------------------------------- | --------------------------------------------------- |
+| **安全性**     | Token 权限通常过大，且容易过期或泄露。   | 使用短寿命的令牌，安全性更高。                      |
+| **权限细化**   | 往往能访问账号下所有仓库。               | **可以指定**只允许访问某一个或某几个特定的仓库。    |
+| **管理便捷**   | 每个开发者可能都要配置自己的 Token。     | 只需在 GitHub 组织/账号层面安装一次，团队即可复用。 |
+| **连接稳定性** | 依赖个人账号，人员离职可能导致连接失效。 | 属于应用级集成，不随个人账号变动而失效。            |
 
 ### System manager
 
