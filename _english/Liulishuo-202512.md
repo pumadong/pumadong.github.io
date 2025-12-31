@@ -279,3 +279,23 @@ It's funny how these decisions shape our lives.
 **压紧牙关** If had known then what I know now, I would have bitten the bullet and taken that opportunity.
 
 True, but all we can do is learn from our regrets and make better decisions in the future.
+
+# 2025-12-31
+
+**Don't get up yet. You hardly ever sleep last night. **这句话的意思是：**“别先起床。你昨晚几乎没怎么睡。”**
+
+## 1. Yet
+
+在这个句子中，**yet** 的意思是“**先**”或“**暂时**”，通常用于否定句，表示某事在现阶段还不应该发生。
+
+- **用法解析：** 当你听到 "Don't get up **yet**," 它的核心含义是 "Not now, wait a little longer"（现在先别起，再等一会儿）。
+- **对比：** * *Don't get up.* (别起床。—— 听起来像命令。)
+  - *Don't get up **yet**.* (先别起。—— 听起来更像是建议或关心，暗示等会儿再起。)
+
+## 2. Ever
+
+在这个句子中，**ever** 是用来**加强语气**的，常与 **hardly**（几乎不）连用，形成 **hardly ever** 这个固定搭配。
+
+- **用法解析：** * **Hardly** = 几乎不
+  - **Hardly ever** = 极少、几乎从不。
+- **深层含义：** 在你给出的句子中，它形容的是昨晚睡眠的程度极低。虽然字面上是“时间上的频率”，但在口语语境里，它表达的是“你昨晚根本就没合眼”

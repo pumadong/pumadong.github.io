@@ -1089,7 +1089,9 @@ git config --local user.name "你的新名字"
 git config --local user.email "你的新邮箱@example.com"
 ```
 
-## Code Build
+## Code Build & Code Pipeline
+
+### Code Build
 
 1. 新建Code Build Project：sample-python-service
 
@@ -1100,6 +1102,8 @@ git config --local user.email "你的新邮箱@example.com"
 3. Service role：codebuild-s-service-role
 
 4. **Buildspec：**使用 **Cursor** 生成buildspec.yml
+
+   CI的基本功能是：代码检查、单元测试、打包。下面这个CI配置对于Python是基本可用的。
 
    ```
    version: 0.2
@@ -1198,6 +1202,13 @@ git config --local user.email "你的新邮箱@example.com"
    
 
 5. Create Project
+
+6. 手动Start Build，查看构建日志。
+
+### Code Pipeline
+
+1. 新建Pipeline：simple-python-app
+2. 
 
 ### System manager
 
