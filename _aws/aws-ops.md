@@ -964,7 +964,7 @@ done
 
    
 
-# 七、CICD
+# 七、CI & CD
 
 ## 架构图
 
@@ -1101,6 +1101,8 @@ git config --local user.email "你的新邮箱@example.com"
 
 3. Service role：codebuild-s-service-role
 
+   因为要读取AWS System Manager里存储的登录Docker的账号密码，所以下面有对这个Role授权。
+
 4. **Buildspec：**使用 **Cursor** 生成buildspec.yml
 
    CI的基本功能是：代码检查、单元测试、编译打包。下面这个CI配置对于Python是基本可用的。
@@ -1210,7 +1212,7 @@ git config --local user.email "你的新邮箱@example.com"
 **使用GitHub作为源代码管理工具，实际生产用AWS Code Commit作为源代码管理工具的较少，功能弱**。
 
 1. 新建Pipeline：Build custom pipeline
-2. Pipeline name：simple-python-app
+2. Pipeline name：sample-python-app
 3. Source provider：GitHub（via GitHub App）
 4. Repository name/Default branch：选择代码仓库和分支
 5. Other build providers：选择我们之前建立的code build
@@ -1331,4 +1333,261 @@ AWS 采用**安全责任共担模型**。它不会默认赋予 CodeBuild 你账�
 | **S3**       | `s3:GetObject`, `s3:PutObject`                               |
 | **ECR**      | `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability` |
 | **VPC**      | 如果在 VPC 内构建，需要 `ecr:CreateNetworkInterface` 等      |
+
+## Code deploy & Code pipeline
+
+### Code Build
+
+1. 使用code-commit-user这个iam用户进行操作
+
+   - AmazonEC2FullAccess
+
+   - AmazonS3FullAccess
+
+   - AWSCodeBuildAdminAccess
+
+   - AWSCodeDeployFullAccess
+
+   - AWSCodePipeline_FullAccess
+
+   - 添加Role相关权限
+
+     **权限说明**
+
+     - iam:CreateRole — 创建服务角色
+
+     - iam:GetRole — 检查角色是否存在
+
+     - iam:PassRole — 将角色传递给 CodePipeline
+
+     - iam:TagRole — 添加标签
+
+     - iam:AttachRolePolicy — 附加 AWS 托管策略
+
+     - iam:DetachRolePolicy — 修改角色时可能需要
+
+     **使用建议**
+
+     该策略应能解决 CodePipeline 服务角色创建问题，同时遵循最小权限原则。
+
+     ```
+     {
+     	"Version": "2012-10-17",
+     	"Statement": [
+     		{
+     			"Effect": "Allow",
+     			"Action": [
+     				"iam:CreateRole",
+     				"iam:GetRole",
+     				"iam:PassRole",
+     				"iam:TagRole",
+     				"iam:AttachRolePolicy",
+     				"iam:DetachRolePolicy"
+     			],
+     			"Resource": "arn:aws:iam::*:role/AWSCodePipelineServiceRole-*"
+     		},
+     		{
+     			"Effect": "Allow",
+     			"Action": [
+     				"iam:AttachRolePolicy"
+     			],
+     			"Resource": "arn:aws:iam::*:role/AWSCodePipelineServiceRole-*",
+     			"Condition": {
+     				"StringEquals": {
+     					"iam:PolicyARN": "arn:aws:iam::aws:policy/AWSCodePipelineServiceRolePolicy"
+     				}
+     			}
+     		},
+     		{
+     			"Effect": "Allow",
+     			"Action": [
+     				"iam:PassRole"
+     			],
+     			"Resource": [
+     				"arn:aws:iam::*:role/service-role/codebuild-*",
+     				"arn:aws:iam::*:role/codebuild-*"
+     			]
+     		},
+     		{
+     			"Effect": "Allow",
+     			"Action": [
+     				"iam:GetRole"
+     			],
+     			"Resource": "*"
+     		}
+     	]
+     }
+     ```
+
+     5. 点击 **Review policy**，给它起个名字（例如 `PassRoleToCodeBuild`），然后点击 **Create policy**。
+
+   - 添加连接GitHub的权限
+
+     ```
+     {
+     	"Version": "2012-10-17",
+     	"Statement": [
+     		{
+     			"Sid": "AllowCodeConnectionsList",
+     			"Effect": "Allow",
+     			"Action": [
+     				"codeconnections:*",
+     				"codestar-connections:*"
+     			],
+     			"Resource": "*"
+     		}
+     	]
+     }
+     ```
+
+     
+
+2. 新建Code Build Project：sample-java-service
+
+3. Source provider：我们选择GitHub，通过Persional Access Token来连接GitHub
+
+   https://github.com/pumadong/docker-java-web-app
+
+4. Service role：codebuild-s-service-role - 写日期
+
+   ```
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Action": [
+                   "logs:CreateLogGroup",
+                   "logs:CreateLogStream",
+                   "logs:PutLogEvents"
+               ],
+               "Resource": [
+                   "*"
+               ]
+           }
+       ]
+   }
+   ```
+
+5. Service role：codebuild-s-service-role - 上传Artifacts到S3
+
+   如果需要把一些文件（比如target/*.jar，代码检查结果文件）上传S3，则需要配置权限。
+
+   ```
+   {
+   	"Version": "2012-10-17",
+   	"Statement": [
+   		{
+   			"Effect": "Allow",
+   			"Action": [
+   				"s3:PutObject",
+   				"s3:GetObject",
+   				"s3:GetObjectVersion",
+   				"s3:ListBucket"
+   			],
+   			"Resource": "*"
+   		}
+   	]
+   }
+   ```
+
+   
+
+6. **Buildspec：**使用 **Cursor** 生成buildspec.yml
+
+   CI的基本功能是：代码检查、单元测试、编译打包。
+
+   ```
+   version: 0.2
+   
+   env:
+     parameter-store:
+       DOCKER_REGISTRY_USERNAME: /myapp/docker-credentials/username
+       DOCKER_REGISTRY_PASSWORD: /myapp/docker-credentials/password
+     variables:
+       # 设置时区为上海（东八区）
+       TZ: "Asia/Shanghai"
+       JAVA_VERSION: "8"
+       MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
+   
+   phases:
+     install:
+       runtime-versions:
+         java: corretto8
+       commands:
+         - echo "正在安装环境依赖..."
+         - java -version
+         - mvn -version
+         - echo "配置 Maven 设置..."
+         - mkdir -p /root/.m2
+   
+     pre_build:
+       commands:
+         - echo "编译项目代码..."
+         - mvn clean compile
+         - echo "开始代码质量检查..."
+         - echo "运行代码风格检查 (Checkstyle)..."
+         - mvn checkstyle:check || echo "Checkstyle 检查发现问题，请检查输出"
+         - echo "运行静态代码分析 (SpotBugs)..."
+         - mvn spotbugs:check || echo "SpotBugs 扫描发现问题，请检查输出"
+         - echo "运行代码质量检查 (PMD)..."
+         - mvn pmd:check || echo "PMD 检查发现问题，请检查输出"
+   
+     build:
+       commands:
+         - echo "开始运行单元测试..."
+         - mvn test
+         - echo "生成测试覆盖率报告 (JaCoCo)..."
+         - mvn jacoco:report || echo "JaCoCo 报告生成失败，跳过"
+         - echo "正在执行打包逻辑..."
+         - mvn package -DskipTests
+         - echo "使用管道符传递密码进行非交互式登录..."
+         - REGISTRY_HOST="docker.io"
+         - export REGISTRY_HOST
+         - echo $DOCKER_REGISTRY_PASSWORD | docker login --username $DOCKER_REGISTRY_USERNAME --password-stdin $REGISTRY_HOST
+         - echo "构建Docker镜像..."
+         - |
+           IMAGE_NAME="$REGISTRY_HOST/$DOCKER_REGISTRY_USERNAME/docker-java-web-app:latest"
+           docker build -t "$IMAGE_NAME" .
+           echo "Docker镜像构建完成: $IMAGE_NAME"
+         - echo "上传Docker镜像..."
+         - docker push "$REGISTRY_HOST/$DOCKER_REGISTRY_USERNAME/docker-java-web-app:latest"
+   
+     post_build:
+       commands:
+         - bash -c 'echo "构建与检查流程于 $(date +%Y-%m-%d-%H:%M:%S) 完成"'
+         - echo "代码质量报告已生成"
+         - echo "Checkstyle报告 target/checkstyle-result.xml"
+         - echo "SpotBugs报告 target/spotbugsXml.xml"
+         - echo "PMD报告 target/pmd.xml"
+         - echo "JaCoCo报告 target/site/jacoco/index.html"
+   
+   artifacts:
+     files:
+       - 'target/*.jar'
+       - 'target/checkstyle-result.xml'
+       - 'target/spotbugsXml.xml'
+       - 'target/pmd.xml'
+       - 'target/site/jacoco/**/*'
+     name: build-artifacts
+   
+   cache:
+     paths:
+       - '/root/.m2/repository/**/*' # 缓存 Maven 依赖，加速下次构建
+   
+   
+   ```
+
+
+### Code Pipeline
+
+1. 新建Pipeline：Build custom pipeline
+2. Pipeline name：sample-java-app
+3. Source provider：GitHub（via GitHub App）
+4. Repository name/Default branch：选择代码仓库和分支
+5. Other build providers：选择我们之前建立的code build
+6. Create pipeline
+7. 当GitHub有代码提交，就会通过Code pipeline调用Code build进行构建和Docker推送
+
+### Code Deploy
 

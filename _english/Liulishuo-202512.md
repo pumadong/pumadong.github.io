@@ -299,3 +299,5 @@ True, but all we can do is learn from our regrets and make better decisions in t
 - **用法解析：** * **Hardly** = 几乎不
   - **Hardly ever** = 极少、几乎从不。
 - **深层含义：** 在你给出的句子中，它形容的是昨晚睡眠的程度极低。虽然字面上是“时间上的频率”，但在口语语境里，它表达的是“你昨晚根本就没合眼”
+
+**mean jealous** 嫉妒的
