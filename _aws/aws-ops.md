@@ -9,11 +9,19 @@ description: "汇总在 AWS 云平台上进行系统运维、架构优化及日�
 
 ## 新建EC2实例
 
+**注意：**
+
+下面这个mykey1必须是root或者当前iam用户生成的。
+
+如果是其他iam用户生成的，当前用户ssh是连接不上去的，不匹配。
+
+
+
 1. Instances -> Launch Instances
 
 2. 操作系统选择ubuntu
 
-3. Create key pair，my-test-key/my-test-key.pem，SSH到机器用的用户名和私钥
+3. Create key pair，mykey1/mykey1.pem，SSH到机器用的用户名和私钥
 
 4. 几秒之后，机器处于Running状态，1分钟左右，机器初始化完毕
 
@@ -1099,9 +1107,13 @@ git config --local user.email "你的新邮箱@example.com"
 
    https://github.com/pumadong/docker-python-hello-world
 
-3. Service role：codebuild-s-service-role
+3. **Service role：codebuild-s-service-role**
 
-   因为要读取AWS System Manager里存储的登录Docker的账号密码，所以下面有对这个Role授权。
+   **这个角色我们后续给CodeDeploy、Ec2使用，也会要读取AWS System Manager里存储的登录Docker的账号密码，也会把Artifacts上传到S3，所以下面有一些地方会根据场景对这个Role授权。**
+
+   **我们此处演示一个统一的：**
+
+   TODO
 
 4. **Buildspec：**使用 **Cursor** 生成buildspec.yml
 
@@ -1213,11 +1225,12 @@ git config --local user.email "你的新邮箱@example.com"
 
 1. 新建Pipeline：Build custom pipeline
 2. Pipeline name：sample-python-app
-3. Source provider：GitHub（via GitHub App）
-4. Repository name/Default branch：选择代码仓库和分支
-5. Other build providers：选择我们之前建立的code build
-6. Create pipeline
-7. 当GitHub有代码提交，就会通过Code pipeline调用Code build进行构建和Docker推送
+3. Service role：codebuild-s-service-role
+4. Source provider：GitHub（via GitHub App）
+5. Repository name/Default branch：选择代码仓库和分支
+6. Other build providers：选择我们之前建立的code build
+7. Create pipeline
+8. 当GitHub有代码提交，就会通过Code pipeline调用Code build进行构建和Docker推送
 
 ### AWS GitHub App
 
@@ -1254,7 +1267,7 @@ git config --local user.email "你的新邮箱@example.com"
 
 这个不能存在yaml文件里面，所以我们使用AWS的System manager服务来存储。
 
-### CodeBuild Service Role增加访问SSM的权限
+### codebuild-s-service-role增加访问SSM的权限
 
 **为了遵循“最小权限原则”，建议添加以下特定的权限：**
 
@@ -1334,9 +1347,9 @@ AWS 采用**安全责任共担模型**。它不会默认赋予 CodeBuild 你账�
 | **ECR**      | `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability` |
 | **VPC**      | 如果在 VPC 内构建，需要 `ecr:CreateNetworkInterface` 等      |
 
-## Code deploy & Code pipeline
+## 演示完整的Java项目CI/CD
 
-### Code Build
+### IAM用户权限
 
 1. 使用code-commit-user这个iam用户进行操作
 
@@ -1440,15 +1453,42 @@ AWS 采用**安全责任共担模型**。它不会默认赋予 CodeBuild 你账�
      }
      ```
 
-     
 
-2. 新建Code Build Project：sample-java-service
+### Code Build
 
-3. Source provider：我们选择GitHub，通过Persional Access Token来连接GitHub
+1. 新建Code Build Project：sample-java-service
+
+2. Source provider：我们选择GitHub，通过Persional Access Token来连接GitHub
 
    https://github.com/pumadong/docker-java-web-app
 
-4. Service role：codebuild-s-service-role - 写日期
+3. Service role：codebuild-s-service-role
+
+4. Service role：codebuild-s-service-role - Trust relationships
+
+   我们CodeDeploy也会用这个角色。Trust relationships如下：
+
+   ```
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Principal": {
+                   "Service": [
+                       "codebuild.amazonaws.com",
+                       "codedeploy.amazonaws.com"
+                   ]
+               },
+               "Action": "sts:AssumeRole"
+           }
+       ]
+   }
+   ```
+
+   
+
+5. Service role：codebuild-s-service-role - 写日志
 
    ```
    {
@@ -1469,7 +1509,7 @@ AWS 采用**安全责任共担模型**。它不会默认赋予 CodeBuild 你账�
    }
    ```
 
-5. Service role：codebuild-s-service-role - 上传Artifacts到S3
+6. Service role：codebuild-s-service-role - 上传Artifacts到S3
 
    如果需要把一些文件（比如target/*.jar，代码检查结果文件）上传S3，则需要配置权限。
 
@@ -1493,7 +1533,7 @@ AWS 采用**安全责任共担模型**。它不会默认赋予 CodeBuild 你账�
 
    
 
-6. **Buildspec：**使用 **Cursor** 生成buildspec.yml
+7. **Buildspec：**使用 **Cursor** 生成buildspec.yml
 
    CI的基本功能是：代码检查、单元测试、编译打包。
 
@@ -1578,16 +1618,165 @@ AWS 采用**安全责任共担模型**。它不会默认赋予 CodeBuild 你账�
    
    ```
 
+8. Artifacts
+
+   如果我们需要buildspec.xml节点artifacts中配置的文件上传到S3，这里需要配置一个Bucket
+
+   
+
 
 ### Code Pipeline
 
 1. 新建Pipeline：Build custom pipeline
 2. Pipeline name：sample-java-app
-3. Source provider：GitHub（via GitHub App）
-4. Repository name/Default branch：选择代码仓库和分支
-5. Other build providers：选择我们之前建立的code build
-6. Create pipeline
-7. 当GitHub有代码提交，就会通过Code pipeline调用Code build进行构建和Docker推送
+3. Service role：codebuild-s-service-role
+4. Source provider：GitHub（via GitHub App）
+5. Repository name/Default branch：选择代码仓库和分支
+6. Other build providers：选择我们之前建立的code build
+7. Create pipeline
+8. 当GitHub有代码提交，就会通过Code pipeline调用Code build进行构建和Docker推送
 
 ### Code Deploy
 
+#### EC2主机
+
+1. 新建Ec2主机
+2. 安装CodeDeploy agent：https://docs.aws.amazon.com/codedeploy/latest/userguide/codedeploy-agent-operations-install-ubuntu.html
+3. 安装Docker：https://pumadong.github.io/docker/docker/#%E4%BA%8C%E5%AE%89%E8%A3%85docker
+4. Ec2主机 IAM role为：codebuild-s-service-role
+
+**如果role列表不显示：**
+
+在 AWS 中，**IAM Role（角色）** 和 **Instance Profile（实例配置文件）** 是两个不同的对象，但在控制台操作时，AWS 往往把它们“透明化”了。
+
+**核心原因：为什么自定义 JSON 时没有 Instance Profile？**
+
+1. **控制台的“自动化”逻辑：** 当你使用控制台的“可视化界面”创建角色，并点击 **“EC2”** 作为服务时，AWS 会在后台自动为你创建一个与角色同名的 Instance Profile。
+2. **自定义 JSON 的“缺失”：** 如果你是通过直接编写 JSON 信任策略或者通过 **AWS CLI / Terraform / CloudFormation** 创建的角色，AWS **不会**自动为你创建 Instance Profile。
+3. **EC2 的特殊性：** EC2 是极少数必须通过 Instance Profile 来“承载”角色的服务。没有这个容器，EC2 的元数据服务就无法获取角色的临时凭证，因此在 EC2 的下拉列表里就找不到它。
+
+**控制台执行：**
+
+```
+aws iam create-instance-profile --instance-profile-name codebuild-s-service-role
+
+aws iam add-role-to-instance-profile --instance-profile-name codebuild-s-service-role --role-name codebuild-s-service-role
+```
+
+**Ec2主机执行：**
+
+```
+sudo service codedeploy-agent restart
+```
+
+
+
+#### Code Deploy
+
+1. 新建CodeDeploy：sample-java-app，Compute platform：EC2/ON-premises
+
+2. **Create deployment group：**sample-java-app，Service role：codebuild-s-service-role
+
+   codebuild-s-service-role，赋予权限：AmazonEC2FullAccess、AWSCodeDeployFullAccess。
+
+   Tag：Name:sample-java
+
+   **Environment configuration:**Amazon EC2 instances，通过Name：MyCursorAutoInstance1匹配Ec2实例
+
+   关闭：Enable load balancing
+
+3. **Create deploymen：**My application is stored in GitHub，Auth2链接Github，输入repo/commit id，比如：pumadong/docker-java-web-app，956c76695d192b6dbb2e0c2ea4359e927e686fa1
+
+   - 会读取根目录下的appspec.xml文件
+   - 这个文件执行scripts下的几个shell脚本
+
+4. 错误处理：
+
+   - 可以看Deploy Detail events中的错误日志，只有错误的。
+   - 看所以日志：https://github.com/pumadong/docker-java-web-app/blob/main/CODEDEPLOY_LOGS.md，这是scripts中的shell定义的。
+
+5. 开始做这个总会折腾一番，最终成功：http://公网IP:8080。
+
+#### Code Pipeline
+
+1. 使用上面执行CI步骤的时候，建立的Pipeline，增加一个步骤，就可以自动部署了。
+   - Add stage, Stage name：code-deploy
+   - Add action group，Action provider：AWS CodeDeploy，选择Application name/Deploygroup group
+   - **别忘了回到Pipeline编辑页面Save**
+2. 实际生产环境中，是不可能自动部署的。
+
+### CodePipeline 审核与部署配置
+
+在 AWS CodePipeline 中，要实现“经过人工审核”且“仅在合并到特定分支（如 `main` 或 `prod`）时才执行部署”，通常有两套主流的配置方案。
+
+以下是详细的配置思路：
+
+------
+
+#### 方案一：在 Pipeline 中加入 Approval 阶段（最常用）
+
+这是最直观的方法：在 **Build** 阶段之后、**Deploy** 阶段之前，插入一个 **Manual Approval** 类型的操作。
+
+##### 配置步骤：
+
+1. **编辑 Pipeline**：在 AWS 控制台找到你的流水线，点击 "Edit"。
+2. **添加 Stage**：在 Build 和 Deploy 阶段之间点击 "+ Add stage"，命名为 `Approval`。
+3. **添加 Action**：
+   - **Action name**: `Manual-Approval`
+   - **Action provider**: 选择 `Manual approval`。
+   - **（可选）SNS Topic**: 配置一个 SNS 主题，这样当需要审核时，相关人员会收到邮件通知。
+4. **保存**：这样流水线运行到这一步会暂停，直到管理员点击“Approve”。
+
+------
+
+#### 方案二：基于分支策略的自动触发（架构级隔离）
+
+如果你希望“只有合并到 `main` 分支才执行代码部署”，而其他分支（如 `develop`）只跑测试，建议通过 **Source 端的配置**来实现：
+
+##### 1. 设置 Source 触发器
+
+在 CodePipeline 的 **Source** 阶段，将分支指向你的目标分支（例如 `main`）。
+
+- **效果**：只有当代码合并/推送至 `main` 时，整个流水线才会启动。
+
+##### 2. 结合分支保护（Branch Protection）
+
+在 CodeCommit、GitHub 或 GitLab 中设置：
+
+- 禁止直接 Push 到 `main` 分支。
+- 必须通过 **Pull Request (PR)** 合并。
+- 设置 PR 合并前必须经过至少一人审核。
+
+**这种方案的逻辑是：** 审核发生在 Git 层面（合并前），一旦审核通过并合并，Pipeline 自动执行并部署。
+
+------
+
+#### 方案三：使用条件判断（高级用法）
+
+如果你希望一个 Pipeline 兼容多个分支，但只有特定分支走部署流程，可以使用 **AWS CodeBuild** 作为“网关”：
+
+1. 在 Deploy 阶段前的 CodeBuild 中编写脚本。
+2. 利用环境变量 `$CODEBUILD_WEBHOOK_HEAD_REF` 判断分支。
+3. 如果分支不是 `main`，则直接调用 AWS CLI 命令停止当前 Pipeline 执行，或报错跳过。
+
+------
+
+#### 方案选择建议
+
+| **需求场景**           | **推荐方案**                                                 |
+| ---------------------- | ------------------------------------------------------------ |
+| **标准的企业发布流程** | **方案一 (Manual Approval)**：代码已构建好，人工点一下才上线，安全性最高。 |
+| **高度自动化的 CI/CD** | **方案二 (Branch Trigger)**：通过 PR 审核把关，合并即部署，流程最顺滑。 |
+| **预发布环境测试**     | **方案一 + 二**：合并到 `release` 分支触发 Pipeline，中间加一个人工审核确认环境 OK 后再部署。 |
+
+#### 后续建议
+
+如果你使用的是 **GitHub** 或 **Bitbucket** 作为源，我建议优先使用 **方案二**（分支保护 + PR 审核），因为这符合现代 DevSecOps 的习惯。
+
+## 代码质量检查
+
+1. 代码质量检查生成的报告文件
+   - 为了演示流程，不通过也没有报错走下去了。
+   - 如果code build 手工触发，报告文件存在artifacts指定的s3 bucket中
+   - 如果通过code pipeline触发，报告文件存在Artifacts store指定的位置
+   - 关于日志大一统化，推荐CloudWatch Logs，后续会演示
