@@ -1113,7 +1113,70 @@ git config --local user.email "你的新邮箱@example.com"
 
    **我们此处演示一个统一的：**
 
-   TODO
+   ![codebuild-s-service-role](https://cdn.jsdelivr.net/gh/pumadong/assets@master/aws/aws-codebuild-s-service-role.png)
+
+   **codebuild-s-service-role-other policy：**
+
+   ```
+   {
+   	"Version": "2012-10-17",
+   	"Statement": [
+   		{
+   			"Sid": "log",
+   			"Effect": "Allow",
+   			"Action": [
+   				"logs:CreateLogGroup",
+   				"logs:CreateLogStream",
+   				"logs:PutLogEvents"
+   			],
+   			"Resource": [
+   				"*"
+   			]
+   		},
+   		{
+   			"Sid": "AllowCodeConnectionsList",
+   			"Effect": "Allow",
+   			"Action": [
+   				"codeconnections:*",
+   				"codestar-connections:*"
+   			],
+   			"Resource": "*"
+   		},
+   		{
+   			"Sid": "CICD",
+   			"Effect": "Allow",
+   			"Action": [
+   				"codebuild:*"
+   			],
+   			"Resource": "arn:aws:codebuild:ap-southeast-1:275695461302:project/*"
+   		}
+   	]
+   }
+   ```
+
+   **Trusted entities** 受信任实体：
+
+   ```
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Principal": {
+                   "Service": [
+                       "codepipeline.amazonaws.com",
+                       "codebuild.amazonaws.com",
+                       "codedeploy.amazonaws.com",
+                       "ec2.amazonaws.com"
+                   ]
+               },
+               "Action": "sts:AssumeRole"
+           }
+       ]
+   }
+   ```
+
+   
 
 4. **Buildspec：**使用 **Cursor** 生成buildspec.yml
 
