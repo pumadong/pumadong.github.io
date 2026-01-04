@@ -35,3 +35,11 @@ I always saw motels as a last resort, a dreaded pit stop. 我之前总把汽车�
 
 - *n.*（企业的）房屋建筑及附属场地，营业场所（premise 的复数）
 - *v.*以……为基础，以……为前提；预先提出，事先提到；<古>声明，说明（premise 的第三人称单数）
+
+# 2026-01-04
+
+**exposure** / ɪkˈspoʊʒər / 暴露，接触；曝光
+
+**in favor of** If you're in favor of sth, you support and agree with it。
+
+**out of favor** He is out of favor with his classmates. 不再受到他人的喜爱。

@@ -7,7 +7,54 @@ description: |
 
 ---
 
+# 零、总结-写在前面
+
 这篇文章《AI 时代的敏捷开发：AI + Rapid》（AI-Rapid）主要探讨了在人工智能技术爆发的背景下，如何通过 AI 赋能传统的“敏捷开发”模式，以实现更高效、更智能的软件交付。
+
+- 2022年：只能补全单行代码
+- 2023年：可以生成完整代码片段
+- 2024年：可跨多个文件工作，构建简单应用
+- 2025年：能够创建并重构整个代码库
+
+## 快捷开发结果
+
+![快捷开发](https://cdn.jsdelivr.net/gh/pumadong/assets@master/architecture/ai-rapid.png)
+
+## 快捷开发周期
+| **任务**               | **工具**   | **输出**                                                 | **用时**  |
+| ---------------------- | ---------- | -------------------------------------------------------- | ---------- |
+| **需求**               | **Manus**  | 需求说明、数据库设计文档、技术框架、一些具体的技术规范。比如：时间字段用timestamptz支持未来全球化，登录鉴权用JWT支持未来水平扩展。 |2 |
+| **原型**               | **v0**     | 与v0对话，生成前端原型。                                          |2 |
+| **存储** | **Supabase** | 生成Table和Function，完成RLS权限配置，所有的数据操作只能在后端通过SUPABASE_SERVICE_ROLE_KEY进行。 |2 |
+| **开发** | **Cursor** | 因为是全新项目，先定义完整提示词进行一次全量构建。然后新增功能，并逐个功能微调。 |8 |
+| **发布** | **Vercel** | [https://rapid-recruit.vercel.app/](https://rapid-recruit.vercel.app/) |1 |
+
+- **15个小时可以完成一个具备基本功能的招聘网站从需求上线：
+
+  - 有考虑全球化支持问题
+
+  - 有考虑未来服务的水平扩展问题
+
+  - 有考虑未来存储优化和多种存储问题
+
+- **StartUp公司在AI支持下做MVP或者产品的初期中期阶段是可行的**
+
+  - 初期选择快速开发框架时，考虑后期的扩展
+    - **目标就是千万级，先快速验证业务：**以下先都不要考虑
+    - 全局唯一ID和分片键
+    - 不用function、存储过程、view、trigger
+  - **业务发展期：**
+    - 引入缓存、搜索框架、消息队列，支持千万级用户规模
+  - **业务爆发期：**
+    - 系统重构，国内一线大厂的架构。
+
+- **已经颇具规模和用户体量：**
+
+  - 使用当前国内一二线大厂的成熟架构
+  - AI作为辅助，用来优化代码，查找问题，提出建议等。
+
+------
+
 
 # 一、AI高效生产力工作流
 
@@ -464,3 +511,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 # 七、Vercel部署
 
+1. 项目推送GitHub：[https://github.com/pumadong/rapid-recruit](https://github.com/pumadong/rapid-recruit)
+
+2. Vercel配置Project：[https://vercel.com/](https://vercel.com/)
+
+   .env/.envlocal定义的环境变量，需要在project中配置：
+
+   - NEXT_PUBLIC_SUPABASE_URL
+   - SUPABASE_SERVICE_ROLE_KEY
+   - JWT_SECRET
+
+3. 部署：[https://rapid-recruit.vercel.app/](https://rapid-recruit.vercel.app/)
