@@ -1948,6 +1948,8 @@ sudo service codedeploy-agent restart
 }
 ```
 
+## Lambda函数(Python)
+
 **成本统计脚本（可以每日统计一次，通过SNS发送通知，作为成本控制的一种手段）：**
 
 ```
