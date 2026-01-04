@@ -253,52 +253,214 @@ my-awesome-project/          # 项目根目录
 - **在 v0 中：** 专注于一个一个页面的“画稿”，确保每一个页面的 UI 你都满意。
 - **在 Cursor 中：** 把这些“画稿”拼凑成一个有灵魂、有逻辑的完整网站。
 
-# 四、v0具体使用
+# 四、v0 代码集成 Cursor 项目指南
 
-你应该按照 **Next.js 的标准项目结构**（v0 默认基于 Next.js + Tailwind + shadcn/ui）将它们放入对应的代码目录。以下是标准的迁移步骤：
+## 环境准备
 
-### 1. 准备项目基础环境
+1. v0生成前端，全量拷贝到项目目录
 
-在 Cursor 中，如果还没有项目，建议先创建一个标准的 Next.js 项目，因为 v0 的代码高度依赖它的生态：
+2. **运行安装命令**： 在终端输入以下命令来补全 v0 独有的依赖
 
-Bash
+   `npm install` 每次把v0的文件拷贝过来都要执行哦。
+
+3. 启动开发服务器
+
+   在 Cursor 的终端（Terminal）中，输入以下命令：
+
+   ```
+   npm run dev
+   # 或者如果你使用的是 pnpm
+   pnpm dev
+   ```
+
+   执行后，终端会显示一个地址（通常是 `http://localhost:3000`）。按住 **Cmd** (Mac) 或 **Ctrl** (Win) 并点击该链接，就能在浏览器看到效果了。
+
+4. **安装 Supabase SDK**（在终端运行）：
+
+   ```
+   npm install @supabase/supabase-js
+   ```
+
+5. **.env.local**
+
+你需要从 Supabase 控制台（Project Settings -> API）获取以下两个核心参数，并严格按照这个格式写入项目根目录下的 `.env.local` 文件：
 
 ```
-npx create-next-app@latest my-project --typescript --tailwind --eslint
+# 你的 Supabase 项目 URL
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+
+# 你的 Supabase 匿名 Key (Anon Key)
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-*务必安装 **shadcn/ui**，因为 v0 生成的组件几乎全部基于它。*
+**为什么要有 `NEXT_PUBLIC_` 前缀？**
 
-### 2. 放置页面的正确位置
+- 在 Next.js 中，只有以 `NEXT_PUBLIC_` 开头的变量才能在**浏览器端（前端）**被访问。
+- 如果你打算在前端直接调用 Supabase 获取数据，这两个前缀必须保留。
 
-根据你使用的是 **App Router**（目前最主流）还是 **Pages Router**，位置如下：
+------
 
-#### A. 页面文件 (Pages)
+## 五、Cursor开始工作
 
-- **路径：** `src/app/` (App Router) 或 `src/pages/` (Pages Router)。
-- **操作：** * 如果你在 v0 生成的是“首页”，就把代码复制到 `src/app/page.tsx`。
-  - 如果你生成的是“关于我们”页面，就新建文件夹 `src/app/about/page.tsx`。
+------
 
-#### B. 组件文件 (Components) —— **关键点**
+### 🚀 Cursor 全量动态化构建提示词
 
-v0 生成的代码通常包含很多 UI 组件（如 Button, Card, Navbar）。
+> **任务目标**：根据 `docs/` 目录下的设计文档，将根目录下的静态 v0 页面全量转化为与 Supabase 联动的动态全栈网站。
+>
+> **第一步：环境与文档读取**
+>
+> 1. 请深度阅读 `docs/DATABASE_DESIGN.md` 和 `docs/database/schema.ts`，理解数据库表结构和字段定义。
+> 2. 确认根目录下 `.env.local` 中的 Supabase 环境变量已就绪。
+>
+> **第二步：后端基础设施建立**
+>
+> 1. 在 `lib/supabase.ts` 中初始化 Supabase 客户端（使用 `NEXT_PUBLIC_` 变量）。
+> 2. 参考 `.cursorrules` 的规范，在 `server/queries/` 目录下创建数据读取逻辑（如获取职位列表、获取人才信息）。
+> 3. 在 `server/actions/` 目录下创建数据写入逻辑（如用户注册、投递简历、发布职位），使用 Next.js Server Actions 实现。
+>
+> **第三步：前端页面动态化（关键）**
+>
+> 1. **首页与列表页**：修改 `app/page.tsx` 及相关列表组件，将静态 Hardcoded 的假数据替换为从 Supabase 实时抓取的真实数据。
+> 2. **表单联调**：找到所有的 `Form` 或 `Button` 提交处，连接到对应的 Server Actions，并添加加载状态（Loading）和成功/失败的 Toast 提示。
+> 3. **详情页构建**：如果 v0 只有列表，请根据文档自动生成动态详情页（如 `/jobs/[id]`）。
+>
+> **第四步：安全与规范**
+>
+> 1. 严格遵守“前后端分离”原则：数据库直接操作逻辑必须放在 `server/` 文件夹。
+> 2. 检查所有 Import 路径，确保搬运过来的 v0 组件能正确引用 `lib/` 里的工具。
+> 3. 确保所有新生成的代码符合 `docs/SECURITY_BEST_PRACTICES.md` 中的安全规范。
+>
+> **执行要求**：请一次性扫描整个项目，先列出你的执行计划，经我确认后开始批量修改。
 
-- **路径：** `src/components/`
-- **操作：** 1.  先看 v0 代码顶部的 `import` 部分。 2.  如果有引用 `@/components/ui/...`，你需要先在 Cursor 终端里用 shadcn 命令安装对应的组件（例如 `npx shadcn-ui@latest add button`）。 3.  如果是 v0 自己生成的自定义组件，在 `src/components/` 下新建 `.tsx` 文件并粘贴进去。
+------
 
-### 3. 利用 Cursor 进行高效集成的技巧
+### 💡 在让 Cursor 执行前，给你几个小贴士：
 
-这是最推荐的工作流，能让 Cursor 帮你自动处理琐碎的配置：
+1. **打开文件**：在输入提示词前，建议你在 Cursor 里先点开 `docs/DATABASE_DESIGN.md`，这样 AI 会更优先关注这个文件的内容。
+2. **分步确认**：Cursor 可能会一次性修改几十个文件。如果它列出的计划里有你不确定的地方，你可以说：“先只做首页的动态化，成功后再做表单提交。”
+3. **检查 `components.json`**：因为 v0 用了很多 shadcn 组件，如果 Cursor 报错说找不到组件，让它运行 `npx shadcn-ui@latest add [组件名]`。
 
-1. **直接粘贴并让 Cursor 修复：** 在一个新文件中粘贴 v0 的代码。代码由于缺少依赖（比如某些 icon 库或 shadcn 组件）肯定会报红。
-2. **使用 `Cmd + L` (Chat)：** 全选代码，告诉 Cursor：“这是我从 v0 生成的代码，请帮我处理所有的 import 错误，安装缺失的依赖，并把其中的子组件拆分到 components 文件夹中。”
-3. **处理全局样式：** v0 有时会用到特殊的 Tailwind 配置。检查 v0 代码中是否有自定义的 `tailwind.config.js` 配置或 `globals.css` 样式，并对应地合并到你的 Cursor 项目中。
+**现在，你可以按下 `Cmd + I` 开启你的全量构建了。完成后，运行 `npm run dev` 看看你的数据库数据是不是已经出现在页面上了！**
 
-### 总结
+### 🚀基于后端中转（Service Role）修复连接超时
 
-- **页面逻辑：** 放 `src/app/` 目录下对应的文件夹。
-- **UI 组件：** 放 `src/components/` 目录。
-- **静态资源：** 图片等放 `public/` 目录。
-- **不要放 `docs`：** 那个目录下的代码不会被执行，只能看。
+请直接给 Cursor 下达这个修正后的指令，它会帮你把“后端中转”逻辑做扎实：
 
-**建议：** 你可以先在 Cursor 里新建一个 `page.tsx`，把 v0 最核心的一个页面丢进去，然后对着报错直接按 `Cmd + K` 让 Cursor 帮你“一键修复所有依赖”。
+> **任务：基于后端中转（Service Role）修复连接超时**
+>
+> **要求**：
+>
+> 1. **后端客户端初始化**：在 `lib/supabase-admin.ts` (新建) 中，使用 `NEXT_PUBLIC_SUPABASE_URL` 和 `SUPABASE_SERVICE_ROLE_KEY` 创建一个服务端专用的客户端。
+>    - *注意：确保这个文件里没有 NEXT_PUBLIC 前缀引用 Service Role Key。*
+> 2. **重构 Server 逻辑**：
+>    - 修改 `server/queries/` 和 `server/actions/` 中的所有函数。
+>    - **彻底弃用** `DATABASE_URL`、`drizzle` 或 `postgres` 的直连方式。
+>    - 统一调用 `lib/supabase-admin.ts` 中的高权限客户端，使用 `.from('table').select()` 语法。
+> 3. **安全性检查**：
+>    - 确保 `SUPABASE_SERVICE_ROLE_KEY` 永远不会出现在任何标记为 `'use client'` 的组件中。
+>    - 所有的数据库操作必须封装在标记为 `'use server'` 的函数或 Server Components 中。
+> 4. **连接验证**：
+>    - 在 `server/queries/` 中写一个 `testAdminConnection` 函数，尝试读取 `jobs` 表的总数。
+>    - 在控制台打印结果，验证通过 HTTPS (API 模式) 是否解决了超时问题。
+
+###  Service Role Key（高权限 API）对比端口直连
+
+这是一个非常深刻的问题。简单来说：**解决 5432 端口（直连）不通的问题，和你选择用 Service Role Key（高权限 API），其实是两个层面的事情，但结合起来确实是目前的“最优解”。**
+
+我们要区分 **“连接通道”** 和 **“访问权限”**：
+
+------
+
+### 1. 为什么“放弃 5432 走 API”是更好的选择？（连接通道层面）
+
+如果你非要修好 5432 端口直连，你会面临以下痛苦：
+
+- **网络环境极其脆弱**：今天你的 VPN 代理了 TCP 流量能连上，明天换个网络环境或 VPN 节点可能就断了。
+- **部署环境限制**：即使你本地修好了，很多 Serverless 部署平台（如 Vercel）对原生 PostgreSQL 连接数有限制，容易产生连接溢出。
+- **开发体验差**：每次启动都要配置复杂的系统级代理。
+
+**结论**：改走 **HTTPS API (443端口)** 是实战派的选择，因为它极度稳定且符合现代 Serverless 开发趋势。
+
+------
+
+### 2. 为什么“使用 Service Role Key”是更好的选择？（访问权限层面）
+
+这正是你架构的高明之处：
+
+| **方案**                | **安全性**                   | **灵活性**                 | **复杂度** |
+| ----------------------- | ---------------------------- | -------------------------- | ---------- |
+| **前端用 Anon Key**     | 低（依赖数据库 RLS 策略）    | 差（只能做基础增删改）     | 简单       |
+| **后端用 Service Role** | **极高（Key 隐藏在服务器）** | **极强（可以做任何逻辑）** | 中等       |
+
+**结论**：
+
+- 如果你只用 Anon Key，你得在 Supabase 后台写复杂的 SQL 策略（RLS）。
+- 你选择 **Service Role Key + 后端中转**，意味着你可以把权限逻辑写在 Next.js 的代码里（比如：`if (user.isAdmin) { ... }`）。这对开发者来说更直观、更好维护。
+
+------
+
+### 3. 最终结论：你的方案是“降维打击”
+
+你现在的方案（**后端 + Service Role + API 模式**）实际上是：
+
+1. 用 **API 模式** 绕过了 5432 端口的**网络封锁**。
+2. 用 **Service Role** 绕过了 RLS 的**配置麻烦**。
+3. 用 **后端中转** 保证了**核心密钥的安全**。
+
+# 六、Supabase 数据库优化百万级数据
+
+这是一个非常经典的思想冲突。在大厂（阿里、腾讯、字节等）的规范中，**“禁止存储过程/触发器”**几乎是铁律，主要原因是：
+
+1. **扩展性差**：代码逻辑消耗数据库 CPU，而数据库是最难扩容的（IO 密集型）。
+2. **版本控制难**：SQL 代码不像 Java/Go 代码可以方便地进行 Code Review、CI/CD 和回滚。
+3. **调试痛苦**：PL/pgSQL 的单步调试非常反人类。
+
+**但是，为什么 Supabase（以及像 PostgREST 这种现代架构）反其道而行之？**
+
+------
+
+### 1. 架构哲学的本质转变：BaaS vs. 微服务
+
+大厂的架构是“微服务 + 应用层”，而 Supabase 属于 **BaaS (Backend as a Service)**。
+
+- **大厂模式（Fat Backend）**：数据库只作为“哑存储（Dumb Storage）”。复杂的权限、校验、逻辑全部写在 Java 层。
+- **Supabase 模式（Thin Backend）**：利用数据库的强大功能。PostgreSQL 已经存在了 30 多年，它的 RLS（行级安全）、Function 和事务其实非常成熟。
+
+### 2. 为什么在 Supabase 中推荐写 Function？
+
+在 100 万级数据量下，有几个现实问题逼着你把逻辑下沉：
+
+- **网络延迟（N+1 问题）**： 如果你要在 Java 代码里处理 100 万行数据，你必须把数据 fetch 出来。即便分批，网络开销也非常大。在数据库内部，逻辑离数据只有“0 距离”。
+- **原子性与数据一致性**： 没有 Java 层的分布式事务管理器，要在 TS 后端保证多个操作的原子性，写在一个 Function 事务里是最稳妥的选择。
+- **性能瓶颈的转移**： Supabase 提供的服务器（通常是 AWS/GCP 上的实例）性能很强。对于 100 万行这种中等规模的数据，数据库消耗的那点 CPU 处理业务逻辑，往往比 TS/Node.js 层处理 JSON 序列化的开销还要小。
+
+### 3. 如何在“大厂规范”和“Supabase 便利”间寻找平衡？
+
+如果你担心以后维护困难，可以采取**“混合模式”**：
+
+#### ✅ 建议这样做（现代做法）：
+
+1. **数据密集型逻辑入库**：如“批量扣费”、“统计报表聚合”、“带有复杂条件的大规模分页”。这些操作在数据库内完成。
+2. **外部交互逻辑入后端**：如“发送邮件”、“调用支付网关”、“生成 PDF”。这些逻辑写在 **Supabase Edge Functions** (TS) 中。
+3. **使用索引保护**：无论逻辑写在哪，确保 Function 内部的 SQL 经过 `EXPLAIN ANALYZE` 优化，不要让逻辑变成全表扫描。
+
+------
+
+### 4. 解决“版本控制”痛点
+
+针对大厂开发者最担心的版本管理问题，Supabase 推荐使用 **Supabase CLI**。
+
+- 你可以将所有的 Function 写在本地的 `.sql` 迁移文件中。
+- 通过 Git 进行版本管理。
+- 使用 `supabase db push` 部署。
+- 这样，你的 SQL 逻辑就像 Java 代码一样，可以追踪、可以回滚、可以被 Review。
+
+------
+
+### 总结：工具是为了业务服务的
+
+大厂严禁业务逻辑入库是为了支撑**千万级甚至亿级 DAU** 的横向扩展。但如果你的数据量在 **100 万到 1000 万** 级别，利用好 PostgreSQL 的 Function 反而能让你用极低的人力成本，实现极高性能的系统。
+
+# 七、Vercel部署
+
