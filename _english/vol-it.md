@@ -22,3 +22,7 @@ description: "积累当前比较生疏的IT词汇，帮助形成IT这个特定�
 **spin up** / spɪn ʌp / 启动：指快速启动或准备好某个系统、服务或过程。
 
 **Need to specify how to reconcile divergent branches** / ˈrekənsaɪl /调解，协调一致  / daɪˈvɜːrdʒənt / 不同的，分歧的
+
+**overhead** / ˌoʊvərˈhed / <美>经常开支，营运费用 to reduce the overhead of infrastructure.
+
+**on-premises** / ˈpremɪsɪz / 本地的

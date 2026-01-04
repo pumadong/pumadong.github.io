@@ -1843,3 +1843,305 @@ sudo service codedeploy-agent restart
    - 如果code build 手工触发，报告文件存在artifacts指定的s3 bucket中
    - 如果通过code pipeline触发，报告文件存在Artifacts store指定的位置
    - 关于日志大一统化，推荐CloudWatch Logs，后续会演示
+
+# 八、Lambda实践
+
+## IAM操作，新建Policy
+
+分别是Lambda操作的权限和统计成本的权限，把这两个Policy赋予执行Lambda的角色和用户。
+
+**Lambda相关的Policy：**
+
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "LambdaFunctionManagement",
+			"Effect": "Allow",
+			"Action": [
+				"lambda:CreateFunction",
+				"lambda:UpdateFunctionCode",
+				"lambda:UpdateFunctionConfiguration",
+				"lambda:GetFunction",
+				"lambda:GetFunctionConfiguration",
+				"lambda:ListFunctions",
+				"lambda:DeleteFunction",
+				"lambda:TagResource",
+				"lambda:UntagResource",
+				"lambda:ListTags",
+				"lambda:PublishVersion",
+				"lambda:CreateAlias",
+				"lambda:UpdateAlias",
+				"lambda:GetAlias",
+				"lambda:ListAliases",
+				"lambda:DeleteAlias"
+			],
+			"Resource": "*"
+		},
+		{
+			"Sid": "LambdaInvokeFunction",
+			"Effect": "Allow",
+			"Action": [
+				"lambda:InvokeFunction",
+				"lambda:InvokeAsync"
+			],
+			"Resource": "*"
+		},
+		{
+			"Sid": "CloudWatchLogs",
+			"Effect": "Allow",
+			"Action": [
+				"logs:CreateLogGroup",
+				"logs:CreateLogStream",
+				"logs:PutLogEvents",
+				"logs:DescribeLogGroups",
+				"logs:DescribeLogStreams"
+			],
+			"Resource": "arn:aws:logs:*:*:*"
+		},
+		{
+			"Sid": "IAMPassRole",
+			"Effect": "Allow",
+			"Action": [
+				"iam:PassRole",
+				"iam:GetRole"
+			],
+			"Resource": "*",
+			"Condition": {
+				"StringEquals": {
+					"iam:PassedToService": "lambda.amazonaws.com"
+				}
+			}
+		},
+		{
+			"Sid": "EC2NetworkInterface",
+			"Effect": "Allow",
+			"Action": [
+				"ec2:CreateNetworkInterface",
+				"ec2:DescribeNetworkInterfaces",
+				"ec2:DeleteNetworkInterface",
+				"ec2:AssignPrivateIpAddresses",
+				"ec2:UnassignPrivateIpAddresses"
+			],
+			"Resource": "*"
+		}
+	]
+}
+```
+
+**成本统计相关的Policy：**
+
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Action": [
+				"ce:GetCostAndUsage",
+				"ce:DescribeCostCategoryDefinition"
+			],
+			"Resource": "*"
+		}
+	]
+}
+```
+
+**成本统计脚本（可以每日统计一次，通过SNS发送通知，作为成本控制的一种手段）：**
+
+```
+#!/usr/bin/env python3
+"""
+AWS Lambda函数 - 成本统计
+统计最近7天成本>0.01的服务/资源
+"""
+
+import boto3
+from datetime import datetime, timedelta
+from decimal import Decimal
+import json
+
+# 成本阈值（美元）
+COST_THRESHOLD = 0.01
+
+def _format_output(result):
+    """格式化输出为美观的文本表格"""
+    # 定义列宽常量（确保所有行宽度完全一致）
+    # 表格行结构：║ + 排名(4) + │ + 服务(52) + │ + 成本(18) + ║ = 78字符
+    WIDTH_TOTAL = 78     # 总宽度（含左右边框）
+    WIDTH_RANK = 4       # 排名列宽度
+    WIDTH_SERVICE = 52   # 服务名称列宽度
+    WIDTH_COST = 18      # 成本列宽度
+    WIDTH_CONTENT = WIDTH_RANK + 1 + WIDTH_SERVICE + 1 + WIDTH_COST  # 76字符
+    
+    def make_row(content):
+        """创建一行，确保宽度为WIDTH_TOTAL"""
+        content = content[:WIDTH_CONTENT] if len(content) > WIDTH_CONTENT else content
+        return "║" + content.ljust(WIDTH_CONTENT) + "║"
+    
+    def make_table_row(rank, service, cost):
+        """创建表格行，确保宽度为WIDTH_TOTAL"""
+        rank_str = str(rank)[:WIDTH_RANK].ljust(WIDTH_RANK)
+        service_str = str(service)[:WIDTH_SERVICE].ljust(WIDTH_SERVICE)
+        cost_str = str(cost)[:WIDTH_COST].rjust(WIDTH_COST)
+        return "║" + rank_str + "│" + service_str + "│" + cost_str + "║"
+    
+    lines = []
+    
+    # 顶部边框
+    lines.append("╔" + "═" * WIDTH_CONTENT + "╗")
+    
+    # 标题（居中）
+    title = "AWS 成本统计报告"
+    title_padded = title.center(WIDTH_CONTENT)
+    lines.append(make_row(title_padded))
+    
+    # 分隔线
+    lines.append("╠" + "═" * WIDTH_CONTENT + "╣")
+    
+    # 时间范围和阈值信息
+    time_info = f"时间范围: {result['time_period']['start']} 至 {result['time_period']['end']}  成本阈值: ${result['cost_threshold']:.2f}"
+    lines.append(make_row(time_info))
+    
+    # 分隔线
+    lines.append("╠" + "═" * WIDTH_CONTENT + "╣")
+    
+    # 表头
+    lines.append(make_table_row("排名", "服务名称", "成本（美元）"))
+    
+    # 分隔线
+    separator = "╠" + "═" * WIDTH_RANK + "╪" + "═" * WIDTH_SERVICE + "╪" + "═" * WIDTH_COST + "╣"
+    lines.append(separator)
+    
+    # 服务列表
+    for idx, service in enumerate(result['services'], 1):
+        service_name = service['service']
+        cost = service['cost']
+        
+        # 如果服务名太长，截断并添加省略号
+        if len(service_name) > WIDTH_SERVICE:
+            service_name = service_name[:WIDTH_SERVICE-3] + "..."
+        
+        # 格式化成本
+        cost_str = f"${cost:,.2f}"
+        lines.append(make_table_row(str(idx), service_name, cost_str))
+    
+    # 分隔线
+    lines.append(separator)
+    
+    # 总计（让"总计"文本跨越排名列和服务名称列）
+    total_text = f"总计 ({result['service_count']} 个服务)"
+    total_combined_width = WIDTH_RANK + 1 + WIDTH_SERVICE
+    if len(total_text) > total_combined_width:
+        total_text = total_text[:total_combined_width-3] + "..."
+    total_cost_str = f"${result['total_cost']:,.2f}"
+    total_row = "║" + total_text[:total_combined_width].ljust(total_combined_width) + "│" + total_cost_str[:WIDTH_COST].rjust(WIDTH_COST) + "║"
+    lines.append(total_row)
+    
+    # 底部边框
+    lines.append("╚" + "═" * WIDTH_CONTENT + "╝")
+    
+    return "\n".join(lines)
+
+def lambda_handler(event, context):
+    """
+    AWS Lambda处理函数
+    返回最近7天成本>0.01的服务统计
+    """
+    try:
+        # 创建Cost Explorer客户端
+        ce_client = boto3.client('ce')
+        
+        # 计算日期范围（最近7天）
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=7)
+        
+        # 获取按服务分组的成本数据
+        response = ce_client.get_cost_and_usage(
+            TimePeriod={
+                'Start': start_date.strftime('%Y-%m-%d'),
+                'End': end_date.strftime('%Y-%m-%d')
+            },
+            Granularity='DAILY',
+            Metrics=['UnblendedCost'],
+            GroupBy=[
+                {
+                    'Type': 'DIMENSION',
+                    'Key': 'SERVICE'
+                }
+            ]
+        )
+        
+        # 处理结果，汇总各服务成本
+        cost_data = {}
+        total_cost = Decimal('0')
+        
+        for result in response['ResultsByTime']:
+            for group in result['Groups']:
+                service = group['Keys'][0]
+                amount = Decimal(group['Metrics']['UnblendedCost']['Amount'])
+                
+                # 只统计成本>0.01的服务
+                if amount > COST_THRESHOLD:
+                    if service not in cost_data:
+                        cost_data[service] = Decimal('0')
+                    cost_data[service] += amount
+                    total_cost += amount
+        
+        # 按成本从高到低排序
+        sorted_costs = sorted(cost_data.items(), key=lambda x: x[1], reverse=True)
+        
+        # 构建返回结果
+        result = {
+            'time_period': {
+                'start': start_date.strftime('%Y-%m-%d'),
+                'end': end_date.strftime('%Y-%m-%d')
+            },
+            'cost_threshold': float(COST_THRESHOLD),
+            'services': [
+                {
+                    'service': service,
+                    'cost': float(cost),
+                    'cost_formatted': f"${cost:.2f}"
+                }
+                for service, cost in sorted_costs
+            ],
+            'total_cost': float(total_cost),
+            'total_cost_formatted': f"${total_cost:.2f}",
+            'service_count': len(sorted_costs)
+        }
+        
+        # 生成格式化的文本输出
+        formatted_output = _format_output(result)
+        
+        # 打印日志（CloudWatch Logs）
+        print(formatted_output)
+        
+        # 返回格式化的响应
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'text/plain; charset=utf-8'
+            },
+            'body': formatted_output
+        }
+        
+    except Exception as e:
+        error_message = str(e)
+        print(f"错误: {error_message}")
+        
+        return {
+            'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps({
+                'error': error_message,
+                'hint': '请确保Lambda执行角色有Cost Explorer API的访问权限（ce:GetCostAndUsage）'
+            }, ensure_ascii=False)
+        }
+
+
+```
+
