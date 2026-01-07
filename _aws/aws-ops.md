@@ -1750,6 +1750,8 @@ sudo service codedeploy-agent restart
 
 3. **Create deploymen：**My application is stored in GitHub，Auth2链接Github，输入repo/commit id，比如：pumadong/docker-java-web-app，956c76695d192b6dbb2e0c2ea4359e927e686fa1
 
+   [https://github.com/pumadong/docker-java-web-app](https://github.com/pumadong/docker-java-web-app)
+
    - 会读取根目录下的appspec.xml文件
    - 这个文件执行scripts下的几个shell脚本
 

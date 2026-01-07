@@ -26,3 +26,7 @@ description: "积累当前比较生疏的IT词汇，帮助形成IT这个特定�
 **overhead** / ˌoʊvərˈhed / <美>经常开支，营运费用 to reduce the overhead of infrastructure.
 
 **on-premises** / ˈpremɪsɪz / 本地的
+
+**ephemeral** / ɪˈfemərəl / 短暂的；（主指植物）短生的，短命的
+
+**vulnerability** 脆弱性，安全隐患
