@@ -598,3 +598,47 @@ Cliche-riddled” 并不是一个单一的单词，而是一个由**连字符（
 -----
 
 **villain** 反派角色 / ˈvɪlən /
+
+# 2026-01-13
+
+**It's tough seeing people not stick around to watch. **
+
+**stick around** 是一个非常地道的口语短语，意思是**“逗留、留在原地、不离去”**。
+
+-----
+
+**But how about we try to spick it up a little. spice up是什么意思？**
+
+"Spice up" 是一个非常地道的英语表达，意思类似于中文里的**“增色”、“润色”**或**“加点料”**。
+
+-----
+
+**alley** 小径，小街，胡同
+
+**oasis** （沙漠中的）绿洲；（困苦中）令人快慰的地方（或时刻）
+
+**vlogger** / ˈvlɑːɡə / 视频博主 **vlog** 视频博客
+
+-----
+
+**I beg to differ. Susan always posts interesting content that offers a different take on things.**
+
+我不敢苟同。Susan总是会发布一些有趣的内容，提供一些不同的视角。
+
+-----
+
+**Knowing that  my work resonates with you on such a personal level truly is the greatest reward. **
+
+引起共鸣
+
+**Redemption Arc** 是文学、影视和游戏创作中的一个术语，中文通常翻译为**“救赎弧线”**或**“洗白之路”**
+
+-----
+
+**aspiring** / əˈspaɪərɪŋ /  有抱负的；渴望从事……的
+
+**anticipate**  期望，盼望
+
+**admiration**  / ˌædməˈreɪʃ(ə)n /  钦佩，赞美，欣赏；赞美对象
+
+**narrative** 记叙文，叙述；叙事技巧
