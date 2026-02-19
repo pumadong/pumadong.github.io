@@ -636,3 +636,428 @@ Cliche-riddled” 并不是一个单一的单词，而是一个由**连字符（
 **admiration**  / ˌædməˈreɪʃ(ə)n /  钦佩，赞美，欣赏；赞美对象
 
 **narrative** 记叙文，叙述；叙事技巧
+
+# 2026-01-14
+
+**I'm so broke right now and can barely make ends meet. ** 我现在穷得叮当响，快连日子都过不下去了。
+
+ "Broke" 在口语里常译为“身无分文”或“穷疯了”；"make ends meet" 指收支平衡，在这里强调勉强维持。
+
+**adversity** 逆境 / ədˈvɜːrsəti /
+
+-----
+
+**I doubt I'll ever be as strong and determined as you are. **
+
+**“Ever” 在这里的具体作用**
+
+在这句话中，`ever` 是一个副词，主要起到**强调**和**时间泛指**的作用。具体可以从以下三个维度理解：
+
+- **加强否定语气：** 虽然句子主句是 "I doubt"（我怀疑/我不觉得），但在语义上表达的是一种否定的预期。`ever` 在这种语境下相当于 "at any time"（在任何时候）。它强调了这种“不可能”是贯穿未来的，而不仅仅是现在。
+- **拓宽时间维度：** 如果去掉 `ever`，句子变成 "I doubt I'll be as strong..."，意思是我怀疑我会（在某个特定时刻）变坚强。加上 `ever` 后，范围扩大到了**“这辈子”、“永远”**或**“任何一个时间点”**。
+- **表达极端程度：** 在比较句（as...as）中使用 `ever`，通常是为了突出对方的高度。它暗示了你的强大是一个极高的标准，以至于我即使花一辈子的时间去努力，也难以企及。
+
+-----
+
+**at the first sign of trouble**  一有风吹草动
+
+**compotation** 聚饮；共饮
+
+**sympathetic** 同情的
+
+**apathetic**  / ˌæpəˈθetɪk /  冷淡的，无动于衷的
+
+**enthusiasm**   / ɪnˈθuːziæzəm /  热情，热忱；热衷的活动，热爱的事物
+
+-----
+
+**With all due respect, ma'am, I'm not sure if it's the right story for us.**
+
+“恕我直言，女士，我不确定这个故事（或题材）是否适合我们。”
+
+**An independent bookstore is closing down due to stiff competion from online booksellers and e-books.**一家实体书店快关门了，主要是因为拼不过网店和电子书。
+
+- **Independent bookstore:** 独立书店（指非连锁、自主经营的书店）。
+- **Closing down:** 倒闭、关门、停业。
+- **Stiff competition:** 激烈的竞争（stiff 在此意为强劲的、艰难的）。
+- **Online booksellers:** 网络书店、线上图书零售商。
+
+-----
+
+**Our readers won't care about the death of a brick-and-mortar bookstore. ** 我们的读者不会在意一家实体书店的倒闭。
+
+- **Brick-and-mortar bookstore:** 意为“实体书店”。“Brick-and-mortar”直译是“砖墙和灰泥”，在商业语境下专门用来指代有线下实体店面的生意。
+
+-----
+
+**I beg to differ. Bookstores mean a lot to a culturally rich motropolis like Shanghai. **我不敢苟同。对于上海这样一座文化底蕴深厚的大都市来说，书店意义非凡。
+
+- **I beg to differ:** 委婉地表达反对，译为“恕我直言”、“我不敢苟同”或“我持不同意见”。
+- **Culturally rich:** 译为“文化底蕴深厚的”、“文化丰富的”。
+- **Metropolis:** 译为“大都市”、“名城”。  / məˈtrɑːpəlɪs /
+- **Mean a lot:** 译为“意义重大”、“举足轻重”、“意义非凡”。
+
+-----
+
+**stalemate** 
+
+- *n.*僵局；陷于困境
+- *vt.*使僵持；使陷入困境
+- *vi.*僵持；陷入僵局
+
+**Discouraged** [dɪsˈkɜːrɪdʒd]：气馁的、沮丧的。
+
+**Self-help books are now all the rage.**  all the rage = popular, liked by a lot of people.
+
+**acquaintance** 相识的人，泛泛之交；认识，相识；所知，了解
+
+# 2026-01-15
+
+**He used to write poetry like many people of his age. 问什么用his age. mane people不是复数吗**
+
+这里的 **"his age"** 并不是在修饰 "many people"，而是在修饰这些人的**状态**。
+
+- 这里的 **"of his age"** 其实是一个固定表达，意思是 **“和他同龄的”**。
+
+  - **Many people of his age** = 许多和他同龄的人。
+
+  - 这里的 **his** 指代的是主语那个“他”（He）。
+
+- **2. 为什么不用 "their age"？**如果你说 "many people of **their** age"，语法上也是通顺的，但意思会发生微小的变化：
+  - **...of his age:** 强调这些人是以“他”为参照标准的。重点在于“和他岁数一样大”。
+
+  - **...of their age:** 强调这群人处在他们自己的那个年龄段（比如一群年轻人）。
+
+
+在英文习惯中，当我们想表达“像他这个年纪的许多人”时，习惯用主语的所属格（his）来定义这个群体。
+
+-----
+
+**We have to adapt our timetable due to the weather. 讲解一下due。不用to可以吗**
+
+在这个语境下，**due to** 是一个固定介词短语，意思是 **“由于”** 或 **“因为”**（because of）。它连接了“调整时间表”这个**结果**和“天气”这个**原因**。
+
+-----
+
+**Congratulation letter 1**
+
+Hi Mia,
+
+Way to go! I've learned about your latest promotion, and no one is more deserving of it than you are.
+
+I've enjoyed watching you begin as a teller(银行柜员) and develop your skills over the years. You've earned every bit of success you now enjoy, and it's about time that the company recognized your commitment and competence(能力).
+
+I'm so proud to have a friend and co-workder like you. With you at the helm of the department, I look forward to great things happening. Best wishes for you continued success.
+
+Best,
+
+Amelia
+
+----
+
+**Congratulation letter 2**
+
+Hi Bob,
+
+Good news travels fast. I have learned about your new role and want to be among the first to congratulate you on your well deserved promotion to editor-in-chief.
+
+I think it's about time that The Daily Standard recognized the hard work and expertise(专长) you have given them for the last six years.
+
+I have a feeling that this is just the first of many good things to come. I know you will go on to set many other records. Best wishes for continued success in your career.
+
+Best regards,
+
+Noah
+
+-----
+
+**Dedication 与 Commitment 的区别**
+
+在英语中，**Dedication** 和 **Commitment** 经常被翻译为“奉献”和“承诺/投入”，它们虽然是近义词，但在情感深度、驱动力和约束力上有着微妙而关键的区别。
+
+简单来说：**Commitment 更多是关于“责任和决定”，而 Dedication 更多是关于“热情和愿望”。**
+
+**1. 核心定义 (Core Definition)**
+
+- **Commitment (承诺/投入):** * 通常指一种**契约或决定**。它是你对自己或他人许下的诺言（“我会做这件事”）。
+  - 它强调的是**持久性**和**义务**。即使你今天心情不好，或者这件事不再有趣，你仍然会因为它是一项“任务”或“承诺”而去完成它。
+- **Dedication (奉献/专注):**
+  - 通常指一种**情感上的投入**。它是你对某件事的极度热爱和全心全意的付出。
+  - 它强调的是**单向的、自发的专注**。当你“dedicated”时，你不仅是在做这件事，而且是带着目标感和高标准去追求卓越。
+
+-----
+
+**I'm about to start a side hustle.**  我准备开始搞副业了。
+
+**详细解释 "Hustle"**
+
+在现代英语（尤其是北美口语）中，**Hustle** 是一个非常有内涵的词。根据语境不同，它的褒贬义会有所变化：
+
+**1. 积极/流行语境：拼搏、奋斗**
+
+这是你句子中的用法。**"Side hustle"** 特指在全职工作之外，利用业余时间经营的赚钱项目（副业）。
+
+- **含义：** 勤奋工作、积极进取、为了成功而不懈努力。
+- **例子：** "You've got to hustle if you want to make it."（如果你想成功，你就得拼命奋斗。）
+
+**2. 动词原义：催促、急忙**
+
+指快速行动或催促他人。
+
+- **例子：** "Hustle up! We're going to be late."（快点！我们要迟到了。）
+
+**3. 负面语境：行骗、耍手段**
+
+在一些老派或特定的犯罪语境下，指通过欺诈或不正当手段骗钱。
+
+- **例子：** "He got hustled at the pool hall."（他在台球厅被人设局骗了钱。）
+
+**总结**
+
+在 **"Side hustle"** 这个词组里，它完全是正向的，代表了一种**“斜杠青年”**的生活方式：不满足于单一收入，愿意投入额外精力去创造财富。
+
+-----
+
+**It seems very niche in the pet industry. **  似乎是宠物行业中一个非常小众（冷门）的领域。  / niːʃ /
+
+**Niche (小众/利基):** 在商业语境下，指大市场中被忽视或尚未被满足的细分需求。它不是给所有人准备的，而是给“特定的一小群人”。
+
+**customer base** 客户群
+
+-----
+
+# 2026-01-16
+
+**I've been feeling pretty stuck in my run-of-the mill job lately.**
+
+我最近觉得困在了一份平庸的工作里，没什么长进。
+
+**Run-of-the-mill:** 普普通通的、乏味的、平庸的（原意指工厂磨坊里生产出来的千篇一律的东西）。
+
+---
+
+**You don't want to end up overworked and underpaid at the new gig. **
+
+你可不想在这份新差事里落得个钱少活多的下场。
+
+**词汇解析**
+
+- **Overworked and underpaid:** 这是英语中的常用固定搭配，专门形容“活多钱少”、“事儿多薪低”的情况。
+- **Gig:** 在现代英语中不仅指“演出”，也常指“工作、项目、差事”。
+- **End up:** 强调最终的下场或结局，通常带有一点负面意味。
+
+-----
+
+**He seemed to be a dynamic and energetic leader. **
+
+他似乎是一位充满活力且精力充沛的领导者。
+
+**Dynamic vs. Energetic**
+
+| **维度**     | **Dynamic (动态的/有活力的)**                            | **Energetic (精力充沛的/充满能量的)**                |
+| ------------ | -------------------------------------------------------- | ---------------------------------------------------- |
+| **核心含义** | 强调**变化、进步和影响力**。                             | 强调**体力、热情和行动力**。                         |
+| **性格特征** | 侧重于一个人有思想、有创意、能适应变化，通常指“有闯劲”。 | 侧重于一个人干劲十足、不累、动作快，通常指“体力好”。 |
+| **职场语境** | 指领导者善于开拓、敢于创新、能推动事情发展。             | 指领导者工作时间长、富有激情、办事效率高。           |
+| **词源感觉** | 带有**智力与魅力**的色彩（Active + Creative）。          | 带有**生理与力量**的色彩（Active + Hardworking）。   |
+
+# 2026-01-17
+
+**soft opening** 试营业
+
+**grand opening** 正式开业
+
+**Just keep popping up like a jack-in-the-box. **  就像个惊吓盒子一样，总是突然冒出来。
+
+- **解析：** “Jack-in-the-box” 是指那种带摇杆的玩具盒，一转圈就会突然弹出一个小丑。这个翻译保留了原句的画面感。
+
+**小贴士：** 在英文语境中，用 **"jack-in-the-box"** 来形容人，通常是指那个人非常活跃、坐不住，或者总是出人意料地出现。
+
+-----
+
+**The catchy tune from the commercial keeps playing on repeat in my head.**
+
+- **Catchy**: 朗朗上口的、好记的。
+- **On repeat / On loop**: 循环播放。
+- **Commercial / Ad**: 广告。
+
+-----
+
+**Start**
+
+- get the ball rolling
+- kick it off
+
+-----
+
+**经常有的念头**
+
+- It just won't quit.
+- It keeps popping up.
+- The idea keeps playing on repeat.
+
+# 2026-01-18
+
+**top-notch**  / ˌtɑːp ˈnɑːtʃ / 一流的；拔尖的
+
+**Don't forget Cathy's Corner in Mt. Hollywood Drive. **别忘了好莱坞山大道（Mt. Hollywood Drive）上的 **Cathy's Corner**。
+
+**Cathy's Corner** 是洛杉矶格里菲斯公园（Griffith Park）内一个著名的观景点。
+
+- **文化点：** 这里是电影《爱乐之城》（*La La Land*）中男女主角跳那段经典双人舞（《A Lovely Night》）的取景地。
+- **地名处理：** 在翻译时，通常保留原名 "Cathy's Corner"，或者音译为“凯茜角”，因为这是一个特定的地名标致。
+
+# 2026-01-20
+
+**be/get hyped up about something** 激动紧张到不能自已
+
+**best ... ever** 最棒的，没有之一。
+
+- Best lasagna ever!
+- This is the best movie ever!
+
+**on the edge of one's seat** 悬念迭起，扣人心弦
+
+- What an amazing match! The two players had us on the edge of our seats.
+
+**music to my ears** 十分合心意
+
+- When they said they would have a big profit from the project, it was music to my ears.
+
+**Told you** 我就说吧。
+
+**bucket list** 人生愿望清单
+
+-----
+
+**The movies really did justice to the books.**  / Stay true to the original
+
+电影拍得很好，没有辜负原著。
+
+**I'm not a movie buff myself **
+
+我自己并不是一个影迷。
+
+-----
+
+**You've got to give it to the movies. **
+
+不得不说，电影这东西确实厉害。
+
+它的核心结构是 **"You've got to give it to [someone/something]"**，这是一个地道的英语口语表达，意思是“你不得不佩服……”或“不得不承认……确实很厉害”
+
+-----
+
+**They nailed it with both the adaptation and the casting.**
+
+这句话的意思是：**“无论是改编还是选角，他们都做得非常出色（精准到位）。”**
+
+通常用于评价一部**由书、漫画或游戏改编的影视作品**。
+
+- **Nailed it:** 这是一个非常地道的口语表达，意思是“做得非常好”、“一针见血”、“完美搞定”。
+- **Adaptation:** 指“改编”。比如把小说拍成电影，这个过程和作品就叫 adaptation。
+- **Casting:** 指“选角”。即电影或剧集中演员的选择是否符合原著角色的形象和气质。
+
+-----
+
+**She knocked it out of the park.**
+
+句话是一个非常地道的美国英语表达，意思是**“做得非常出色”**、**“表现得棒极了”**或者**“取得了巨大的成功”**。
+
+# 2026-01-23
+
+**They all agree that it is a movie worth seeing for its spectacular effects alone.**
+
+他们都同意，单单为了那壮观的特效，这部电影就值得一看。
+
+**alone** 是一个副词，表示**“仅仅、单单、只靠……这一点”**。
+
+# 2026-01-24
+
+**to come to/draw/reach the conclusion 下结论,得出结论**
+
+The team has reached the conclusion that it's the best solution to the problem.
+
+**as per** 按照,依据
+
+The travel agency can help book accommodation and flights as per his requirement.
+
+# 2026-01-27
+
+**and don't even get me started on the Eiffel Tower! **
+
+这里的 **"don't even get me started on..."** 是一个地道的习语，意思是“别跟我提……”或者“别让我聊起……”，通常暗示你对某件事有很多（通常是负面的、吐槽的或极度兴奋的）看法，一旦开口就停不下来。
+
+**Sounds like you were in a pickle.**
+
+听起来你刚才左右为难。
+
+**"In a pickle"** 是一个英语成语，形容：
+
+- 处境困难
+- 进退两难
+- 遇到了麻烦/尴尬的局面
+
+> **冷知识：** 这个表达最早可能源于腌制泡菜。想象一下你像蔬菜一样被塞进罐子里泡在醋里，那种感觉确实是“束手无策”且“酸爽”。
+
+**Maybe next time, try going off the beaten track.**
+
+“下次也许可以尝试走走不寻常的路。”
+
+- **字面意思（旅行/远足）：** “下次可以试着去些人迹罕至的地方。”
+- **抽象引申（工作/生活方式）：** “下次不妨尝试一下另辟蹊径。”
+- **比较随意的口语：** “下次试试走那种没多少人走的路吧。”
+
+**词汇点拨**
+
+- **Off the beaten track:** 原意指避开拥挤的旅游景点，去偏僻、冷门的地方。引申为不落俗套、不按常理出牌。
+- **Maybe next time:** 是一种委婉的建议方式，翻译时用“也许”、“不妨”会显得很自然。
+
+**Explore some hidden gems instead of the tourist traps. **
+
+探索一些小众景点，而不是那些游客打卡地。
+
+**Hidden gems:** 小众景点 (niche spots) or 宝藏去处 (treasure places).
+
+**pep talk**
+
+鼓舞士气的演讲：一种通常简短、强烈和情感激励的演讲，旨在影响或鼓励听众。
+
+**Next time, I'll mare sure to play better and avoid any travel hiccups. **
+
+**Travel hiccups:** 直译是“旅行中的打嗝”，在英文中常用来形容**小状况、小插曲**或**意外的小麻烦**。
+
+# 2026-01-28
+
+**grumpy** 脾气坏的
+
+# 2026-01-31
+
+**substantial** 大量的，价值巨大的；牢固的，结实的；基本的，实质性的；（饭菜）丰盛的；重要的，真实的；有地位的，富有的
+
+**make a fortune** 发财 He made a fortune in the stocket market.
+
+**come into a fortune** 继承一笔遗产  He came into a fortune when his rich grandfather died.
+
+**suite**  / swiːt /  套房，套间
+
+**buffet** / bəˈfeɪ /  自助餐；快餐部，点心柜
+
+-----
+
+**lead a charmed life**   过着幸运的生活
+
+**a blessing in disguise**  因祸得福
+
+**beginner's luck**
+
+-----
+
+**down on one's luck** 运气不佳 People are down on their luck when they are experiencing a bad situation or have very little money.
+
+**just my luck** 算我倒霉  When something bad happens, you can say "Just my luck" to express your feelings.
+
+**get the short/rough/bad end of the stick** 命运不公
+
+
+
