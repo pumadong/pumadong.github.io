@@ -733,3 +733,15 @@ gripping
 relevant
 
 *adj.*有关的，切题的；正确的，适宜的；有价值的，有意义的
+
+-----
+
+**off-ramp**  *n.*驶出匝道  ramp  斜坡
+
+**on-ramp****  n.驶进坡道，入口匝道
+
+**farmstand**  农产品摊位：一个出售农产品（如水果、蔬菜、鸡蛋等）的摊位，通常位于农场附近或道路旁。
+
+**organically**  / ɔːrˈɡænɪkli /  *adv.*有机地；有组织地；器官上地 Organic、Organ
+
+**He wishes he hadn't dropped out of college.** 辍学。
